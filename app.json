@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "Nightlight",
+    "slug": "Nightlight",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "Nightlight"
+}
