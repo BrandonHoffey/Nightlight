@@ -1,0 +1,1 @@
+export const API_VIEW_ALL_USERS = "http://localhost:4000/user/view-all"
