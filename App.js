@@ -4,6 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { Auth } from "./screens/auth/AuthScreen";
 import { Friend } from "./screens/friends/FriendScreen";
 
+
 export default function App() {
   return (
     <View style={styles.container}>
@@ -18,7 +19,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#011c40",
     alignItems: "center",
     justifyContent: "center",
   },
