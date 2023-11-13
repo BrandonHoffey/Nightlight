@@ -1,8 +1,11 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+
 import { Group } from "./screens/groups/GroupsScreen";
-// import { Auth } from "./screens/auth/AuthScreen";
+import { Auth } from "./screens/auth/AuthScreen";
+import { Friend } from "./screens/friends/FriendScreen";
+
 
 
 export default function App() {
@@ -11,6 +14,7 @@ export default function App() {
       <Text>App</Text>
       {/* <Auth /> */}
       <Group/>
+      <Friend />
       <StatusBar style="auto" />
     </View>
   );
@@ -19,7 +23,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#011c40",
     alignItems: "center",
     justifyContent: "center",
   },
