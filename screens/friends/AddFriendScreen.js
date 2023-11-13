@@ -1,124 +1,97 @@
-import React, { useState } from "react";
-import { Text, Pressable, StyleSheet, SafeAreaView, SectionList, TextInput, Alert } from "react-native";
-import axios from "axios";
-import { UsesNonExemptEncryption } from "@expo/config-plugins/build/ios";
+import React, { useEffect, useState } from 'react';
+import {
+  SafeAreaView,
+  View,
+  FlatList,
+  StyleSheet,
+  Text,
+  StatusBar,
+  Image,
+  TouchableOpacity,
+  Modal,
+  Alert,
+  Button,
+} from 'react-native';
+import { API_VIEW_ALL_USERS } from '../../constants/Endpoints';
 
-const AddFriend = () => {
-    const [searchQuery, setSearchQuery] = useState("");
-    const [friendAdded, setFriendAdded] = useState(false);
-    const [allUsers, setAllUsers] = useState([]);  
-    
-    useEffect(() => {
-        fetchAllUsers();
-    }, []);
 
-    const fetchAllUsers = async () => {
-        try {
-            const response = await axios.get("http://localhost:4000/user/view-all");
-            setAllUsers(response.data);
-        } catch (error) {
-            console.error("Error fetching users:", error);
-        }
-    };
+const UserItem = ({ user, onPress }) => (
+  <TouchableOpacity onPress={() => onPress(user)}>
+    <View style={styles.item}>
+      <Image source={{ uri: user.profilePicture }} style={styles.profilePicture} />
+      <Text style={styles.title}>{user.username}</Text>
+      {/* <Text style={styles.subtitle}>{user.displayName}</Text> */}
+      {/* <Text style={styles.subtitle}>{user.email}</Text> */}
+    </View>
+  </TouchableOpacity>
+);
 
-    // const filteredData = [
-    //     {title: 'B', data: ['Brandon']},
-    //     {title: 'J', data: ['Jacob']},
-    //     {title: 'N', data: ['Neil']},
-    // ].filter(section => {
-    //     const filteredItems = section.data.filter(item =>
-    //         item.toLowerCase().includes(searchQuery.toLowerCase())
-    //         );
-    //         return filteredItems.length > 0;
-    // });
+const AddFriend = (props) => {
+  const [userItems, setUserItems] = useState([]);
 
-    const FriendAddedMessage = ({friendName}) => {
-        return (
-            <SafeAreaView style={styles.FriendAddedMessage}>
-                <Text>{`${friendName} has been added to your friends list.`}</Text>
-            </SafeAreaView>
-        );
-    };
+  async function fetchUserList() {
+    try {
+      const myHeaders = new Headers();
+      myHeaders.append("Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NGE5OWJlNjQ3YjA2NTA4MTM3NzQ3ZSIsImlhdCI6MTY5OTkwMTk1OCwiZXhwIjoxNzAwNTA2NzU4fQ.zuPiLLMX4772VipOVHV2MM6JAjuJ1Xz7VVtDXqeDz40");
+      myHeaders.append("ngrok-skip-browser-warning", "true");
+      let requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+      };
+      const response = await fetch(API_VIEW_ALL_USERS, requestOptions);
+      const data = await response.json();
+      console.log(data);
+      setUserItems(data.users);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  useEffect(() => {
+    fetchUserList();
+  }, []);
 
-    const handleAddFriend = (friendNameArray) => {
-        const friendName = friendNameArray;
-        Alert.alert(
-            "Add Friend",
-            `Do you want to add ${friendName} as your friend?`,
-            [
-                {
-                    text: "Cancel",
-                    style: "cancel",
-                },
-                {
-                    text: "Yes",
-                    onPress: () => {
-                        setFriendAdded(friendName);
-                        console.log(`Added ${friendName} as a friend.`);
-                    },
-                },
-            ],
-            {cancelable: false}
-        );
-    };
 
-    return (
-        <SafeAreaView style={styles.container}>
-            <TextInput
-                style={styles.searchBar}
-                placeholder="Search..."
-                onChangeText={(text) => setSearchQuery(text)}
-                value={searchQuery}
-            />
-            {friendAdded && <FriendAddedMessage friendName={friendAdded} />}
-            <SectionList
-                sections={allUsers}
-                renderItem={({item}) => (
-                <Pressable onPress={() => handleAddFriend([item.username])}>
-                    <Text style={styles.item}>{item.username}</Text>
-                </Pressable>
-                )}
-                renderSectionHeader={({section}) => (
-                    <Text style={styles.sectionHeader}>{section.title}</Text>
-                )}
-                keyExtractor={(item) => `basicListEntry-${item}`}
-            />
-        </SafeAreaView>
-    );
+  return (
+    <SafeAreaView style={styles.container}>
+      <h1 style={styles.h1}>All Users</h1>
+      <FlatList
+        data={userItems}
+        renderItem={({item}) => <UserItem user={item} />}
+        keyExtractor={(item) => item._id}
+      />
+    </SafeAreaView>
+  );
 };
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      paddingTop: 22,
-    },
-    sectionHeader: {
-      paddingTop: 2,
-      paddingLeft: 10,
-      paddingRight: 10,
-      paddingBottom: 2,
-      fontSize: 14,
-      fontWeight: 'bold',
-      backgroundColor: 'rgba(247,247,247,1.0)',
-    },
-    item: {
-      padding: 10,
-      fontSize: 18,
-      height: 44,
-    },
-    searchBar: {
-      height: 40,
-      borderColor: 'gray',
-      borderWidth: 1,
-      margin: 10,
-      padding: 10,
-    },
-    FriendAddedMessage: {
-        backgroundColor: "green",
-        padding: 10,
-        margin: 10,
-        borderRadius: 5,
-    },
-  });
+  container: {
+    flex: 1,
+    marginTop: StatusBar.currentHeight || 0,
+  },
+  item: {
+    backgroundColor: '#009d94',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+  },
+  title: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  subtitle: {
+    fontSize: 16,
+    color: 'gray',
+  },
+  profilePicture: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginBottom: 10,
+  },
+  h1: {
+    color: '#c5b358',
+  },
+});
 
 export default AddFriend;

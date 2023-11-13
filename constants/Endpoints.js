@@ -1,1 +1,1 @@
-export const API_VIEW_ALL_USERS = "http://localhost:4000/user/view-all"
+export const API_VIEW_ALL_USERS = "https://8d0d-2601-282-4303-1fc0-ed67-38f3-e70-3c04.ngrok-free.app/user/view-all"
