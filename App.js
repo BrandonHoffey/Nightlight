@@ -2,14 +2,16 @@ import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Auth } from "./screens/auth/AuthScreen";
-import AddFriend from "./screens/friends/AddFriendScreen";
+import { Friend } from "./screens/friends/FriendScreen";
+
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Auth />
-      {/* <AddFriend /> */}
-      <StatusBar style="auto" />
+      {/* <Text>App</Text> */}
+      {/* <Auth /> */}
+      <Friend />
+      {/* <StatusBar style="auto" /> */}
     </View>
   );
 }
