@@ -14,11 +14,10 @@ export default GroupCreateAddInput = (props) => {
   const [showInput, setShowInput] = useState(false);
   const [inputValue, setInputValue] = useState("");
   async function handleButtonClick() {
-    
     try {
       const myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
-      let users = []
+      let users = [];
 
       let body = {
         name: inputValue,
@@ -32,17 +31,17 @@ export default GroupCreateAddInput = (props) => {
       const response = await fetch(API_GROUP_ADD, requestOptions);
 
       const data = await response.json();
-    //   props.fetchGroups();
-       console.log("Input Value:", inputValue);
-       // Hide the input field after saving
-       setShowInput(false);
-       //  resets input field after save
-       setInputValue("");
+      //   props.fetchGroups();
+      console.log("Input Value:", inputValue);
+      // Hide the input field after saving
+      setShowInput(false);
+      //  resets input field after save
+      setInputValue("");
     } catch (error) {
       console.error(error);
     }
   }
-  
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -64,7 +63,7 @@ export default GroupCreateAddInput = (props) => {
             value={inputValue}
             onChangeText={(text) => setInputValue(text)}
           />
-          
+
           <TouchableOpacity
             style={styles.buttonContainer}
             onPress={handleButtonClick}
@@ -74,11 +73,9 @@ export default GroupCreateAddInput = (props) => {
               title="Save"
               onPress={handleButtonClick}
             />
-            
           </TouchableOpacity>
         </View>
       )}
-      
     </View>
   );
 };
@@ -91,7 +88,6 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     overflow: "hidden",
     margin: 10,
-
   },
   inputContainer: {
     alignItems: "center",

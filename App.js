@@ -1,20 +1,18 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-
-import { Group } from "./screens/groups/GroupsScreen";
+// import { Group } from "./screens/groups/GroupsScreen";
 import { Auth } from "./screens/auth/AuthScreen";
-import { Friend } from "./screens/friends/FriendScreen";
-
-
+import MessageScreen from "./screens/messages/MessageScreen";
+// import { Friend } from "./screens/friends/FriendScreen";
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>App</Text>
       {/* <Auth /> */}
-      <Group/>
-      <Friend />
+      {/* <Group /> */}
+      {/* <Friend /> */}
+      <MessageScreen />
       <StatusBar style="auto" />
     </View>
   );

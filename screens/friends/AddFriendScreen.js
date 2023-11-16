@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -11,14 +11,16 @@ import {
   Modal,
   Alert,
   Button,
-} from 'react-native';
-import { API_VIEW_ALL_USERS } from '../../constants/Endpoints';
-
+} from "react-native";
+import { API_VIEW_ALL_USERS } from "../../constants/Endpoints";
 
 const UserItem = ({ user, onPress }) => (
   <TouchableOpacity onPress={() => onPress(user)}>
     <View style={styles.item}>
-      <Image source={{ uri: user.profilePicture }} style={styles.profilePicture} />
+      <Image
+        source={{ uri: user.profilePicture }}
+        style={styles.profilePicture}
+      />
       <Text style={styles.title}>{user.username}</Text>
       {/* <Text style={styles.subtitle}>{user.displayName}</Text> */}
       {/* <Text style={styles.subtitle}>{user.email}</Text> */}
@@ -32,7 +34,10 @@ const AddFriend = (props) => {
   async function fetchUserList() {
     try {
       const myHeaders = new Headers();
-      myHeaders.append("Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NGE5OWJlNjQ3YjA2NTA4MTM3NzQ3ZSIsImlhdCI6MTY5OTkwMTk1OCwiZXhwIjoxNzAwNTA2NzU4fQ.zuPiLLMX4772VipOVHV2MM6JAjuJ1Xz7VVtDXqeDz40");
+      myHeaders.append(
+        "Authorization",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NGE5OWJlNjQ3YjA2NTA4MTM3NzQ3ZSIsImlhdCI6MTY5OTkwMTk1OCwiZXhwIjoxNzAwNTA2NzU4fQ.zuPiLLMX4772VipOVHV2MM6JAjuJ1Xz7VVtDXqeDz40"
+      );
       myHeaders.append("ngrok-skip-browser-warning", "true");
       let requestOptions = {
         method: "GET",
@@ -50,13 +55,12 @@ const AddFriend = (props) => {
     fetchUserList();
   }, []);
 
-
   return (
     <SafeAreaView style={styles.container}>
-      <h1 style={styles.h1}>All Users</h1>
+      <Text style={styles.h1}>All Users</Text>
       <FlatList
         data={userItems}
-        renderItem={({item}) => <UserItem user={item} />}
+        renderItem={({ item }) => <UserItem user={item} />}
         keyExtractor={(item) => item._id}
       />
     </SafeAreaView>
@@ -69,19 +73,19 @@ const styles = StyleSheet.create({
     marginTop: StatusBar.currentHeight || 0,
   },
   item: {
-    backgroundColor: '#009d94',
+    backgroundColor: "#009d94",
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,
   },
   title: {
-    color: 'white',
+    color: "white",
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   subtitle: {
     fontSize: 16,
-    color: 'gray',
+    color: "gray",
   },
   profilePicture: {
     width: 50,
@@ -90,7 +94,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   h1: {
-    color: '#c5b358',
+    color: "#c5b358",
   },
 });
 
