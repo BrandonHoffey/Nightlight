@@ -24,12 +24,11 @@ export const Auth = (params) => {
 
 const styles = StyleSheet.create({
   screenContainer: {
-    // backgroundColor: "#35478C",
-    // backgroundColor: "#0A3C41",
+    backgroundColor: Colors.darkBlue,
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
-    height: "80%",
-    width: "80%",
+    height: "100%",
+    width: "100%",
   },
 });
