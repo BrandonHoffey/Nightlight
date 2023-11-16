@@ -10,9 +10,9 @@ import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { UserType } from "../../UserContext";
-import jwt_decode from "jwt-decode";
 import { API_VIEW_ALL_USERS } from "../../constants/Endpoints";
 import User from "./components/User";
+import LogoutButton from "../../ui/LogoutButton";
 
 const FriendScreen = () => {
   const navigation = useNavigation();
@@ -37,6 +37,7 @@ const FriendScreen = () => {
             size={24}
             color="black"
           />
+          <LogoutButton />
         </View>
       ),
     });

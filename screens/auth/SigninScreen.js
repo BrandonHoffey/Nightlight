@@ -38,6 +38,8 @@ export default (params) => {
         const data = await response.json();
         navigation.navigate("Home");
         Alert.alert(data.message);
+        setUsername("");
+        setPassword("");
       } else if (response.status === 401) {
         Alert.alert("Incorrect username or password. Please try again.");
       } else {
@@ -48,8 +50,6 @@ export default (params) => {
       console.error(error);
       Alert.alert("An error occurred. Please try again later.");
     }
-
-    
   };
   return (
     <View style={styles.screenContainer}>
@@ -91,7 +91,9 @@ export default (params) => {
             <Pressable
               style={({ pressed }) => [
                 {
-                  backgroundColor: pressed ? Colors.lightGreen : Colors.lightBlue,
+                  backgroundColor: pressed
+                    ? Colors.lightGreen
+                    : Colors.lightBlue,
                   // backgroundColor: pressed ? "#24A49C" : "#05002B",
                 },
                 styles.submit,

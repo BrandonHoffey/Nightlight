@@ -1,13 +1,22 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useContext, useState } from "react";
+import React, { useLayoutEffect, useEffect, useContext, useState } from "react";
 import { UserType } from "../../UserContext";
 import { API_FRIEND_REQUESTS } from "../../constants/Endpoints";
 import FriendRequest from "./components/FriendRequest";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+
 
 const ViewFriendsScreen = () => {
+  const navigation = useNavigation();
   const { userId, setUserId } = useContext(UserType);
   const [friendRequests, setFriendRequests] = useState([]);
-
+  
+  const handleLogout = () => {
+    setUserId(null);
+    navigation.navigate("Authorization");
+  };
+  
   useEffect(() => {
     const fetchFriendRequests = async () => {
       try {
@@ -29,8 +38,7 @@ const ViewFriendsScreen = () => {
         const response = await fetch(apiUrl, requestOptions);
         const data = await response.json();
         console.log(data);
-
-        // const data = JSON.parse(textResponse);
+;
 
         setFriendRequests(data.friendRequests);
       } catch (error) {
@@ -40,8 +48,26 @@ const ViewFriendsScreen = () => {
     fetchFriendRequests();
   }, []);
 
-  return (
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: "",
+      headerLeft: () => (
+        <Text style={{ fontSize: 16, fontWeight: "bold" }}>Nightlight</Text>
+      ),
+      headerRight: () => (
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+          <MaterialCommunityIcons
+            name="logout"
+            size={24}
+            color="black"
+            onPress={handleLogout}
+          />
+        </View>
+      ),
+    });
+  }, []);
 
+  return (
     <View style={{ padding: 10, marginHorizontal: 12 }}>
       {friendRequests.length > 0 && <Text>Your Friend Requests</Text>}
 
