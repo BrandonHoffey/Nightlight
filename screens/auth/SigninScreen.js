@@ -16,8 +16,8 @@ import { useNavigation } from "@react-navigation/native";
 
 export default (params) => {
   const {login} = useContext(UserContext);
-  const [username, setUsername] = useState("Neil");
-  const [password, setPassword] = useState("test123");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const navigation = useNavigation();
 
   const handleSubmit = async () => {
@@ -40,10 +40,9 @@ export default (params) => {
 
         login(data.token, data.signedInAccount._id);
         navigation.navigate("Home");
-
         Alert.alert(data.message);
-        // setUsername("");
-        // setPassword("");
+        setUsername("");
+        setPassword("");
       } else if (response.status === 401) {
         Alert.alert("Incorrect username or password. Please try again.");
       } else {

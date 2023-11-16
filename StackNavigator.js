@@ -28,7 +28,6 @@ const StackNavigator = () => {
           headerTintColor: "white",
         })}
       >
-
         
         <Stack.Screen
           name="Authorization"
