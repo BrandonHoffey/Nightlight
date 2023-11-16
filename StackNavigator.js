@@ -1,4 +1,3 @@
-
 import React from "react";
 import { View, Text, StyleSheet, } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
@@ -15,7 +14,6 @@ const Stack = createNativeStackNavigator();
 
 const StackNavigator = () => {
   return (
-    <NavigationContainer>
       <Stack.Navigator
       screenOptions={({ navigation }) => ({
         headerStyle: {
@@ -27,7 +25,7 @@ const StackNavigator = () => {
         <Stack.Screen 
           name="Authorization"
           component={Auth}
-          options={{ headerShown: true}}
+          options={{ headerShown: false}}
         />
         <Stack.Screen
           name="Group Chats"
@@ -55,11 +53,9 @@ const StackNavigator = () => {
           options={{ headerShown: true }}
         />
       </Stack.Navigator>
-    </NavigationContainer>
   );
 };
 
 export default StackNavigator;
 
 const styles = StyleSheet.create({});
-

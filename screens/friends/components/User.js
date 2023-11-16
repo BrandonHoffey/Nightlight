@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View, Pressable, Image } from "react-native";
 import React, { useContext, useState } from "react";
-import { UserType } from "../../../UserContext";
+import { UserContext} from "../../../UserContext";
 
 const User = ({ item }) => {
-  const { userId, setUserId } = useContext(UserType);
+  const { userId, setUserId } = useContext(UserContext);
   const [requestSent, setRequestSent] = useState(false);
   const sendFriendRequest = async (currentUserId, selectedUserId) => {
     try {

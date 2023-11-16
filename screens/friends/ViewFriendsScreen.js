@@ -1,22 +1,21 @@
 import { StyleSheet, Text, View } from "react-native";
 import React, { useLayoutEffect, useEffect, useContext, useState } from "react";
-import { UserType } from "../../UserContext";
+import { UserContext } from "../../UserContext";
 import { API_FRIEND_REQUESTS } from "../../constants/Endpoints";
 import FriendRequest from "./components/FriendRequest";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-
 const ViewFriendsScreen = () => {
   const navigation = useNavigation();
-  const { userId, setUserId } = useContext(UserType);
+  const { userId, setUserId } = useContext(UserContext);
   const [friendRequests, setFriendRequests] = useState([]);
-  
+
   const handleLogout = () => {
     setUserId(null);
     navigation.navigate("Authorization");
   };
-  
+
   useEffect(() => {
     const fetchFriendRequests = async () => {
       try {
@@ -38,8 +37,6 @@ const ViewFriendsScreen = () => {
         const response = await fetch(apiUrl, requestOptions);
         const data = await response.json();
         console.log(data);
-;
-
         setFriendRequests(data.friendRequests);
       } catch (error) {
         console.log("error message", error);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,14 +9,15 @@ import {
   Modal,
   Alert,
 } from "react-native";
-
+import { UserContext } from "../../UserContext";
 import { API_USER_SIGN_IN } from "../../constants/Endpoints";
 import Colors from "../../Colors";
 import { useNavigation } from "@react-navigation/native";
 
 export default (params) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const {login} = useContext(UserContext);
+  const [username, setUsername] = useState("Neil");
+  const [password, setPassword] = useState("test123");
   const navigation = useNavigation();
 
   const handleSubmit = async () => {
@@ -36,10 +37,11 @@ export default (params) => {
       const response = await fetch(API_USER_SIGN_IN, requestOption);
       if (response.ok) {
         const data = await response.json();
+        login(data.token, data.signedInAccount._id);
         navigation.navigate("Friend");
         Alert.alert(data.message);
-        setUsername("");
-        setPassword("");
+        // setUsername("");
+        // setPassword("");
       } else if (response.status === 401) {
         Alert.alert("Incorrect username or password. Please try again.");
       } else {
