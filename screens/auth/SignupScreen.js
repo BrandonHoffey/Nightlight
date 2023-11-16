@@ -9,15 +9,12 @@ import {
   Modal,
   Alert,
 } from "react-native";
-// import logo from "../../assets/logo-nightlight.png";
-// import logo from "../../assets/logo-nightlight1.png";
-// import logo from "../../assets/logo-nightlight2.png";
-// import logo from "../../assets/logo-nightlight3.png";
 import { API_USER_SIGN_IN } from "../../constants/Endpoints";
 import Colors from "../../Colors";
 
 export default (params) => {
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = async () => {
@@ -26,7 +23,7 @@ export default (params) => {
       myHeaders.append("Content-Type", "application/json");
       const body = {
         username: username,
-        email: username,
+        email: email,
         password: password,
       };
       const requestOption = {
@@ -34,12 +31,12 @@ export default (params) => {
         headers: myHeaders,
         body: JSON.stringify(body),
       };
-      const response = await fetch(API_USER_SIGN_IN, requestOption);
+      const response = await fetch(API_USER_SIGN_UP, requestOption);
       if (response.ok) {
         const data = await response.json();
         Alert.alert(data.message);
-      } else if (response.status === 401) {
-        Alert.alert("Incorrect username or password. Please try again.");
+      } else if (response.status === 422) {
+        Alert.alert("Missing fields. Please try again.");
       } else {
         console.error(`HTTP Error: ${response.status}`);
         Alert.alert("An error occurred. Please try again later.");
@@ -78,8 +75,8 @@ export default (params) => {
             <TextInput
               textContentType="emailAddress"
               style={styles.input}
-              onChangeText={(text) => setUsername(text)}
-              value=""
+              onChangeText={(text) => setEmail(text)}
+              value={email}
               placeholder="Email"
               placeholderTextColor="#000"
             />
@@ -112,13 +109,6 @@ export default (params) => {
             <Text style={styles.text} onPress={params.handleSwitch}>
               Have An Account?
             </Text>
-            <Pressable
-              onPress={() => {
-                console.log("hi");
-              }}
-            >
-              <Text style={styles.text}>Forgot Password?</Text>
-            </Pressable>
           </View>
         </View>
       </View>

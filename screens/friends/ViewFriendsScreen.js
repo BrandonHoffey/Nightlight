@@ -54,10 +54,8 @@ const ViewFriendsScreen = () => {
         />
       ))}
     </View>
-
   );
 };
 
 export default ViewFriendsScreen;
-
 const styles = StyleSheet.create({});

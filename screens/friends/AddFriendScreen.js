@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useRef } from 'react';
 import {
   SafeAreaView,
@@ -13,7 +14,6 @@ import {
 } from 'react-native';
 import { API_VIEW_ALL_USERS } from '../../constants/Endpoints';
 
-
 const UserItem = ({ user, onPress, onLayout }) => (
   <TouchableOpacity onPress={() => onPress(user)} onLayout={onLayout}>
     <View style={styles.item}>
@@ -23,7 +23,6 @@ const UserItem = ({ user, onPress, onLayout }) => (
           <Text style={styles.title}>{user.username}</Text>
         </View>
       </View>
-
     </View>
   </TouchableOpacity>
 );
@@ -93,12 +92,9 @@ const AddFriend = (props) => {
     fetchUserList();
   }, []);
 
-
   return (
     <SafeAreaView style={styles.container}>
-
       <h1 style={styles.h1}>Online Users</h1>
-
       <FlatList
         ref={flatListRef}
         data={userItems}
@@ -147,19 +143,19 @@ const styles = StyleSheet.create({
     marginTop: StatusBar.currentHeight || 0,
   },
   item: {
-    backgroundColor: '#009d94',
+    backgroundColor: "#009d94",
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,
   },
   title: {
-    color: 'white',
+    color: "white",
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   subtitle: {
     fontSize: 16,
-    color: 'gray',
+    color: "gray",
   },
   profilePicture: {
     width: 50,
@@ -168,7 +164,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   h1: {
-    color: '#c5b358',
+    color: "#c5b358",
   },
   centeredView: {
     position: 'absolute',

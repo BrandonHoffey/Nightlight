@@ -1,11 +1,10 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import MessageScreen from "./screens/messages/MessageScreen";
 import Colors from "./Colors";
-
 import { Groups } from "./screens/groups/GroupsScreen";
 import { Auth } from "./screens/auth/AuthScreen";
-
 import FriendScreen from "./screens/friends/FriendScreen";
 import { NavigationContainer } from '@react-navigation/native';
 import StackNavigator from "./StackNavigator";
@@ -18,9 +17,7 @@ export default function App() {
         <StackNavigator/>
       </UserContext>
     </>
-    
   );
-
 }
 
 const styles = StyleSheet.create({
