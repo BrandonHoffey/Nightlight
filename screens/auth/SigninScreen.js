@@ -36,7 +36,7 @@ export default (params) => {
       const response = await fetch(API_USER_SIGN_IN, requestOption);
       if (response.ok) {
         const data = await response.json();
-        navigation.navigate("Friend");
+        navigation.navigate("Home");
         Alert.alert(data.message);
       } else if (response.status === 401) {
         Alert.alert("Incorrect username or password. Please try again.");
