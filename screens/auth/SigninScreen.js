@@ -9,16 +9,15 @@ import {
   Modal,
   Alert,
 } from "react-native";
-// import logo from "../../assets/logo-nightlight.png";
-// import logo from "../../assets/logo-nightlight1.png";
-// import logo from "../../assets/logo-nightlight2.png";
-// import logo from "../../assets/logo-nightlight3.png";
+
 import { API_USER_SIGN_IN } from "../../constants/Endpoints";
 import Colors from "../../Colors";
+import { useNavigation } from "@react-navigation/native";
 
 export default (params) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigation = useNavigation();
 
   const handleSubmit = async () => {
     try {
@@ -37,6 +36,7 @@ export default (params) => {
       const response = await fetch(API_USER_SIGN_IN, requestOption);
       if (response.ok) {
         const data = await response.json();
+        navigation.navigate("Friend");
         Alert.alert(data.message);
       } else if (response.status === 401) {
         Alert.alert("Incorrect username or password. Please try again.");
@@ -48,6 +48,8 @@ export default (params) => {
       console.error(error);
       Alert.alert("An error occurred. Please try again later.");
     }
+
+    
   };
   return (
     <View style={styles.screenContainer}>

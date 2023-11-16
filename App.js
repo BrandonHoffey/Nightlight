@@ -14,7 +14,7 @@ export default function App() {
   return (
     <>
       <UserContext>
-        <StackNavigator/>
+        <StackNavigator style={styles.StyleSheet}/>
       </UserContext>
     </>
   );
