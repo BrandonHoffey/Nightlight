@@ -1,11 +1,11 @@
 import { StyleSheet, Text, View, Pressable, Image } from "react-native";
-import Reac, { useContext } from "react";
-import { UserType } from "../../../UserContext";
+import React, { useContext } from "react";
+import { UserContext } from "../../../UserContext";
 import { useNavigation } from "@react-navigation/core";
 import { API_FRIEND_REQUEST_ACCEPT } from "../../../constants/Endpoints";
 
 const FriendRequest = ({ item, FriendRequests, setFriendRequests }) => {
-  const { userId, setUserId } = useContext(UserType);
+  const { userId, setUserId } = useContext(UserContext);
   const navigation = useNavigation();
 
   const acceptRequest = async (friendRequestId) => {

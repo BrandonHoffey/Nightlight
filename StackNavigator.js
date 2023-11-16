@@ -1,4 +1,3 @@
-
 import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
@@ -21,7 +20,6 @@ const Stack = createNativeStackNavigator();
 
 const StackNavigator = () => {
   return (
-    <NavigationContainer>
       <Stack.Navigator
         screenOptions={({ navigation }) => ({
           headerStyle: {
@@ -30,18 +28,16 @@ const StackNavigator = () => {
           headerTintColor: "white",
         })}
       >
-
         
         <Stack.Screen
           name="Authorization"
           component={Auth}
-          options={{ headerShown: true }}
+          options={{ headerShown: false}}
         />
         <Stack.Screen
           name="Home"
           component={HomeScreen}
           options={{headerShown:true}}
-
         />
         <Stack.Screen
           name="Group Chats"
@@ -69,11 +65,9 @@ const StackNavigator = () => {
           options={{ headerShown: true }}
         />
       </Stack.Navigator>
-    </NavigationContainer>
   );
 };
 
 export default StackNavigator;
 
 const styles = StyleSheet.create({});
-

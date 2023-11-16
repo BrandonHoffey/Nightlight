@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,12 +9,13 @@ import {
   Modal,
   Alert,
 } from "react-native";
-
+import { UserContext } from "../../UserContext";
 import { API_USER_SIGN_IN } from "../../constants/Endpoints";
 import Colors from "../../Colors";
 import { useNavigation } from "@react-navigation/native";
 
 export default (params) => {
+  const {login} = useContext(UserContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
@@ -36,6 +37,8 @@ export default (params) => {
       const response = await fetch(API_USER_SIGN_IN, requestOption);
       if (response.ok) {
         const data = await response.json();
+
+        login(data.token, data.signedInAccount._id);
         navigation.navigate("Home");
         Alert.alert(data.message);
         setUsername("");

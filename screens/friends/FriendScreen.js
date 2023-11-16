@@ -9,14 +9,14 @@ import React, {
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import { UserType } from "../../UserContext";
+import { UserContext } from "../../UserContext";
 import { API_VIEW_ALL_USERS } from "../../constants/Endpoints";
 import User from "./components/User";
 import LogoutButton from "../../ui/LogoutButton";
 
 const FriendScreen = () => {
   const navigation = useNavigation();
-  const { userId, setUserId } = useContext(UserType);
+  const { userId, setUserId } = useContext(UserContext);
   const [users, setUsers] = useState([]);
   const [userItems, setUserItems] = useState([]);
 
