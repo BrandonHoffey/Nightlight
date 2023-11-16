@@ -11,7 +11,7 @@ import {
 import GetAllUsers from "./AllUsersGroupScreen";
 import Colors from "../../Colors";
 
-export default GroupCreateAddInput = (props) => {
+const GroupCreateAddInput = (props) => {
   const [showInput, setShowInput] = useState(false);
   const [inputValue, setInputValue] = useState("");
   async function handleButtonClick() {
@@ -107,3 +107,5 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
 });
+
+export default GroupCreateAddInput;

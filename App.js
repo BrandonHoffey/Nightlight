@@ -5,34 +5,30 @@ import Colors from "./Colors";
 
 import { Groups } from "./screens/groups/GroupsScreen";
 import { Auth } from "./screens/auth/AuthScreen";
-import { Friend } from "./screens/friends/FriendScreen";
-import { NavigationContainer } from "@react-navigation/native";
+
+import FriendScreen from "./screens/friends/FriendScreen";
+import { NavigationContainer } from '@react-navigation/native';
 import StackNavigator from "./StackNavigator";
+import { UserContext } from "./UserContext";
 
 export default function App() {
-  return <StackNavigator />;
-  // return (
-  //   // <NavigationContainer>
-  //   // <View style={styles.container}>
-  //     {/* <View style={styles.textRow}>
-  //       <Text style={styles.textContainerNight}>Night</Text>
-  //       <Text style={styles.textContainerLight}>Light</Text>
-  //     </View> */}
+  return (
+    <>
+      <UserContext>
+        <StackNavigator/>
+      </UserContext>
+    </>
+    
+  );
 
-  //     {/* <Auth /> */}
-  //     {/* <Groups /> */}
-  //     {/* <Friend /> */}
-  //     <StatusBar style="auto" />
-  //     </>
-  //   // </View>
-  //   // {/* </NavigationContainer> */}
-  // );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+
     backgroundColor: Colors.darkBlue,
+
     alignItems: "center",
     justifyContent: "center",
   },

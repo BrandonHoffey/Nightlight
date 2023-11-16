@@ -1,8 +1,11 @@
-import * as React from "react";
-import { View, Text } from "react-native";
+
+import React from "react";
+import { View, Text, StyleSheet, } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Groups } from "./screens/groups/GroupsScreen";
+import FriendScreen from "./screens/friends/FriendScreen";
+import ViewFriendsScreen from "./screens/friends/ViewFriendsScreen";
 import ViewGroupsScreen from "./screens/groups/ViewGroupsScreen";
 import Colors from "./Colors";
 import CreateGroupScreen from "./screens/groups/CreateGroupScreen";
@@ -35,9 +38,22 @@ const StackNavigator = () => {
           component={CreateGroupScreen}
           options={{headerShown: true}}
         />
+        <Stack.Screen
+          name="Friend"
+          component={FriendScreen}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
+          name="ViewFriends"
+          component={ViewFriendsScreen}
+          options={{ headerShown: true }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
 
 export default StackNavigator;
+
+const styles = StyleSheet.create({});
+
