@@ -20,8 +20,8 @@ const UserItem = ({ user, onPress }) => (
     <View style={styles.item}>
       <Image source={{ uri: user.profilePicture }} style={styles.profilePicture} />
       <Text style={styles.title}>{user.username}</Text>
-      {/* <Text style={styles.subtitle}>{user.displayName}</Text> */}
-      {/* <Text style={styles.subtitle}>{user.email}</Text> */}
+      <Text style={styles.subtitle}>{user.displayName}</Text>
+      <Text style={styles.subtitle}>{user.email}</Text>
     </View>
   </TouchableOpacity>
 );
@@ -53,7 +53,7 @@ const AddFriend = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <h1 style={styles.h1}>All Users</h1>
+      <Text style={styles.text}>All Users</Text>
       <FlatList
         data={userItems}
         renderItem={({item}) => <UserItem user={item} />}

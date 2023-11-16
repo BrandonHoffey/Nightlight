@@ -12,7 +12,7 @@ import {
 function ViewFriendsScreen(props) {
   return (
     <>
-        <h1 style={styles.h1}>Your Friends</h1>
+        <Text style={styles.text}>Your Friends</Text>
     </>
   );
 }
