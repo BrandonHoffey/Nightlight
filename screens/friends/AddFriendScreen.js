@@ -23,6 +23,7 @@ const UserItem = ({ user, onPress, onLayout }) => (
           <Text style={styles.title}>{user.username}</Text>
         </View>
       </View>
+
     </View>
   </TouchableOpacity>
 );
@@ -95,7 +96,9 @@ const AddFriend = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
+
       <h1 style={styles.h1}>Online Users</h1>
+
       <FlatList
         ref={flatListRef}
         data={userItems}

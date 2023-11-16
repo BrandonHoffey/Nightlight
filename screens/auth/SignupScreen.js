@@ -9,8 +9,12 @@ import {
   Modal,
   Alert,
 } from "react-native";
-import logo from "../../assets/logo-nightlight.png";
+// import logo from "../../assets/logo-nightlight.png";
+// import logo from "../../assets/logo-nightlight1.png";
+// import logo from "../../assets/logo-nightlight2.png";
+// import logo from "../../assets/logo-nightlight3.png";
 import { API_USER_SIGN_IN } from "../../constants/Endpoints";
+import Colors from "../../Colors";
 
 export default (params) => {
   const [username, setUsername] = useState("");
@@ -49,7 +53,7 @@ export default (params) => {
     <View style={styles.screenContainer}>
       <View style={styles.imageContainer}>
         <Image
-          source={logo}
+          // source={logo}
           style={{
             flex: 1,
             maxHeight: 150,
@@ -126,7 +130,7 @@ const styles = StyleSheet.create({
   screenContainer: {
     height: "100%",
     width: "100%",
-    backgroundColor: "#011c40",
+    // backgroundColor: "#011c40",
   },
   inputContainer: {
     backgroundColor: "#011c40",

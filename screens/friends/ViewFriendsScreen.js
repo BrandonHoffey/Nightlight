@@ -41,6 +41,7 @@ const ViewFriendsScreen = () => {
   }, []);
 
   return (
+
     <View style={{ padding: 10, marginHorizontal: 12 }}>
       {friendRequests.length > 0 && <Text>Your Friend Requests</Text>}
 
@@ -53,6 +54,7 @@ const ViewFriendsScreen = () => {
         />
       ))}
     </View>
+
   );
 };
 
