@@ -37,8 +37,10 @@ export default (params) => {
       const response = await fetch(API_USER_SIGN_IN, requestOption);
       if (response.ok) {
         const data = await response.json();
+
         login(data.token, data.signedInAccount._id);
-        navigation.navigate("Friend");
+        navigation.navigate("Home");
+
         Alert.alert(data.message);
         // setUsername("");
         // setPassword("");

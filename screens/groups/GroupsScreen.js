@@ -12,13 +12,11 @@ import {
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 
-
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import StackNavigator from "../../StackNavigator";
+import { useNavigation } from "@react-navigation/native";
 import Colors from "../../Colors";
 
-export const Groups = ({ navigation }) => {
+export const Groups = () => {
+  const navigation = useNavigation();
   const pressHandlerView = () => {
     navigation.navigate("View Groups");
   };
