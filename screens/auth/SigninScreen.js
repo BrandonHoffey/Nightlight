@@ -9,8 +9,12 @@ import {
   Modal,
   Alert,
 } from "react-native";
-import logo from "../../assets/logo-nightlight.png";
+// import logo from "../../assets/logo-nightlight.png";
+// import logo from "../../assets/logo-nightlight1.png";
+// import logo from "../../assets/logo-nightlight2.png";
+// import logo from "../../assets/logo-nightlight3.png";
 import { API_USER_SIGN_IN } from "../../constants/Endpoints";
+import Colors from "../../Colors";
 
 export default (params) => {
   const [username, setUsername] = useState("");
@@ -49,7 +53,7 @@ export default (params) => {
     <View style={styles.screenContainer}>
       <View style={styles.imageContainer}>
         <Image
-          source={logo}
+          // source={logo}
           style={{
             flex: 1,
             maxHeight: 150,
@@ -85,13 +89,23 @@ export default (params) => {
             <Pressable
               style={({ pressed }) => [
                 {
-                  backgroundColor: pressed ? "#b1a14f" : "#c5b358",
+                  backgroundColor: pressed ? Colors.lightGreen : Colors.lightBlue,
+                  // backgroundColor: pressed ? "#24A49C" : "#05002B",
                 },
                 styles.submit,
               ]}
               onPress={handleSubmit}
             >
-              <Text>Sign In</Text>
+              <Text
+                style={{
+                  // color: "#05002B",
+                  color: Colors.white,
+                  // fontWeight: "bold",
+                  fontSize: 16,
+                }}
+              >
+                Sign In
+              </Text>
             </Pressable>
           </View>
           <View style={styles.controlContainer}>
@@ -116,10 +130,11 @@ const styles = StyleSheet.create({
   screenContainer: {
     height: "100%",
     width: "100%",
-    backgroundColor: "#011c40",
+    // backgroundColor: "#35478C",
+    // backgroundColor: "#0A3C41",
   },
   inputContainer: {
-    backgroundColor: "#011c40",
+    // backgroundColor: "#011c40",
     gap: 20,
   },
   input: {

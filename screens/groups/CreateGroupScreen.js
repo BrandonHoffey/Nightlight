@@ -9,8 +9,9 @@ import {
   StyleSheet,
 } from "react-native";
 import GetAllUsers from "./AllUsersGroupScreen";
+import Colors from "../../Colors";
 
-export default GroupCreateAddInput = (props) => {
+const GroupCreateAddInput = (props) => {
   const [showInput, setShowInput] = useState(false);
   const [inputValue, setInputValue] = useState("");
   async function handleButtonClick() {
@@ -49,7 +50,7 @@ export default GroupCreateAddInput = (props) => {
         onPress={() => setShowInput(true)}
       >
         <Button
-          color="rgb(4, 117, 111)"
+          color={Colors.lightBlue}
           title="Create Group"
           onPress={() => setShowInput(true)}
         />
@@ -69,7 +70,7 @@ export default GroupCreateAddInput = (props) => {
             onPress={handleButtonClick}
           >
             <Button
-              color="rgb(4, 117, 111)"
+              color={Colors.lightGreen}
               title="Save"
               onPress={handleButtonClick}
             />
@@ -82,6 +83,7 @@ export default GroupCreateAddInput = (props) => {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: Colors.darkBlue,
     flex: 1,
   },
   buttonContainer: {
@@ -96,7 +98,7 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: "white",
     height: 40,
-    borderColor: "rgb(10, 60, 65)",
+    borderColor: Colors.darkGreen,
     borderWidth: 1,
     marginBottom: 10,
     paddingHorizontal: 10,
@@ -105,3 +107,5 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
 });
+
+export default GroupCreateAddInput;
