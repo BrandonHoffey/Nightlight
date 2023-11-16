@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Groups } from "./screens/groups/GroupsScreen";
+import { Auth } from "./screens/auth/AuthScreen";
 import FriendScreen from "./screens/friends/FriendScreen";
 import ViewFriendsScreen from "./screens/friends/ViewFriendsScreen";
 import ViewGroupsScreen from "./screens/groups/ViewGroupsScreen";
@@ -23,6 +24,11 @@ const StackNavigator = () => {
         headerTintColor:"white"
       })}
       >
+        <Stack.Screen 
+          name="Authorization"
+          component={Auth}
+          options={{ headerShown: true}}
+        />
         <Stack.Screen
           name="Group Chats"
           component={Groups}

@@ -11,11 +11,14 @@ import {
 } from "react-native";
 import { API_USER_SIGN_IN } from "../../constants/Endpoints";
 import Colors from "../../Colors";
+import { useNavigation } from "@react-navigation/native";
 
 export default (params) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigation = useNavigation;
 
   const handleSubmit = async () => {
     try {
@@ -34,6 +37,7 @@ export default (params) => {
       const response = await fetch(API_USER_SIGN_UP, requestOption);
       if (response.ok) {
         const data = await response.json();
+        navigation.navigate("Friend")
         Alert.alert(data.message);
       } else if (response.status === 422) {
         Alert.alert("Missing fields. Please try again.");
