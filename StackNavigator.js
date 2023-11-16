@@ -10,7 +10,6 @@ import ViewFriendsScreen from "./screens/friends/ViewFriendsScreen";
 import ViewGroupsScreen from "./screens/groups/ViewGroupsScreen";
 import Colors from "./Colors";
 import CreateGroupScreen from "./screens/groups/CreateGroupScreen";
-import { Auth } from "./screens/auth/AuthScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -29,11 +28,6 @@ const StackNavigator = () => {
           name="Authorization"
           component={Auth}
           options={{ headerShown: true}}
-        />
-        <Stack.Screen
-          name="Authorization"
-          component={Auth}
-          options={{headerShown: true}}
         />
         <Stack.Screen
           name="Group Chats"
