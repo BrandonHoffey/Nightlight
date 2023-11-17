@@ -9,6 +9,7 @@ const FriendRequest = ({ item, FriendRequests, setFriendRequests }) => {
   const navigation = useNavigation();
 
   const acceptRequest = async (friendRequestId) => {
+    console.log("Accept button pressed for friendRequestId:", friendRequestId);
     try {
       const response = await fetch(API_FRIEND_REQUEST_ACCEPT, {
         method: "POST",
@@ -25,7 +26,9 @@ const FriendRequest = ({ item, FriendRequests, setFriendRequests }) => {
         setFriendRequests(
           FriendRequests.filter((request) => request._id !== friendRequestId)
         );
-        navigation.navigate("Friend");
+        console.log("Updated Friend Requests:", FriendRequests);
+        console.log("Accepting friend request for user:", userId, "from user:", friendRequestId);
+        // navigation.navigate("Community");
       }
     } catch (error) {
       console.log("error accepting the friend request", error);

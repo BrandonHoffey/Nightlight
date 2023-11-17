@@ -4,14 +4,15 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Groups } from "./screens/groups/GroupsScreen";
 import { Auth } from "./screens/auth/AuthScreen";
-import FriendScreen from "./screens/friends/FriendScreen";
-import ViewFriendsScreen from "./screens/friends/ViewFriendsScreen";
 import ViewGroupsScreen from "./screens/groups/ViewGroupsScreen";
 import Colors from "./Colors";
 import CreateGroupScreen from "./screens/groups/CreateGroupScreen";
 
 
 import {HomeScreen} from "./screens/home/HomeScreen";
+import CommunityScreen from "./screens/friends/CommunityScreen";
+import FriendRequestsScreen from "./screens/friends/FriendRequestsScreen";
+import FriendScreen from "./screens/friends/FriendsScreen";
 
 
 
@@ -55,14 +56,19 @@ const StackNavigator = () => {
           options={{ headerShown: true }}
         />
         <Stack.Screen
-          name="Friend"
-          component={FriendScreen}
+          name="FriendRequestsScreen"
+          component={FriendRequestsScreen}
           options={{ headerShown: true }}
         />
         <Stack.Screen
-          name="ViewFriends"
-          component={ViewFriendsScreen}
-          options={{ headerShown: true }}
+        name="Community"
+        component={CommunityScreen}
+        options={{ headerShown: true}}
+        />
+        <Stack.Screen
+        name="FriendScreen"
+        component={FriendScreen}
+        options={{headerShown: true}}
         />
       </Stack.Navigator>
   );

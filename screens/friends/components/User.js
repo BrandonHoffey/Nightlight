@@ -1,33 +1,59 @@
 import { StyleSheet, Text, View, Pressable, Image } from "react-native";
-import React, { useContext, useState } from "react";
-import { UserContext} from "../../../UserContext";
+import React, { useContext, useState, useEffect } from "react";
+import { UserContext } from "../../../UserContext";
+import { API_SEND_FRIEND_REQUEST } from "../../../constants/Endpoints";
+import Colors from "../../../Colors";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const User = ({ item }) => {
-  const { userId, setUserId } = useContext(UserContext);
+  const { userId, setUserId, token } = useContext(UserContext);
   const [requestSent, setRequestSent] = useState(false);
   const sendFriendRequest = async (currentUserId, selectedUserId) => {
     try {
-      const response = await fetch(
-        "https://c8e2-2601-282-4303-1fc0-c103-746f-c263-4be4.ngrok-free.app/friend/add",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ currentUserId, selectedUserId }),
-        }
-      );
+      const response = await fetch(API_SEND_FRIEND_REQUEST, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify({ currentUserId, selectedUserId }),
+      });
 
       if (response.ok) {
         setRequestSent(true);
+        await AsyncStorage.setItem(`friendRequest:${selectedUserId}`, 'sent');
+        console.log(
+          "Add Friend button pressed for user with ID:",
+          selectedUserId
+        );
+      } else {
+        console.log(
+          "Server returned an error:",
+          response.status,
+          response.statusText
+        );
       }
     } catch (error) {
       console.log("error message", error);
     }
   };
+
+  useEffect(() => {
+    const checkFriendRequestStatus = async () => {
+      const status = await AsyncStorage.getItem(`friendRequest:${item._id}`);
+      if (status === 'sent') {
+        setRequestSent(true);
+      }
+    };
+
+    checkFriendRequestStatus();
+  }, [item._id]);
+
+
   return (
     <Pressable
       style={{ flexDirection: "row", alignItems: "center", marginVertical: 10 }}
+      disabled={requestSent}
     >
       <View>
         <Image
@@ -46,16 +72,21 @@ const User = ({ item }) => {
       </View>
 
       <Pressable
-        onPress={() => sendFriendRequest(userId, item._id)}
+        onPress={() => {
+          if (!requestSent) {
+            sendFriendRequest(userId, item._id);
+          }
+        }}
         style={{
-          backgroundColor: "#567189",
+          backgroundColor: requestSent ? Colors.yellow : Colors.lightBlue,
           padding: 10,
           borderRadius: 6,
           width: 105,
         }}
+        disabled={requestSent}
       >
-        <Text style={{ textAlign: "center", color: "white", fontSize: 13 }}>
-          Add Friend
+        <Text style={{ textAlign: "center", color: requestSent ? "black" : "white", fontSize: 13 }}>
+          {requestSent ? "Pending" : "Add Friend"}
         </Text>
       </Pressable>
     </Pressable>
