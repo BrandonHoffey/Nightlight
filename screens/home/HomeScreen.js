@@ -11,13 +11,13 @@ const HomeScreen = () => {
     const navigation = useNavigation();
 
     const pressHandlerFriends = () => {
-      navigation.navigate("Friend");
+      navigation.navigate("FriendScreen");
     };
     const pressHandlerGroups = () => {
       navigation.navigate("Group Chats");
     };
     const pressHandlerCommunity = () => {
-      navigation.navigate("Authorization");
+      navigation.navigate("Community");
     };
 
 

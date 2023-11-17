@@ -14,9 +14,9 @@ import { API_VIEW_ALL_USERS } from "../../constants/Endpoints";
 import User from "./components/User";
 import LogoutButton from "../../ui/LogoutButton";
 
-const FriendScreen = () => {
+const CommunityScreen = () => {
   const navigation = useNavigation();
-  const { userId, setUserId } = useContext(UserContext);
+  const { userId, setUserId, token } = useContext(UserContext);
   const [users, setUsers] = useState([]);
   const [userItems, setUserItems] = useState([]);
 
@@ -32,7 +32,7 @@ const FriendScreen = () => {
         <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
           <AntDesign name="message1" size={24} color="black" />
           <Ionicons
-            onPress={() => navigation.navigate("ViewFriends")}
+            onPress={() => navigation.navigate("FriendRequestsScreen")}
             name="people-outline"
             size={24}
             color="black"
@@ -47,10 +47,7 @@ const FriendScreen = () => {
     const fetchUsers = async () => {
       try {
         const myHeaders = new Headers();
-        myHeaders.append(
-          "Authorization",
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTRlNDAyMjcwYjI2NDliY2NjODJmYiIsImlhdCI6MTcwMDA2NTgwNywiZXhwIjoxNzAwNjcwNjA3fQ.FRiNpxJMMN6BNYUwR_hX7XU8VD2C-YsVwUTtsaCErTc"
-        );
+        myHeaders.append("Authorization", token);
         myHeaders.append("ngrok-skip-browser-warning", "true");
         let requestOptions = {
           method: "GET",
@@ -59,14 +56,15 @@ const FriendScreen = () => {
         const response = await fetch(API_VIEW_ALL_USERS, requestOptions);
         const data = await response.json();
         console.log(data);
-        setUserItems(data.users);
+        const filteredUsers = data.users.filter((user) => user._id !== userId);
+        setUserItems(filteredUsers);
       } catch (error) {
         console.log(error);
       }
     };
 
     fetchUsers();
-  }, []);
+  }, [token]);
 
   return (
     <View>
@@ -79,6 +77,6 @@ const FriendScreen = () => {
   );
 };
 
-export default FriendScreen;
+export default CommunityScreen;
 
 const styles = StyleSheet.create({});
