@@ -23,7 +23,6 @@ const FriendRequestsScreen = () => {
         myHeaders.append("Authorization", token);
         myHeaders.append("ngrok-skip-browser-warning", "true");
 
-        // const userId = "6554e402270b2649bccc82fb";
         const apiUrl = `${API_FRIEND_REQUESTS}/${userId}`;
 
         const requestOptions = {
@@ -33,8 +32,17 @@ const FriendRequestsScreen = () => {
 
         const response = await fetch(apiUrl, requestOptions);
         const data = await response.json();
+        const uniqueUserIds = new Set();
+        const filteredFriendRequests = data.friendRequests.filter((request) => {
+          if (uniqueUserIds.has(request.senderId)) {
+            return false;
+          }
+          uniqueUserIds.add(request.senderId);
+          return true;
+        });
         console.log(data);
-        setFriendRequests(data.friendRequests);
+        setFriendRequests(filteredFriendRequests);
+
       } catch (error) {
         console.log("error message", error);
       }
