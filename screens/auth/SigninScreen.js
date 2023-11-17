@@ -15,7 +15,9 @@ import Colors from "../../Colors";
 import { useNavigation } from "@react-navigation/native";
 
 export default (params) => {
+
   const {login} = useContext(UserContext);
+
   const [username, setUsername] = useState("Neil");
   const [password, setPassword] = useState("test123");
   const navigation = useNavigation();
@@ -97,7 +99,7 @@ export default (params) => {
                   backgroundColor: pressed
                     ? Colors.lightGreen
                     : Colors.lightBlue,
-                  // backgroundColor: pressed ? "#24A49C" : "#05002B",
+                 
                 },
                 styles.submit,
               ]}

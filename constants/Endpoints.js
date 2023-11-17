@@ -20,3 +20,4 @@ export const API_FRIEND_REQUESTS =
 "https://f71a-2601-282-4303-1fc0-dda-500b-d99b-a63e.ngrok-free.app/friend/friend-requests";
 export const API_FRIEND_REQUEST_ACCEPT =
 "https://f71a-2601-282-4303-1fc0-dda-500b-d99b-a63e.ngrok-free.app/friend/friend-request/accept";
+

@@ -38,8 +38,11 @@ export default (params) => {
       const response = await fetch(API_USER_SIGN_UP, requestOption);
       if (response.ok) {
         const data = await response.json();
+
+        navigation.navigate("Home");
+
         login(data.token);
-        navigation.navigate("Friend");
+      
         Alert.alert(data.message);
       } else if (response.status === 422) {
         Alert.alert("Missing fields. Please try again.");

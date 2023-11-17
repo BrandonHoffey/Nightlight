@@ -17,7 +17,7 @@ const LogoutButton = () => {
     <MaterialCommunityIcons
       name="logout"
       size={24}
-      color="black"
+      color="white"
       onPress={handleLogout}
     />
   );
