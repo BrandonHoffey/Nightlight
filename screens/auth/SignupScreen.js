@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,11 +9,13 @@ import {
   Modal,
   Alert,
 } from "react-native";
+import { UserContext } from "../../UserContext";
 import { API_USER_SIGN_UP } from "../../constants/Endpoints";
 import Colors from "../../Colors";
 import { useNavigation } from "@react-navigation/native";
 
 export default (params) => {
+  const {login} = useContext(UserContext);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -36,7 +38,11 @@ export default (params) => {
       const response = await fetch(API_USER_SIGN_UP, requestOption);
       if (response.ok) {
         const data = await response.json();
+
         navigation.navigate("Home");
+
+        login(data.token);
+      
         Alert.alert(data.message);
       } else if (response.status === 422) {
         Alert.alert("Missing fields. Please try again.");

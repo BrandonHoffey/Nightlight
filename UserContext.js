@@ -1,14 +1,30 @@
 import React, { createContext, useState } from "react";
 
-const UserType = createContext();
+const UserContext = createContext();
 
-const UserContext = ({ children }) => {
+const UserProvider = ({ children }) => {
   const [userId, setUserId] = useState("");
+  const [token, setToken] = useState(null);
+
+  const login = (userToken, userUserId) => {
+    if (userToken && userUserId) {
+      setToken(userToken);
+      setUserId(userUserId);
+  } else {
+    console.error("Invalid token or userId");
+  }
+};
+
+  const logout = () => {
+    setUserId("");
+    setToken("");
+  };
+
   return (
-    <UserType.Provider value={{ userId, setUserId }}>
+    <UserContext.Provider value={{ userId, setUserId, token, login, logout }}>
       {children}
-    </UserType.Provider>
+    </UserContext.Provider>
   );
 };
 
-export { UserType, UserContext };
+export { UserContext, UserProvider };

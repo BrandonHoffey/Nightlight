@@ -20,15 +20,15 @@ import logo from "../../assets/NightLight-GCfont1.png";
 const HomeScreen = () => {
   const navigation = useNavigation();
 
-  const pressHandlerFriends = () => {
-    navigation.navigate("Friend");
-  };
-  const pressHandlerGroups = () => {
-    navigation.navigate("Group Chats");
-  };
-  const pressHandlerCommunity = () => {
-    navigation.navigate("Authorization");
-  };
+ const pressHandlerFriends = () => {
+      navigation.navigate("FriendScreen");
+    };
+    const pressHandlerGroups = () => {
+      navigation.navigate("Group Chats");
+    };
+    const pressHandlerCommunity = () => {
+      navigation.navigate("Community");
+    };
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -52,7 +52,6 @@ const HomeScreen = () => {
       ),
     });
   }, []);
-
 
   return (
     <>

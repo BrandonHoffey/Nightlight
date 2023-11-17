@@ -1,14 +1,15 @@
 import React, { useContext } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { UserType } from "../UserContext";
+import { UserContext } from "../UserContext";
 
 const LogoutButton = () => {
   const navigation = useNavigation();
-  const { setUserId } = useContext(UserType);
+  const {logout, setUserId} = useContext(UserContext);
 
   const handleLogout = () => {
     setUserId(null);
+    logout();
     navigation.navigate("Authorization");
   };
 
