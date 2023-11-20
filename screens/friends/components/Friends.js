@@ -1,6 +1,8 @@
-import { StyleSheet, Text, View, Image, Pressable } from "react-native";
+import { StyleSheet, Text, View, Image, Pressable, PixelRatio } from "react-native";
 import React, { useContext } from "react";
 import { UserContext } from "../../../UserContext";
+const fontScale = PixelRatio.getFontScale();
+const getFontSize = (size) => size / fontScale;
 
 const Friend = ({ item }) => {
   console.log(item);
@@ -23,7 +25,7 @@ const Friend = ({ item }) => {
       </View>
 
       <View style={{ marginLeft: 12, flex: 1 }}>
-        <Text style={{ fontWeight: "bold" }}>{item?.username}</Text>
+        <Text style={{ fontSize:getFontSize(16), color:"white",fontWeight: "bold" }}>{item?.username}</Text>
       </View>
       </Pressable>
   );

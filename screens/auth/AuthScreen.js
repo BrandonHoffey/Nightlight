@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, SafeAreaView } from "react-native";
 import SignupScreen from "./SignupScreen";
 import SigninScreen from "./SigninScreen";
 import Colors from "../../Colors";
@@ -14,28 +14,32 @@ export const Auth = (params) => {
   };
 
   return (
-    
-    <View style={styles.screenContainer}>
-      <Image style={styles.logoContainer}source={logo} />
-      {signinVisible ? (
-        <SigninScreen handleSwitch={handleSwitch} />
-      ) : (
-        <SignupScreen handleSwitch={handleSwitch} />
-      )}
-    </View>
+    <SafeAreaView>
+      <View style={styles.screenContainer}>
+        <Image style={styles.logoContainer} source={logo} />
+        {signinVisible ? (
+          <SigninScreen handleSwitch={handleSwitch} />
+        ) : (
+          <SignupScreen handleSwitch={handleSwitch} />
+        )}
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   screenContainer: {
     backgroundColor: Colors.darkBlue,
-    // borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
     height: "100%",
     width: "100%",
+    // marginBottom:"10%"
   },
-  logoContainer:{
-    marginTop:150,
-  }
+  logoContainer: {
+    resizeMode: "contain",
+    width: "80%",
+    height: "80%",
+    marginTop: "100%",
+  },
 });

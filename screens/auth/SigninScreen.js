@@ -5,21 +5,25 @@ import {
   View,
   TextInput,
   Pressable,
-  Image,
+  SafeAreaView,
   Modal,
   Alert,
+  PixelRatio,
 } from "react-native";
 import { UserContext } from "../../UserContext";
 import { API_USER_SIGN_IN } from "../../constants/Endpoints";
 import Colors from "../../Colors";
 import { useNavigation } from "@react-navigation/native";
 
+
+const fontScale = PixelRatio.getFontScale();
+const getFontSize = (size) => size / fontScale;
+
 export default (params) => {
+  const { login } = useContext(UserContext);
 
-  const {login} = useContext(UserContext);
-
-  const [username, setUsername] = useState("Neil");
-  const [password, setPassword] = useState("test123");
+  const [username, setUsername] = useState("neil");
+  const [password, setPassword] = useState("Test123");
   const navigation = useNavigation();
 
   const handleSubmit = async () => {
@@ -57,81 +61,71 @@ export default (params) => {
     }
   };
   return (
-    <View style={styles.screenContainer}>
-      <View style={styles.imageContainer}>
-        <Image
-          // source={logo}
-          style={{
-            flex: 1,
-            maxHeight: 150,
-            width: "100%",
-            resizeMode: "contain",
-          }}
-        />
-      </View>
-      <View style={styles.signinContainer}>
-        <View style={styles.inputContainer}>
-          <View>
-            <TextInput
-              textContentType="emailAddress"
-              style={styles.input}
-              onChangeText={(text) => setUsername(text)}
-              value={username}
-              placeholder="Username or Email"
-              placeholderTextColor="#000"
-            />
-          </View>
-          <View>
-            <TextInput
-              secureTextEntry={true}
-              textContentType="password"
-              style={styles.input}
-              onChangeText={(text) => setPassword(text)}
-              value={password}
-              placeholder="Password"
-              placeholderTextColor="#000"
-            />
-          </View>
-          <View>
-            <Pressable
-              style={({ pressed }) => [
-                {
-                  backgroundColor: pressed
-                    ? Colors.lightGreen
-                    : Colors.lightBlue,
-                 
-                },
-                styles.submit,
-              ]}
-              onPress={handleSubmit}
-            >
-              <Text
-                style={{
-                  // color: "#05002B",
-                  color: Colors.white,
-                  // fontWeight: "bold",
-                  fontSize: 16,
+    <SafeAreaView>
+      <View style={styles.screenContainer}>
+        <View style={styles.imageContainer}></View>
+        <View style={styles.signinContainer}>
+          <View style={styles.inputContainer}>
+            <View>
+              <TextInput
+                textContentType="emailAddress"
+                style={styles.input}
+                onChangeText={(text) => setUsername(text)}
+                value={username}
+                placeholder="Username or Email"
+                placeholderTextColor="#000"
+              />
+            </View>
+            <View>
+              <TextInput
+                secureTextEntry={true}
+                textContentType="password"
+                style={styles.input}
+                onChangeText={(text) => setPassword(text)}
+                value={password}
+                placeholder="Password"
+                placeholderTextColor="#000"
+              />
+            </View>
+            <View>
+              <Pressable
+                style={({ pressed }) => [
+                  {
+                    backgroundColor: pressed
+                      ? Colors.lightGreen
+                      : Colors.lightBlue,
+                  },
+                  styles.submit,
+                ]}
+                onPress={handleSubmit}
+              >
+                <Text
+                  style={{
+                    color: Colors.white,
+                    // fontWeight: "bold",
+                    fontSize: getFontSize(16),
+                  }}
+                >
+                  Sign In
+                </Text>
+              </Pressable>
+            </View>
+            <View style={styles.controlContainer}>
+              <Text style={styles.text} onPress={params.handleSwitch}>
+                Create Account
+              </Text>
+              <Pressable
+                onPress={() => {
+                  console.log("hi");
                 }}
               >
-                Sign In
-              </Text>
-            </Pressable>
-          </View>
-          <View style={styles.controlContainer}>
-            <Text style={styles.text} onPress={params.handleSwitch}>
-              Create Account
-            </Text>
-            <Pressable
-              onPress={() => {
-                console.log("hi");
-              }}
-            >
-              <Text style={styles.text}>Forgot Password?</Text>
-            </Pressable>
+                <Text style={styles.text}>Forgot Password?</Text>
+              </Pressable>
+            </View>
           </View>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -139,29 +133,28 @@ const styles = StyleSheet.create({
   screenContainer: {
     height: "100%",
     width: "100%",
-    // backgroundColor: "#35478C",
-    // backgroundColor: "#0A3C41",
+    marginBottom: "40%",
   },
   inputContainer: {
-    // backgroundColor: "#011c40",
     gap: 20,
   },
   input: {
     height: 40,
     padding: 10,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.white,
     borderRadius: 20,
   },
   text: {
     color: "white",
+    padding:20,
   },
   controlContainer: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "center",
+    width: "100%",
+    alignItems: "center",
   },
-  imageContainer: {
-    flex: 1,
-  },
+
   signinContainer: {
     flex: 3,
   },

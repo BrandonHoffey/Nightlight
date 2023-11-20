@@ -5,17 +5,21 @@ import {
   View,
   TextInput,
   Pressable,
-  Image,
   Modal,
   Alert,
+  PixelRatio,
+  SafeAreaView,
 } from "react-native";
 import { UserContext } from "../../UserContext";
 import { API_USER_SIGN_UP } from "../../constants/Endpoints";
 import Colors from "../../Colors";
 import { useNavigation } from "@react-navigation/native";
 
+const fontScale = PixelRatio.getFontScale();
+const getFontSize = (size) => size / fontScale;
+
 export default (params) => {
-  const {login} = useContext(UserContext);
+  const { login } = useContext(UserContext);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -42,7 +46,7 @@ export default (params) => {
         navigation.navigate("Home");
 
         login(data.token);
-      
+
         Alert.alert(data.message);
       } else if (response.status === 422) {
         Alert.alert("Missing fields. Please try again.");
@@ -56,72 +60,66 @@ export default (params) => {
     }
   };
   return (
-    <View style={styles.screenContainer}>
-      <View style={styles.imageContainer}>
-        <Image
-          // source={logo}
-          style={{
-            flex: 1,
-            maxHeight: 150,
-            width: "100%",
-            resizeMode: "contain",
-          }}
-        />
-      </View>
-      <View style={styles.signinContainer}>
-        <View style={styles.inputContainer}>
-          <View>
-            <TextInput
-              textContentType="name"
-              style={styles.input}
-              onChangeText={(text) => setUsername(text)}
-              value={username}
-              placeholder="Username"
-              placeholderTextColor="#000"
-            />
-          </View>
-          <View>
-            <TextInput
-              textContentType="emailAddress"
-              style={styles.input}
-              onChangeText={(text) => setEmail(text)}
-              value={email}
-              placeholder="Email"
-              placeholderTextColor="#000"
-            />
-          </View>
-          <View>
-            <TextInput
-              secureTextEntry={true}
-              textContentType="password"
-              style={styles.input}
-              onChangeText={(text) => setPassword(text)}
-              value={password}
-              placeholder="Password"
-              placeholderTextColor="#000"
-            />
-          </View>
-          <View>
-            <Pressable
-              style={({ pressed }) => [
-                {
-                  backgroundColor: pressed ? "#b1a14f" : "#c5b358",
-                },
-                styles.submit,
-              ]}
-              onPress={handleSubmit}
-            >
-              <Text>Sign Up</Text>
-            </Pressable>
-          </View>
-          <View style={styles.controlContainer}>
-            <Text style={styles.text} onPress={params.handleSwitch}>
-              Have An Account?
-            </Text>
+    <SafeAreaView>
+      <View style={styles.screenContainer}>
+        <View style={styles.imageContainer}></View>
+        <View style={styles.signinContainer}>
+          <View style={styles.inputContainer}>
+            <View>
+              <TextInput
+                textContentType="name"
+                style={styles.input}
+                onChangeText={(text) => setUsername(text)}
+                value={username}
+                placeholder="Username"
+                placeholderTextColor="#000"
+              />
+            </View>
+            <View>
+              <TextInput
+                textContentType="emailAddress"
+                style={styles.input}
+                onChangeText={(text) => setEmail(text)}
+                value={email}
+                placeholder="Email"
+                placeholderTextColor="#000"
+              />
+            </View>
+            <View>
+              <TextInput
+                secureTextEntry={true}
+                textContentType="password"
+                style={styles.input}
+                onChangeText={(text) => setPassword(text)}
+                value={password}
+                placeholder="Password"
+                placeholderTextColor="#000"
+              />
+            </View>
+            <View>
+              <Pressable
+                style={({ pressed }) => [
+                  {
+                    backgroundColor: pressed
+                      ? Colors.lightGreen
+                      : Colors.lightBlue,
+                  },
+                  styles.submit,
+                ]}
+                onPress={handleSubmit}
+              >
+                <Text style={{ color: Colors.white }}>Sign Up</Text>
+              </Pressable>
+            </View>
+            <View style={styles.controlContainer}>
+              <Text style={styles.text} onPress={params.handleSwitch}>
+                Have An Account?
+              </Text>
+            </View>
           </View>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -129,16 +127,15 @@ const styles = StyleSheet.create({
   screenContainer: {
     height: "100%",
     width: "100%",
-    // backgroundColor: "#011c40",
+    marginBottom: "40%",
   },
   inputContainer: {
-    backgroundColor: "#011c40",
     gap: 20,
   },
   input: {
     height: 40,
     padding: 10,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.white,
     borderRadius: 20,
   },
   text: {
@@ -146,11 +143,11 @@ const styles = StyleSheet.create({
   },
   controlContainer: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "center",
+    width: "100%",
+    alignItems: "center",
   },
-  imageContainer: {
-    flex: 1,
-  },
+
   signinContainer: {
     flex: 3,
   },
