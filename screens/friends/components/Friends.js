@@ -5,7 +5,6 @@ const fontScale = PixelRatio.getFontScale();
 const getFontSize = (size) => size / fontScale;
 
 const Friend = ({ item }) => {
-  console.log(item);
   const { userId, setUserId } = useContext(UserContext);
 
   return (

@@ -62,7 +62,6 @@ const CommunityScreen = () => {
         };
         const response = await fetch(API_VIEW_ALL_USERS, requestOptions);
         const data = await response.json();
-        console.log(data);
         const filteredUsers = data.users.filter((user) => user._id !== userId);
         setUserItems(filteredUsers);
       } catch (error) {
@@ -71,7 +70,7 @@ const CommunityScreen = () => {
     };
 
     fetchUsers();
-  }, [token]);
+  }, [token, userId]);
 
   return (
     <SafeAreaView>

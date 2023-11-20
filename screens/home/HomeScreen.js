@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from "react";
+import React, { useContext, useLayoutEffect } from "react";
 
 import {
   View,
@@ -16,6 +16,8 @@ import { Ionicons } from "@expo/vector-icons";
 import LogoutButton from "../../ui/LogoutButton";
 // import logo from "../../assets/NightLight-BeamFont.png";
 import logo from "../../assets/NightLight-GCfont1.png";
+import { UserContext } from "../../UserContext";
+
 // import bgStars from "../../assets/Texture-Stars75Op.png";
 // import bgStars from "../../assets/Texture-Stars90oP.png";
 import bgStars from "../../assets/stars-backgroundRS.png";
@@ -23,8 +25,10 @@ import bgStars from "../../assets/stars-backgroundRS.png";
 const fontScale = PixelRatio.getFontScale();
 const getFontSize = (size) => size / fontScale;
 
+
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const { username } = useContext(UserContext);
 
   const pressHandlerFriends = () => {
     navigation.navigate("FriendScreen");
@@ -54,10 +58,11 @@ const HomeScreen = () => {
         <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
           <AntDesign name="message1" size={24} color="white" />
           <Ionicons
-            onPress={() => navigation.navigate("ViewFriends")}
+            onPress={() => navigation.navigate("FriendRequestsScreen")}
             name="people-outline"
             size={24}
             color="white"
+
           />
           <LogoutButton />
         </View>
