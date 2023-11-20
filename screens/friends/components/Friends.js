@@ -3,7 +3,6 @@ import React, { useContext } from "react";
 import { UserContext } from "../../../UserContext";
 
 const Friend = ({ item }) => {
-  console.log(item);
   const { userId, setUserId } = useContext(UserContext);
 
   return (

@@ -18,8 +18,8 @@ export default (params) => {
 
   const {login} = useContext(UserContext);
 
-  const [username, setUsername] = useState("Neil");
-  const [password, setPassword] = useState("test123");
+  const [username, setUsername] = useState("neil");
+  const [password, setPassword] = useState("Test123");
   const navigation = useNavigation();
 
   const handleSubmit = async () => {

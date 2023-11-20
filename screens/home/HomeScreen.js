@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from "react";
+import React, { useContext, useLayoutEffect } from "react";
 
 import {
   View,
@@ -8,6 +8,7 @@ import {
   Button,
   TouchableOpacity,
   Pressable,
+  SafeAreaView,
 } from "react-native";
 import Colors from "../../Colors";
 import { useNavigation } from "@react-navigation/native";
@@ -16,19 +17,21 @@ import { Ionicons } from "@expo/vector-icons";
 import LogoutButton from "../../ui/LogoutButton";
 // import logo from "../../assets/NightLight-BeamFont.png";
 import logo from "../../assets/NightLight-GCfont1.png";
+import { UserContext } from "../../UserContext";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const { username } = useContext(UserContext);
 
- const pressHandlerFriends = () => {
-      navigation.navigate("FriendScreen");
-    };
-    const pressHandlerGroups = () => {
-      navigation.navigate("Group Chats");
-    };
-    const pressHandlerCommunity = () => {
-      navigation.navigate("Community");
-    };
+  const pressHandlerFriends = () => {
+    navigation.navigate("FriendScreen");
+  };
+  const pressHandlerGroups = () => {
+    navigation.navigate("Group Chats");
+  };
+  const pressHandlerCommunity = () => {
+    navigation.navigate("Community");
+  };
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -42,10 +45,11 @@ const HomeScreen = () => {
         <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
           <AntDesign name="message1" size={24} color="white" />
           <Ionicons
-            onPress={() => navigation.navigate("ViewFriends")}
+            onPress={() => navigation.navigate("FriendRequestsScreen")}
             name="people-outline"
             size={24}
             color="white"
+
           />
           <LogoutButton />
         </View>

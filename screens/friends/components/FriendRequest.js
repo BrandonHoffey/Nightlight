@@ -4,9 +4,8 @@ import { UserContext } from "../../../UserContext";
 import { useNavigation } from "@react-navigation/core";
 import { API_FRIEND_REQUEST_ACCEPT } from "../../../constants/Endpoints";
 
-const FriendRequest = ({ item, FriendRequests, setFriendRequests }) => {
-  const { userId, setUserId } = useContext(UserContext);
-  const navigation = useNavigation();
+const FriendRequest = ({ item, friendRequests, setFriendRequests }) => {
+  const { userId, setUserId, token } = useContext(UserContext);
 
   const acceptRequest = async (friendRequestId) => {
     console.log("Accept button pressed for friendRequestId:", friendRequestId);
@@ -15,6 +14,7 @@ const FriendRequest = ({ item, FriendRequests, setFriendRequests }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: token,
         },
         body: JSON.stringify({
           senderId: friendRequestId,
@@ -22,13 +22,20 @@ const FriendRequest = ({ item, FriendRequests, setFriendRequests }) => {
         }),
       });
 
+      const responseData = await response.json(); // Log the response
+      console.log("Response from server:", responseData);
+
       if (response.ok) {
         setFriendRequests(
-          FriendRequests.filter((request) => request._id !== friendRequestId)
+          friendRequests.filter((request) => request._id !== friendRequestId)
         );
-        console.log("Updated Friend Requests:", FriendRequests);
-        console.log("Accepting friend request for user:", userId, "from user:", friendRequestId);
-        // navigation.navigate("Community");
+        console.log("Updated Friend Requests:", friendRequests);
+        console.log(
+          "Accepting friend request for user:",
+          userId,
+          "from user:",
+          friendRequestId
+        );
       }
     } catch (error) {
       console.log("error accepting the friend request", error);
