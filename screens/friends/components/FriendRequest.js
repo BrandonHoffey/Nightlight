@@ -1,9 +1,11 @@
-import { StyleSheet, Text, View, Pressable, Image } from "react-native";
+import { StyleSheet, Text, View, Pressable, Image, PixelRatio} from "react-native";
 import React, { useContext } from "react";
 import { UserContext } from "../../../UserContext";
 import { useNavigation } from "@react-navigation/core";
 import { API_FRIEND_REQUEST_ACCEPT } from "../../../constants/Endpoints";
 
+const fontScale = PixelRatio.getFontScale();
+const getFontSize = (size) => size / fontScale;
 const FriendRequest = ({ item, FriendRequests, setFriendRequests }) => {
   const { userId, setUserId } = useContext(UserContext);
   const navigation = useNavigation();
@@ -48,7 +50,7 @@ const FriendRequest = ({ item, FriendRequests, setFriendRequests }) => {
         source={{ uri: item.profilePicture }}
       />
       <Text
-        style={{ fontSize: 15, fontWeight: "bold", marginLeft: 10, flex: 1 }}
+        style={{ fontSize: getFontSize(16), fontWeight: "bold", marginLeft: 10, flex: 1 }}
       >
         {item?.username} sent you a friend request!!
       </Text>

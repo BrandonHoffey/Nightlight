@@ -1,10 +1,12 @@
-import { StyleSheet, Text, View, Pressable, Image } from "react-native";
+import { StyleSheet, Text, View, Pressable, Image, PixelRatio } from "react-native";
 import React, { useContext, useState, useEffect } from "react";
 import { UserContext } from "../../../UserContext";
 import { API_SEND_FRIEND_REQUEST } from "../../../constants/Endpoints";
 import Colors from "../../../Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+const fontScale = PixelRatio.getFontScale();
+const getFontSize = (size) => size / fontScale;
 const User = ({ item }) => {
   const { userId, setUserId, token } = useContext(UserContext);
   const [requestSent, setRequestSent] = useState(false);
@@ -68,7 +70,7 @@ const User = ({ item }) => {
       </View>
 
       <View style={{ marginLeft: 12, flex: 1 }}>
-        <Text style={{ fontWeight: "bold" }}>{item?.username}</Text>
+        <Text style={{ fontWeight: "bold", color:Colors.white, fontSize:getFontSize(16)}}>{item?.username}</Text>
       </View>
 
       <Pressable
@@ -80,12 +82,12 @@ const User = ({ item }) => {
         style={{
           backgroundColor: requestSent ? Colors.yellow : Colors.lightBlue,
           padding: 10,
-          borderRadius: 6,
+          borderRadius: 20,
           width: 105,
         }}
         disabled={requestSent}
       >
-        <Text style={{ textAlign: "center", color: requestSent ? "black" : "white", fontSize: 13 }}>
+        <Text style={{ textAlign: "center", color: requestSent ? "black" : "white", fontSize: getFontSize(12) }}>
           {requestSent ? "Pending" : "Add Friend"}
         </Text>
       </Pressable>

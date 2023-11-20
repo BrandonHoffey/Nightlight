@@ -4,6 +4,7 @@ import React, {
   useContext,
   useState,
   useRef,
+  PixelRatio
 } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -13,6 +14,11 @@ import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { API_VIEW_ALL_FRIENDS } from "../../constants/Endpoints";
 import Friend from "./components/Friends";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Colors from "../../Colors";
+
+// const fontScale = PixelRatio.getFontScale();
+// const getFontSize = (size) => size / fontScale;
 
 const FriendScreen = () => {
     const navigation = useNavigation();
@@ -21,18 +27,18 @@ const FriendScreen = () => {
 
     useLayoutEffect(() => {
         navigation.setOptions({
-          headerTitle: "",
-          headerLeft: () => (
-            <Text style={{ fontSize: 16, fontWeight: "bold" }}>Nightlight</Text>
-          ),
+          headerTitle: "Friends",
+          // headerLeft: () => (
+          //   <Text style={{ fontSize: 16, fontWeight: "bold" }}>Nightlight</Text>
+          // ),
           headerRight: () => (
             <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-              <AntDesign name="message1" size={24} color="black" />
+              <AntDesign name="message1" size={24} color="white" />
               <Ionicons
                 onPress={() => navigation.navigate("FriendRequestsScreen")}
                 name="people-outline"
                 size={24}
-                color="black"
+                color="white"
               />
               <LogoutButton />
             </View>
@@ -61,16 +67,23 @@ const FriendScreen = () => {
       }, [token]);
 
   return (
-    <View>
-      <View style={{ padding: 10 }}>
+    <SafeAreaView>
+      <View style={styles.screenContainer}>
         {friendItems.map((item, index) => (
           <Friend key={index} item={item} />
         ))}
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 export default FriendScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  screenContainer: {
+    padding: 10,
+    backgroundColor: Colors.darkBlue,
+    height: "100%",
+    width: "100%",
+  },
+});

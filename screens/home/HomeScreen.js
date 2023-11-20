@@ -5,9 +5,9 @@ import {
   Text,
   StyleSheet,
   Image,
-  Button,
-  TouchableOpacity,
+  PixelRatio,
   Pressable,
+  SafeAreaView,
 } from "react-native";
 import Colors from "../../Colors";
 import { useNavigation } from "@react-navigation/native";
@@ -16,25 +16,37 @@ import { Ionicons } from "@expo/vector-icons";
 import LogoutButton from "../../ui/LogoutButton";
 // import logo from "../../assets/NightLight-BeamFont.png";
 import logo from "../../assets/NightLight-GCfont1.png";
+// import bgStars from "../../assets/Texture-Stars75Op.png";
+// import bgStars from "../../assets/Texture-Stars90oP.png";
+import bgStars from "../../assets/stars-backgroundRS.png";
+
+const fontScale = PixelRatio.getFontScale();
+const getFontSize = (size) => size / fontScale;
 
 const HomeScreen = () => {
   const navigation = useNavigation();
 
- const pressHandlerFriends = () => {
-      navigation.navigate("FriendScreen");
-    };
-    const pressHandlerGroups = () => {
-      navigation.navigate("Group Chats");
-    };
-    const pressHandlerCommunity = () => {
-      navigation.navigate("Community");
-    };
+  const pressHandlerFriends = () => {
+    navigation.navigate("FriendScreen");
+  };
+  const pressHandlerGroups = () => {
+    navigation.navigate("Group Chats");
+  };
+  const pressHandlerCommunity = () => {
+    navigation.navigate("Community");
+  };
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: "",
       headerLeft: () => (
-        <Text style={{ fontSize: 16, fontWeight: "bold", color: "white" }}>
+        <Text
+          style={{
+            fontSize: getFontSize(16),
+            fontWeight: "bold",
+            color: "white",
+          }}
+        >
           Home
         </Text>
       ),
@@ -55,55 +67,69 @@ const HomeScreen = () => {
 
   return (
     <>
-      <View style={styles.container}>
-        <Text style={styles.textContainer}>Welcome User</Text>
-        <Image source={logo} />
-        <Pressable
-          style={({ pressed }) => [
-            styles.buttonContainer,
-            { backgroundColor: pressed ? Colors.lightGreen : Colors.lightBlue },
-          ]}
-          onPress={pressHandlerFriends}
-        >
-          <Text style={styles.buttonText}>Friends</Text>
-        </Pressable>
-        <Pressable
-          style={({ pressed }) => [
-            styles.buttonContainer,
-            { backgroundColor: pressed ? Colors.lightBlue : Colors.lightGreen },
-          ]}
-          onPress={pressHandlerGroups}
-        >
-          <Text style={styles.buttonText}>Groups</Text>
-        </Pressable>
-        <Pressable
-          style={({ pressed }) => [
-            styles.buttonContainer,
-            { backgroundColor: pressed ? Colors.lightGreen : Colors.yellow },
-          ]}
-          onPress={pressHandlerCommunity}
-        >
-          {/* <Text style={styles.buttonText}>Community</Text> */}
-          <Text style={styles.buttonText1}>Community</Text>
-        </Pressable>
-      </View>
+      <SafeAreaView style={styles.containerBG}>
+        <Image source={bgStars} style={styles.backgroundImage}></Image>
+        <View style={styles.overlay}>
+          <Image source={logo} />
+          <Text style={styles.textContainer}>Welcome User</Text>
+          <Pressable
+            style={({ pressed }) => [
+              styles.buttonContainer,
+              {
+                backgroundColor: pressed ? Colors.lightGreen : Colors.lightBlue,
+              },
+            ]}
+            onPress={pressHandlerFriends}
+          >
+            <Text style={styles.buttonText}>Friends</Text>
+          </Pressable>
+          <Pressable
+            style={({ pressed }) => [
+              styles.buttonContainer,
+              {
+                backgroundColor: pressed ? Colors.lightBlue : Colors.lightGreen,
+              },
+            ]}
+            onPress={pressHandlerGroups}
+          >
+            <Text style={styles.buttonText}>Groups</Text>
+          </Pressable>
+          <Pressable
+            style={({ pressed }) => [
+              styles.buttonContainer,
+              { backgroundColor: pressed ? Colors.lightGreen : Colors.yellow },
+            ]}
+            onPress={pressHandlerCommunity}
+          >
+            <Text style={styles.buttonText1}>Community</Text>
+          </Pressable>
+        </View>
+      </SafeAreaView>
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  containerBG: {
     flex: 1,
-    backgroundColor: Colors.darkBlue,
-    alignItems: "center",
-    height: 100,
-    flexDirection: "column",
-    // justifyContent: "center",
   },
-
+  backgroundImage: {
+    flex: 1,
+    resizeMode: "cover",
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    // transform: [{ rotate: '180deg' }], //rotates image 180
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(5, 0, 43, 0.5)", // Adjust the opacity with last digit, first 3 dialed in darkBlue
+  },
   textContainer: {
     color: Colors.white,
-    fontSize: 25,
+    fontSize: getFontSize(24),
     // fontWeight: "bold",
   },
   buttonContainer: {
@@ -113,22 +139,20 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     margin: 10,
     marginTop: 10,
-    width: 200,
-    height: 200,
+    width: "50%",
+    height: "25%",
     alignItems: "center",
     justifyContent: "center",
-    // opacity:0.7,
-    // paddingHorizontal:10,
-    // paddingVertical:10,
+    aspectRatio: 1,
   },
   buttonText: {
     color: Colors.white,
-    fontSize: 24,
+    fontSize: getFontSize(24),
     fontWeight: "bold",
   },
   buttonText1: {
     color: Colors.lightBlue,
-    fontSize: 24,
+    fontSize: getFontSize(24),
     fontWeight: "bold",
   },
 });

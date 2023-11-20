@@ -1,10 +1,13 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, PixelRatio, SafeAreaView } from "react-native";
 import React, { useLayoutEffect, useEffect, useContext, useState } from "react";
 import { UserContext } from "../../UserContext";
 import { API_FRIEND_REQUESTS } from "../../constants/Endpoints";
 import FriendRequest from "./components/FriendRequest";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import Colors from "../../Colors";
+const fontScale = PixelRatio.getFontScale();
+const getFontSize = (size) => size / fontScale;
 
 const FriendRequestsScreen = () => {
   const navigation = useNavigation();
@@ -53,15 +56,15 @@ const FriendRequestsScreen = () => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: "",
-      headerLeft: () => (
-        <Text style={{ fontSize: 16, fontWeight: "bold" }}>Nightlight</Text>
-      ),
+      // headerLeft: () => (
+      //   <Text style={{ fontSize: getFontSize(16), fontWeight: "bold" }}>Nightlight</Text>
+      // ),
       headerRight: () => (
         <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
           <MaterialCommunityIcons
             name="logout"
             size={24}
-            color="black"
+            color="white"
             onPress={handleLogout}
           />
         </View>
@@ -70,21 +73,40 @@ const FriendRequestsScreen = () => {
   }, []);
 
   return (
-    <View style={{ padding: 10, marginHorizontal: 12 }}>
-      {friendRequests.length > 0 && <Text>Your Friend Requests</Text>}
-      {friendRequests.length === 0 && <Text>No New Friend Requests</Text>}
+    <SafeAreaView>
+      <View style={styles.screenContainer}>
+        {friendRequests.length > 0 && (
+          <Text style={{ color: "white", fontSize: getFontSize(16) }}>
+            Your Friend Requests
+          </Text>
+        )}
+        {friendRequests.length === 0 && (
+          <Text style={{ color: "white", fontSize: getFontSize(16) }}>
+            No New Friend Requests
+          </Text>
+        )}
 
-      {friendRequests.map((item) => (
-        <FriendRequest
-          key={item._id}
-          item={item}
-          friendRequests={friendRequests}
-          setFriendRequests={setFriendRequests}
-        />
-      ))}
-    </View>
+        {friendRequests.map((item) => (
+          <FriendRequest
+            key={item._id}
+            item={item}
+            friendRequests={friendRequests}
+            setFriendRequests={setFriendRequests}
+          />
+        ))}
+      </View>
+    </SafeAreaView>
   );
 };
 
 export default FriendRequestsScreen;
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  screenContainer: {
+    backgroundColor: Colors.darkBlue,
+    padding: 10,
+    // marginHorizontal: 12,
+    height: "100%",
+    width: "100%",
+    
+  },
+});
