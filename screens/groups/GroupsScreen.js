@@ -9,11 +9,18 @@ import {
   Alert,
   Platform,
   PixelRatio,
+  
 } from "react-native";
+import { useLayoutEffect } from "react";
 import { StatusBar } from "expo-status-bar";
-
+import { AntDesign } from "@expo/vector-icons";
+import LogoutButton from "../../ui/LogoutButton";
+import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import Colors from "../../Colors";
+
+const fontScale = PixelRatio.getFontScale();
+const getFontSize = (size) => size / fontScale;
 
 export const Groups = () => {
   const navigation = useNavigation();
@@ -22,7 +29,25 @@ export const Groups = () => {
   };
   const pressHandlerCreate = () => {
     navigation.navigate("Create Groups")
-  }
+  };
+   useLayoutEffect(() => {
+     navigation.setOptions({
+       headerTitle: "Groups",
+    
+       headerRight: () => (
+         <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+           <AntDesign name="message1" size={24} color="white" />
+           <Ionicons
+             onPress={() => navigation.navigate("FriendRequestsScreen")}
+             name="people-outline"
+             size={24}
+             color="white"
+           />
+           <LogoutButton />
+         </View>
+       ),
+     });
+   }, []);
   return (
     <SafeAreaView style={styles.screenContainer}>
       
@@ -41,7 +66,6 @@ export const Groups = () => {
           onPress={pressHandlerCreate}
         />
       </TouchableOpacity>
-
 
       <StatusBar style="auto" />
     </SafeAreaView>
@@ -64,7 +88,7 @@ const styles = StyleSheet.create({
   textContainer: {
     color: Colors.lightGreen,
     fontWeight: "bold",
-    fontSize: 34,
+    fontSize: getFontSize(34),
     marginVertical: 0,
   },
   buttonContainer: {
