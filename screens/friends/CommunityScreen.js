@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import React, {
   useLayoutEffect,
   useContext,
@@ -74,11 +74,11 @@ const CommunityScreen = () => {
 
   return (
     <SafeAreaView>
-      <View style={styles.screenContainer}>
+      <ScrollView style={styles.screenContainer}>
         {userItems.map((item, index) => (
           <User key={index} item={item} />
         ))}
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

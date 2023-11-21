@@ -7,8 +7,9 @@ import { API_FRIEND_REQUEST_ACCEPT } from "../../../constants/Endpoints";
 
 const fontScale = PixelRatio.getFontScale();
 const getFontSize = (size) => size / fontScale;
+
 const FriendRequest = ({ item, FriendRequests, setFriendRequests }) => {
-  const { userId, setUserId } = useContext(UserContext);
+  const { userId, setUserId, token } = useContext(UserContext);
   const navigation = useNavigation();
 
 
@@ -27,7 +28,7 @@ const FriendRequest = ({ item, FriendRequests, setFriendRequests }) => {
         }),
       });
 
-      const responseData = await response.json(); // Log the response
+      const responseData = await response.json();
       console.log("Response from server:", responseData);
 
       if (response.ok) {
@@ -60,7 +61,7 @@ const FriendRequest = ({ item, FriendRequests, setFriendRequests }) => {
         source={{ uri: item.profilePicture }}
       />
       <Text
-        style={{ fontSize: getFontSize(16), fontWeight: "bold", marginLeft: 10, flex: 1 }}
+        style={{ fontSize: getFontSize(16), fontWeight: "bold", color:"white", marginLeft: 10, flex: 1 }}
       >
         {item?.username} sent you a friend request!!
       </Text>

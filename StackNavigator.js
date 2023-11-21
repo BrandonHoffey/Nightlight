@@ -13,6 +13,7 @@ import {HomeScreen} from "./screens/home/HomeScreen";
 import CommunityScreen from "./screens/friends/CommunityScreen";
 import FriendRequestsScreen from "./screens/friends/FriendRequestsScreen";
 import FriendScreen from "./screens/friends/FriendsScreen";
+import Signin from "./screens/auth/SigninScreen";
 
 
 
@@ -68,6 +69,11 @@ const StackNavigator = () => {
         <Stack.Screen
         name="FriendScreen"
         component={FriendScreen}
+        options={{headerShown: true}}
+        />
+        <Stack.Screen
+        name="SigninScreen"
+        component={Signin}
         options={{headerShown: true}}
         />
       </Stack.Navigator>
