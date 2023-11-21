@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import Colors from "../../Colors";
 import { useNavigation } from "@react-navigation/native";
-import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import LogoutButton from "../../ui/LogoutButton";
 
@@ -22,7 +21,6 @@ import bgStars from "../../assets/stars-backgroundRS.png";
 
 const fontScale = PixelRatio.getFontScale();
 const getFontSize = (size) => size / fontScale;
-
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -42,7 +40,9 @@ const HomeScreen = () => {
     navigation.setOptions({
       headerTitle: "",
       headerRight: () => (
+
         <View style={{ marginRight: 16 }}>
+
           <LogoutButton />
         </View>
       ),
@@ -58,7 +58,7 @@ const HomeScreen = () => {
             <LogoutButton />
           </View>
           <Image source={logo} />
-          <Text style={styles.textContainer}>Welcome User</Text>
+          <Text style={styles.textContainer}>Welcome {username}</Text>
           <Pressable
             style={({ pressed }) => [
               styles.buttonContainer,
@@ -136,6 +136,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(5, 0, 43, 0.4)", // Adjust the opacity with last digit, first 3 dialed in darkBlue
+
   },
   textContainer: {
     color: Colors.white,

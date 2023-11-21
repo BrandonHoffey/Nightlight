@@ -33,8 +33,10 @@ const FriendRequest = ({ item, FriendRequests, setFriendRequests }) => {
       console.log("Response from server:", responseData);
 
       if (response.ok) {
-        setFriendRequests(
-          FriendRequests.filter((request) => request._id !== friendRequestId)
+
+        setFriendRequests((prevFriendRequests) =>
+          prevFriendRequests.filter((request) => request._id !== friendRequestId)
+
         );
         console.log("Updated Friend Requests:", FriendRequests);
         console.log(

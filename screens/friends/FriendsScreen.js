@@ -59,6 +59,7 @@ const FriendScreen = () => {
                 const response = await fetch(API_VIEW_ALL_FRIENDS, requestOptions);
                 const data = await response.json();
                 setFriendItems(data.friends || []);
+                console.log("Friend Items:", data.friends);
             } catch (error) {
                 console.log(error);
             }
@@ -67,13 +68,13 @@ const FriendScreen = () => {
       }, [token]);
 
   return (
-    <SafeAreaView>
+
       <ScrollView style={styles.screenContainer}>
-        {friendItems.map((item, index) => (
-          <Friend key={index} item={item} />
+        {friendItems.map((item) => (
+          <Friend key={item._id} item={item} />
         ))}
       </ScrollView>
-    </SafeAreaView>
+
   );
 };
 
@@ -81,9 +82,8 @@ export default FriendScreen;
 
 const styles = StyleSheet.create({
   screenContainer: {
+    flex: 1,
     padding: 10,
     backgroundColor: Colors.darkBlue,
-    height: "100%",
-    width: "100%",
   },
 });
