@@ -5,7 +5,6 @@ import {
   View,
   TextInput,
   Pressable,
-  Modal,
   Alert,
   PixelRatio,
   SafeAreaView,
@@ -25,6 +24,12 @@ export default (params) => {
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
 
+  const clearInputFields = () => {
+    setUsername("");
+    setEmail("");
+    setPassword("");
+  };
+
   const handleSubmit = async () => {
     try {
       let myHeaders = new Headers();
@@ -43,11 +48,12 @@ export default (params) => {
       if (response.ok) {
         const data = await response.json();
 
-        navigation.navigate("Home");
+        navigation.navigate("Authorization");
 
-        login(data.token);
+        // login({ token: data.token, userId: data.userId });
 
         Alert.alert(data.message);
+        clearInputFields();
       } else if (response.status === 422) {
         Alert.alert("Missing fields. Please try again.");
       } else {

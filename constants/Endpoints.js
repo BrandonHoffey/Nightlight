@@ -24,3 +24,4 @@ export const API_SENT_FRIEND_REQUESTS =
   "https://5752-2600-8803-74a4-9000-9989-28a0-7a20-fab5.ngrok-free.app/friend/friend-requests/sent";
 export const API_VIEW_ALL_FRIENDS_BY_ID =
   "https://5752-2600-8803-74a4-9000-9989-28a0-7a20-fab5.ngrok-free.app/friend/friends";
+
