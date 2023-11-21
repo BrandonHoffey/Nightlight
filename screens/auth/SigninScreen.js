@@ -42,7 +42,6 @@ export default (params) => {
       const response = await fetch(API_USER_SIGN_IN, requestOption);
       if (response.ok) {
         const data = await response.json();
-        console.log("Logged in user data:", data);
 
         login(
           data.token,

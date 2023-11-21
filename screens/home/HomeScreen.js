@@ -18,14 +18,16 @@ import logo from "../../assets/NightLight-GCfont1.png";
 import { UserContext } from "../../UserContext";
 
 import bgStars from "../../assets/stars-backgroundRS.png";
+import UserSettings from "../../ui/UserSettings";
 
 const fontScale = PixelRatio.getFontScale();
 const getFontSize = (size) => size / fontScale;
 
+
 const HomeScreen = () => {
   const navigation = useNavigation();
   const { username } = useContext(UserContext);
-
+  
   const pressHandlerFriends = () => {
     navigation.navigate("FriendScreen");
   };
@@ -35,20 +37,10 @@ const HomeScreen = () => {
   const pressHandlerCommunity = () => {
     navigation.navigate("Community");
   };
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: "",
-      headerRight: () => (
-
-        <View style={{ marginRight: 16 }}>
-
-          <LogoutButton />
-        </View>
-      ),
-    });
-  }, []);
-
+  const handleSettings = () => {
+    navigation.navigate("UserSettings");
+  }
+  
   return (
     <>
       <SafeAreaView style={styles.containerBG}>
@@ -56,6 +48,14 @@ const HomeScreen = () => {
         <View style={styles.overlay}>
           <View style={styles.logoutButtonContainer}>
             <LogoutButton />
+          </View>
+          <View style={styles.userSettingsContainer}>
+            <Ionicons
+              name="md-settings-outline"
+              size={24}
+              color="white"
+              onPress={handleSettings}
+            />
           </View>
           <Image source={logo} />
           <Text style={styles.textContainer}>Welcome {username}</Text>
@@ -136,7 +136,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(5, 0, 43, 0.4)", // Adjust the opacity with last digit, first 3 dialed in darkBlue
-
   },
   textContainer: {
     color: Colors.white,
@@ -155,7 +154,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     aspectRatio: 1,
-    
   },
   buttonText: {
     color: Colors.white,
@@ -171,6 +169,12 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 16,
     right: 16,
+    marginTop: 25,
+  },
+  userSettingsContainer: {
+    position: "absolute",
+    top: 16,
+    left: 16,
     marginTop: 25,
   },
 });
