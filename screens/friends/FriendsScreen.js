@@ -59,7 +59,6 @@ const FriendScreen = () => {
                 const response = await fetch(API_VIEW_ALL_FRIENDS, requestOptions);
                 const data = await response.json();
                 setFriendItems(data.friends || []);
-                console.log("Friend Items:", data.friends);
             } catch (error) {
                 console.log(error);
             }

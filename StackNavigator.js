@@ -14,6 +14,7 @@ import CommunityScreen from "./screens/friends/CommunityScreen";
 import FriendRequestsScreen from "./screens/friends/FriendRequestsScreen";
 import FriendScreen from "./screens/friends/FriendsScreen";
 import Signin from "./screens/auth/SigninScreen";
+import UserSettings from "./ui/UserSettings";
 
 
 
@@ -74,6 +75,11 @@ const StackNavigator = () => {
         <Stack.Screen
         name="SigninScreen"
         component={Signin}
+        options={{headerShown: true}}
+        />
+        <Stack.Screen
+        name="UserSettings"
+        component={UserSettings}
         options={{headerShown: true}}
         />
       </Stack.Navigator>

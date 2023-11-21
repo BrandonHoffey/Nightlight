@@ -14,7 +14,6 @@ const fontScale = PixelRatio.getFontScale();
 const getFontSize = (size) => size / fontScale;
 
 const Friend = ({ item }) => {
-  console.log("Friend Component - Item:", item);
   const { userId, setUserId } = useContext(UserContext);
 
   const handleChatPress = () => {
@@ -28,7 +27,7 @@ const Friend = ({ item }) => {
           style={{
             flexDirection: "row",
             alignItems: "center",
-            justifyContent: "space-between", // Add this to create space between items
+            justifyContent: "space-between",
             // marginVertical: 10,
           }}
         >
