@@ -42,8 +42,13 @@ export default (params) => {
       const response = await fetch(API_USER_SIGN_IN, requestOption);
       if (response.ok) {
         const data = await response.json();
+        console.log("Logged in user data:", data);
 
-        login(data.token, data.signedInAccount._id);
+        login(
+          data.token,
+          data.signedInAccount._id,
+          data.signedInAccount.username
+        );
         navigation.navigate("Home");
         Alert.alert(data.message);
         // setUsername("");
@@ -145,7 +150,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "white",
-    padding:20,
+    padding: 20,
   },
   controlContainer: {
     flexDirection: "row",
