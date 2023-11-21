@@ -68,11 +68,13 @@ const FriendScreen = () => {
       }, [token]);
 
   return (
+
       <ScrollView style={styles.screenContainer}>
         {friendItems.map((item) => (
           <Friend key={item._id} item={item} />
         ))}
       </ScrollView>
+
   );
 };
 

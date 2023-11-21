@@ -13,12 +13,10 @@ import Colors from "../../Colors";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import LogoutButton from "../../ui/LogoutButton";
-// import logo from "../../assets/NightLight-BeamFont.png";
+
 import logo from "../../assets/NightLight-GCfont1.png";
 import { UserContext } from "../../UserContext";
 
-// import bgStars from "../../assets/Texture-Stars75Op.png";
-// import bgStars from "../../assets/Texture-Stars90oP.png";
 import bgStars from "../../assets/stars-backgroundRS.png";
 
 const fontScale = PixelRatio.getFontScale();
@@ -42,13 +40,9 @@ const HomeScreen = () => {
     navigation.setOptions({
       headerTitle: "",
       headerRight: () => (
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-          <Ionicons
-            onPress={() => navigation.navigate("FriendRequestsScreen")}
-            name="people-outline"
-            size={24}
-            color="white"
-          />
+
+        <View style={{ marginRight: 16 }}>
+
           <LogoutButton />
         </View>
       ),
@@ -60,6 +54,9 @@ const HomeScreen = () => {
       <SafeAreaView style={styles.containerBG}>
         <Image source={bgStars} style={styles.backgroundImage}></Image>
         <View style={styles.overlay}>
+          <View style={styles.logoutButtonContainer}>
+            <LogoutButton />
+          </View>
           <Image source={logo} />
           <Text style={styles.textContainer}>Welcome {username}</Text>
           <Pressable
@@ -67,6 +64,13 @@ const HomeScreen = () => {
               styles.buttonContainer,
               {
                 backgroundColor: pressed ? Colors.lightGreen : Colors.lightBlue,
+                shadowOffset: { width: -2, height: 4 },
+                shadowOpacity: 1,
+                shadowRadius: 10,
+                borderColor: Colors.lightGreen,
+                borderWidth: 3,
+                elevation: 10,
+                shadowColor: Colors.black,
               },
             ]}
             onPress={pressHandlerFriends}
@@ -78,6 +82,13 @@ const HomeScreen = () => {
               styles.buttonContainer,
               {
                 backgroundColor: pressed ? Colors.lightBlue : Colors.lightGreen,
+                shadowOffset: { width: -2, height: 4 },
+                shadowOpacity: 1,
+                shadowRadius: 10,
+                borderColor: Colors.lightBlue,
+                borderWidth: 3,
+                elevation: 10,
+                shadowColor: Colors.black,
               },
             ]}
             onPress={pressHandlerGroups}
@@ -87,7 +98,16 @@ const HomeScreen = () => {
           <Pressable
             style={({ pressed }) => [
               styles.buttonContainer,
-              { backgroundColor: pressed ? Colors.lightGreen : Colors.yellow },
+              {
+                backgroundColor: pressed ? Colors.lightGreen : Colors.yellow,
+                elevation: 10,
+                shadowColor: Colors.black,
+                shadowOffset: { width: -2, height: 4 },
+                shadowOpacity: 1,
+                shadowRadius: 10,
+                borderColor: Colors.lightBlue,
+                borderWidth: 3,
+              },
             ]}
             onPress={pressHandlerCommunity}
           >
@@ -115,7 +135,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(5, 0, 43, 0.5)",
+    backgroundColor: "rgba(5, 0, 43, 0.4)", // Adjust the opacity with last digit, first 3 dialed in darkBlue
+
   },
   textContainer: {
     color: Colors.white,
@@ -129,21 +150,28 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     margin: 10,
     marginTop: 10,
-    width: "50%",
-    height: "25%",
+    width: "35%",
+    height: "17%",
     alignItems: "center",
     justifyContent: "center",
     aspectRatio: 1,
+    
   },
   buttonText: {
     color: Colors.white,
-    fontSize: getFontSize(24),
+    fontSize: getFontSize(18),
     fontWeight: "bold",
   },
   buttonText1: {
     color: Colors.lightBlue,
-    fontSize: getFontSize(24),
+    fontSize: getFontSize(18),
     fontWeight: "bold",
+  },
+  logoutButtonContainer: {
+    position: "absolute",
+    top: 16,
+    right: 16,
+    marginTop: 25,
   },
 });
 
