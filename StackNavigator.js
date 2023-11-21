@@ -1,6 +1,5 @@
-
 import React from "react";
-import { View, Text, StyleSheet, } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Groups } from "./screens/groups/GroupsScreen";
@@ -10,6 +9,8 @@ import ViewGroupsScreen from "./screens/groups/ViewGroupsScreen";
 import Colors from "./Colors";
 import CreateGroupScreen from "./screens/groups/CreateGroupScreen";
 import { Auth } from "./screens/auth/AuthScreen";
+import InboxScreen from "./screens/messages/InboxScreen";
+import MessageScreen from "./screens/messages/MessageScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -17,17 +18,27 @@ const StackNavigator = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-      screenOptions={({ navigation }) => ({
-        headerStyle: {
-          backgroundColor: Colors.lightBlue,
-        },
-        headerTintColor:"white"
-      })}
+        screenOptions={({ navigation }) => ({
+          headerStyle: {
+            backgroundColor: Colors.lightBlue,
+          },
+          headerTintColor: "white",
+        })}
       >
+        <Stack.Screen
+          name="Inbox"
+          component={InboxScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Messaging"
+          component={MessageScreen}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name="Authorization"
           component={Auth}
-          options={{headerShown: true}}
+          options={{ headerShown: true }}
         />
         <Stack.Screen
           name="Group Chats"
@@ -42,7 +53,7 @@ const StackNavigator = () => {
         <Stack.Screen
           name="Create Groups"
           component={CreateGroupScreen}
-          options={{headerShown: true}}
+          options={{ headerShown: true }}
         />
         <Stack.Screen
           name="Friend"
@@ -62,4 +73,3 @@ const StackNavigator = () => {
 export default StackNavigator;
 
 const styles = StyleSheet.create({});
-

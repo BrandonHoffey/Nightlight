@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 
-const useLoading = (callback) => {
+const UseLoading = (callback) => {
   const [loading, setLoading] = useState(false);
 
   const executeWithLoading = useCallback(
@@ -22,4 +22,4 @@ const useLoading = (callback) => {
   return [loading, executeWithLoading];
 };
 
-export default useLoading;
+export default UseLoading;

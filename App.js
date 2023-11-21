@@ -6,7 +6,7 @@ import Colors from "./Colors";
 import { Groups } from "./screens/groups/GroupsScreen";
 import { Auth } from "./screens/auth/AuthScreen";
 import FriendScreen from "./screens/friends/FriendScreen";
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer } from "@react-navigation/native";
 import StackNavigator from "./StackNavigator";
 import { UserContext } from "./UserContext";
 
@@ -14,7 +14,7 @@ export default function App() {
   return (
     <>
       <UserContext>
-        <StackNavigator style={styles.StyleSheet}/>
+        <StackNavigator style={styles.StyleSheet} />
       </UserContext>
     </>
   );

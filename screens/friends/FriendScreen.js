@@ -10,16 +10,14 @@ import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { UserType } from "../../UserContext";
-import jwt_decode from "jwt-decode";
-import { API_VIEW_ALL_USERS } from "../../constants/Endpoints";
 import User from "./components/User";
+import { fetchUsers } from "../../api/UserApi";
 
 const FriendScreen = () => {
   const navigation = useNavigation();
   const { userId, setUserId } = useContext(UserType);
   const [users, setUsers] = useState([]);
   const [userItems, setUserItems] = useState([]);
-
   const flatListRef = useRef(null);
 
   useLayoutEffect(() => {
@@ -43,28 +41,14 @@ const FriendScreen = () => {
   }, []);
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    async () => {
       try {
-        const myHeaders = new Headers();
-        myHeaders.append(
-          "Authorization",
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTRlNDAyMjcwYjI2NDliY2NjODJmYiIsImlhdCI6MTcwMDA2NTgwNywiZXhwIjoxNzAwNjcwNjA3fQ.FRiNpxJMMN6BNYUwR_hX7XU8VD2C-YsVwUTtsaCErTc"
-        );
-        myHeaders.append("ngrok-skip-browser-warning", "true");
-        let requestOptions = {
-          method: "GET",
-          headers: myHeaders,
-        };
-        const response = await fetch(API_VIEW_ALL_USERS, requestOptions);
-        const data = await response.json();
-        console.log(data);
+        const data = await fetchUsers();
         setUserItems(data.users);
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     };
-
-    fetchUsers();
   }, []);
 
   return (

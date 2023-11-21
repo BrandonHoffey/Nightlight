@@ -25,7 +25,6 @@ export const Auth = (params) => {
 const styles = StyleSheet.create({
   screenContainer: {
     backgroundColor: Colors.darkBlue,
-    borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
     height: "100%",

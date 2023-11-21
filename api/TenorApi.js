@@ -1,10 +1,10 @@
 // Tenor Api Fetch
 const apiKey = "AIzaSyAsjOcDFXxslfZDJrh-uLsUqn-3x0rofm8";
 
-export default tenorApi = async (query) => {
+const tenorApi = async (query) => {
   try {
     const searchQuery = query;
-    const apiUrl = `https://tenor.googleapis.com/v2/search?q=${searchQuery}&key=${apiKey}&limit=12`;
+    const apiUrl = `https://tenor.googleapis.com/v2/search?q=${searchQuery}&key=${apiKey}&limit=22`;
 
     const response = await fetch(apiUrl);
     const data = await response.json();
@@ -14,3 +14,5 @@ export default tenorApi = async (query) => {
     throw error;
   }
 };
+
+export { tenorApi };
