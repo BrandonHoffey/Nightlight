@@ -1,6 +1,8 @@
 import { StyleSheet, Text, View, Image, Pressable, PixelRatio } from "react-native";
 import React, { useContext } from "react";
 import { UserContext } from "../../../UserContext";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Colors from "../../../Colors";
 const fontScale = PixelRatio.getFontScale();
 const getFontSize = (size) => size / fontScale;
 
@@ -8,28 +10,50 @@ const Friend = ({ item }) => {
   const { userId, setUserId } = useContext(UserContext);
 
   return (
-    <Pressable
-      style={{ flexDirection: "row", alignItems: "center", marginVertical: 10 }}
-    >
-      <View>
-        <Image
+    <SafeAreaView>
+      <View style={styles.screenContainer}>
+        <Pressable
           style={{
-            width: 50,
-            height: 50,
-            borderRadius: 25,
-            resizeMode: "cover",
+            flexDirection: "row",
+            alignItems: "center",
+            // marginVertical: 10,
           }}
-          source={{ uri: item.profilePicture }}
-        />
-      </View>
+        >
+          <View>
+            <Image
+              style={{
+                width: 50,
+                height: 50,
+                borderRadius: 25,
+                resizeMode: "cover",
+              }}
+              source={{ uri: item.profilePicture }}
+            />
+          </View>
 
-      <View style={{ marginLeft: 12, flex: 1 }}>
-        <Text style={{ fontSize:getFontSize(16), color:"white",fontWeight: "bold" }}>{item?.username}</Text>
+          <View style={{ marginLeft: 12, flex: 1 }}>
+            <Text
+              style={{
+                fontSize: getFontSize(16),
+                color: "white",
+                fontWeight: "bold",
+              }}
+            >
+              {item?.username}
+            </Text>
+          </View>
+        </Pressable>
       </View>
-      </Pressable>
+    </SafeAreaView>
   );
 };
 
 export default Friend;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  screenContainer: {
+    backgroundColor: Colors.darkBlue,
+    height: "100%",
+    width: "100%",
+  },
+});

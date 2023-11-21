@@ -3,6 +3,7 @@ import React, { useContext } from "react";
 import { UserContext } from "../../../UserContext";
 import { useNavigation } from "@react-navigation/core";
 import { API_FRIEND_REQUEST_ACCEPT } from "../../../constants/Endpoints";
+import Colors from "../../../Colors";
 
 
 const fontScale = PixelRatio.getFontScale();
@@ -61,13 +62,15 @@ const FriendRequest = ({ item, FriendRequests, setFriendRequests }) => {
         source={{ uri: item.profilePicture }}
       />
       <Text
-        style={{ fontSize: getFontSize(16), fontWeight: "bold", color:"white", marginLeft: 10, flex: 1 }}
+
+        style={{ fontSize: getFontSize(16), fontWeight: "bold", marginLeft: 10, flex: 1, color: "white" }}
+
       >
         {item?.username} sent you a friend request!!
       </Text>
       <Pressable
         onPress={() => acceptRequest(item._id)}
-        style={{ backgroundColor: "#0066b2", padding: 10, borderRadius: 6 }}
+        style={{ backgroundColor: Colors.lightBlue, padding: 10, borderRadius: 20 }}
       >
         <Text style={{ textAlign: "center", color: "white" }}>Accept</Text>
       </Pressable>
