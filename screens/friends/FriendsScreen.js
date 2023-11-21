@@ -6,7 +6,7 @@ import React, {
   useRef,
   PixelRatio
 } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../../UserContext";
 import LogoutButton from "../../ui/LogoutButton";
@@ -68,11 +68,11 @@ const FriendScreen = () => {
 
   return (
     <SafeAreaView>
-      <View style={styles.screenContainer}>
+      <ScrollView style={styles.screenContainer}>
         {friendItems.map((item, index) => (
           <Friend key={index} item={item} />
         ))}
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

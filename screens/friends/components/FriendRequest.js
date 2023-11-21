@@ -34,9 +34,9 @@ const FriendRequest = ({ item, FriendRequests, setFriendRequests }) => {
 
       if (response.ok) {
         setFriendRequests(
-          friendRequests.filter((request) => request._id !== friendRequestId)
+          FriendRequests.filter((request) => request._id !== friendRequestId)
         );
-        console.log("Updated Friend Requests:", friendRequests);
+        console.log("Updated Friend Requests:", FriendRequests);
         console.log(
           "Accepting friend request for user:",
           userId,
