@@ -1,13 +1,13 @@
+import React, { useContext } from "react";
 import { API_MESSAGE_SEND, API_MESSAGE_VIEW } from "../constants/Endpoints";
+import { UserContext } from "../UserContext";
 
 const sendMessage = async (receiver, content) => {
+  const { token } = useContext(UserContext);
   try {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-    myHeaders.append(
-      "Authorization",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTUxZjhmNWNjNDlhMjI2MGUyMDE0YiIsImlhdCI6MTcwMDA3NzQ1NSwiZXhwIjoxNzAwNjgyMjU1fQ.2sCJEnhC5FuKa6fDzHyMAYvMrurmO4V_8tf8J0hUw38"
-    );
+    myHeaders.append("Authorization", token);
     const body = {
       receiver: receiver,
       content: content,
@@ -29,10 +29,7 @@ const sendMessage = async (receiver, content) => {
 const viewMessages = async (id) => {
   try {
     const myHeaders = new Headers();
-    myHeaders.append(
-      "Authorization",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTUxZjhmNWNjNDlhMjI2MGUyMDE0YiIsImlhdCI6MTcwMDA3NzQ1NSwiZXhwIjoxNzAwNjgyMjU1fQ.2sCJEnhC5FuKa6fDzHyMAYvMrurmO4V_8tf8J0hUw38"
-    );
+    myHeaders.append("Authorization", token);
     const requestOption = {
       method: "GET",
       headers: myHeaders,

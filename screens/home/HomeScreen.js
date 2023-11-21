@@ -1,5 +1,4 @@
-import React, { useContext, useLayoutEffect } from "react";
-
+import React, { useContext, useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -17,16 +16,15 @@ import LogoutButton from "../../ui/LogoutButton";
 // import logo from "../../assets/NightLight-BeamFont.png";
 import logo from "../../assets/NightLight-GCfont1.png";
 import { UserContext } from "../../UserContext";
-
-// import bgStars from "../../assets/Texture-Stars75Op.png";
-// import bgStars from "../../assets/Texture-Stars90oP.png";
+import { currentUser } from "../../api/UserApi";
 import bgStars from "../../assets/stars-backgroundRS.png";
 
 const fontScale = PixelRatio.getFontScale();
 const getFontSize = (size) => size / fontScale;
 
-
 const HomeScreen = () => {
+  const [currentlySignedIn, setCurrentlySignedIn] = useState({});
+  const data = currentUser();
   const navigation = useNavigation();
   const { username } = useContext(UserContext);
 
@@ -40,40 +38,21 @@ const HomeScreen = () => {
     navigation.navigate("Community");
   };
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: "",
-      headerLeft: () => (
-        <Text
-          style={{
-            fontSize: getFontSize(16),
-            fontWeight: "bold",
-            color: "white",
-          }}
-        >
-          Home
-        </Text>
-      ),
-      headerRight: () => (
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-          <AntDesign name="message1" size={24} color="white" />
-          <Ionicons
-            onPress={() => navigation.navigate("FriendRequestsScreen")}
-            name="people-outline"
-            size={24}
-            color="white"
-
-          />
-          <LogoutButton />
-        </View>
-      ),
-    });
+  useEffect(() => {
+    setCurrentlySignedIn(data);
+    const handlePageLoad = async () => {
+      try {
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    handlePageLoad();
   }, []);
-
+  console.log(data);
   return (
     <>
       <SafeAreaView style={styles.containerBG}>
-        <Image source={bgStars} style={styles.backgroundImage}></Image>
+        <Image source={bgStars} style={styles.backgroundImage} />
         <View style={styles.overlay}>
           <Image source={logo} />
           <Text style={styles.textContainer}>Welcome User</Text>
@@ -122,15 +101,14 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: "cover",
     position: "absolute",
-    width: "100%",
-    height: "100%",
+    height: "120%",
     // transform: [{ rotate: '180deg' }], //rotates image 180
   },
   overlay: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(5, 0, 43, 0.5)", // Adjust the opacity with last digit, first 3 dialed in darkBlue
+    backgroundColor: "rgba(5, 0, 43, .5)", // Adjust the opacity with last digit, first 3 dialed in darkBlue
   },
   textContainer: {
     color: Colors.white,
