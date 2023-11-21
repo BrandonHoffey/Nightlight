@@ -58,7 +58,7 @@ const HomeScreen = () => {
             />
           </View>
           <Image source={logo} />
-          <Text style={styles.textContainer}>Welcome {username}</Text>
+          <Text style={styles.textContainer}>Welcome {username}!</Text>
           <Pressable
             style={({ pressed }) => [
               styles.buttonContainer,
@@ -85,7 +85,7 @@ const HomeScreen = () => {
                 shadowOffset: { width: -2, height: 4 },
                 shadowOpacity: 1,
                 shadowRadius: 10,
-                borderColor: Colors.lightBlue,
+                borderColor: Colors.white,
                 borderWidth: 3,
                 elevation: 10,
                 shadowColor: Colors.black,
@@ -105,13 +105,31 @@ const HomeScreen = () => {
                 shadowOffset: { width: -2, height: 4 },
                 shadowOpacity: 1,
                 shadowRadius: 10,
-                borderColor: Colors.lightBlue,
+                borderColor: Colors.lightGreen,
                 borderWidth: 3,
               },
             ]}
             onPress={pressHandlerCommunity}
           >
             <Text style={styles.buttonText1}>Community</Text>
+          </Pressable>
+          <Pressable
+            style={({ pressed }) => [
+              styles.buttonContainerStatus,
+              {
+                backgroundColor: pressed ? Colors.lightGreen : Colors.red,
+                elevation: 10,
+                shadowColor: Colors.black,
+                shadowOffset: { width: -2, height: 4 },
+                shadowOpacity: 1,
+                shadowRadius: 10,
+                borderColor: Colors.white,
+                borderWidth: 3,
+              },
+            ]}
+            // onPress={}
+          >
+            <Text style={styles.buttonText2}>Offline</Text>
           </Pressable>
         </View>
       </SafeAreaView>
@@ -133,7 +151,9 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    justifyContent: "center",
+    // marginTop:10,
+    padding:10,
+    justifyContent: "space-evenly",
     alignItems: "center",
     backgroundColor: "rgba(5, 0, 43, 0.4)", // Adjust the opacity with last digit, first 3 dialed in darkBlue
   },
@@ -155,6 +175,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     aspectRatio: 1,
   },
+  buttonContainerStatus: {
+    backgroundColor: Colors.lightBlue,
+    borderRadius: 100,
+    // padding: 20,
+    overflow: "hidden",
+    margin: 10,
+    marginTop: 10,
+    width: "20%",
+    height: "10%",
+    alignItems: "center",
+    justifyContent: "center",
+    aspectRatio: 1,
+    
+  },
   buttonText: {
     color: Colors.white,
     fontSize: getFontSize(18),
@@ -165,11 +199,16 @@ const styles = StyleSheet.create({
     fontSize: getFontSize(18),
     fontWeight: "bold",
   },
+  buttonText2: {
+    color: Colors.white,
+    fontSize: getFontSize(14),
+    fontWeight: "bold",
+  },
   logoutButtonContainer: {
     position: "absolute",
-    top: 16,
+    top: 10,
     right: 16,
-    marginTop: 25,
+    marginTop: 15,
   },
   userSettingsContainer: {
     position: "absolute",

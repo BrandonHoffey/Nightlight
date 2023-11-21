@@ -8,13 +8,24 @@ import {
   TouchableOpacity,
   FlatList,
   SafeAreaView,
+  PixelRatio,
 } from "react-native";
 import Colors from "../../Colors";
 import { API_GROUP_VIEW_ALL } from "../../constants/Endpoints";
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../../UserContext";
+import { useLayoutEffect } from "react";
+import { StatusBar } from "expo-status-bar";
+import { AntDesign } from "@expo/vector-icons";
+import LogoutButton from "../../ui/LogoutButton";
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+
+const fontScale = PixelRatio.getFontScale();
+const getFontSize = (size) => size / fontScale;
 
 export default ViewGroupsCreated = (props) => {
+  const navigation = useNavigation();
   const { userId, setUserId, token } = useContext(UserContext);
   const [viewAllGroups, setViewAllGroups] = useState([]);
   useEffect(() => {
@@ -48,6 +59,24 @@ export default ViewGroupsCreated = (props) => {
       <Text style={styles.usersText}>{users}</Text>
     </View>
   );
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: "All Groups",
+
+      headerRight: () => (
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+          <AntDesign name="message1" size={24} color="white" />
+          <Ionicons
+            onPress={() => navigation.navigate("FriendRequestsScreen")}
+            name="people-outline"
+            size={24}
+            color="white"
+          />
+          <LogoutButton />
+        </View>
+      ),
+    });
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -68,18 +97,18 @@ const styles = StyleSheet.create({
   nameText: {
     backgroundColor: Colors.lightBlue,
     color: "white",
-    fontSize: 24,
+    fontSize: getFontSize(18),
   },
   usersText: {
     backgroundColor: Colors.lightBlue,
     color: Colors.lightGreen,
-    fontSize: 16,
+    fontSize: getFontSize(14),
   },
   groupInfo: {
     backgroundColor: Colors.lightBlue,
     margin: 10,
     padding: 10,
-    borderRadius: 15,
+    borderRadius: 20,
     overflow: "hidden",
     marginTop: 15,
   },
@@ -91,13 +120,3 @@ const styles = StyleSheet.create({
   // },
 });
 
-// <View style={styles.container}>
-//   <TouchableOpacity style={styles.buttonContainer}>
-//     <Button
-//       color={Colors.lightBlue}
-//       title="View Groups"
-
-//       onPress={() => console.log("view groups clicked")}
-//     />
-//   </TouchableOpacity>
-// </View>
