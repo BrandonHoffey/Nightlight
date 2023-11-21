@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import Colors from "../../Colors";
 import { useNavigation } from "@react-navigation/native";
-import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import LogoutButton from "../../ui/LogoutButton";
 // import logo from "../../assets/NightLight-BeamFont.png";
@@ -43,20 +42,8 @@ const HomeScreen = () => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: "",
-      headerLeft: () => (
-        <Text
-          style={{
-            fontSize: getFontSize(16),
-            fontWeight: "bold",
-            color: "white",
-          }}
-        >
-          Home
-        </Text>
-      ),
       headerRight: () => (
         <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-          <AntDesign name="message1" size={24} color="white" />
           <Ionicons
             onPress={() => navigation.navigate("FriendRequestsScreen")}
             name="people-outline"
@@ -130,7 +117,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(5, 0, 43, 0.5)", // Adjust the opacity with last digit, first 3 dialed in darkBlue
+    backgroundColor: "rgba(5, 0, 43, 0.5)",
   },
   textContainer: {
     color: Colors.white,
