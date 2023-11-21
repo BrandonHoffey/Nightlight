@@ -15,7 +15,6 @@ import { API_USER_SIGN_IN } from "../../constants/Endpoints";
 import Colors from "../../Colors";
 import { useNavigation } from "@react-navigation/native";
 
-
 const fontScale = PixelRatio.getFontScale();
 const getFontSize = (size) => size / fontScale;
 

@@ -119,25 +119,25 @@ const User = ({ item }) => {
       {userFriends.includes(item._id) ? (
         <Pressable
           style={{
-            backgroundColor: "#82CD47",
+            backgroundColor: Colors.lightGreen,
             padding: 10,
             width: 105,
-            borderRadius: 6,
+            borderRadius: 20,
           }}
         >
-          <Text style={{ textAlign: "center", color: "white" }}>Friends</Text>
+          <Text style={{ textAlign: "center", color: "white", fontSize: getFontSize(14)}}>Friends</Text>
         </Pressable>
       ) : requestSent ||
         friendRequests.some((friend) => friend._id === item._id) ? (
         <Pressable
           style={{
-            backgroundColor: "gray",
+            backgroundColor: Colors.yellow,
             padding: 10,
             width: 105,
-            borderRadius: 6,
+            borderRadius: 20,
           }}
         >
-          <Text style={{ textAlign: "center", color: "white", fontSize: 13 }}>
+          <Text style={{ textAlign: "center", color: "black", fontSize: getFontSize(14) }}>
             Pending
           </Text>
         </Pressable>
@@ -145,13 +145,13 @@ const User = ({ item }) => {
         <Pressable
           onPress={() => sendFriendRequest(userId, item._id)}
           style={{
-            backgroundColor: "#567189",
+            backgroundColor: Colors.lightBlue,
             padding: 10,
-            borderRadius: 6,
+            borderRadius:20,
             width: 105,
           }}
         >
-          <Text style={{ textAlign: "center", color: "white", fontSize: getFontSize(12) }}>
+          <Text style={{ textAlign: "center", color: "white", fontSize: getFontSize(14) }}>
             Add Friend
           </Text>
         </Pressable>
