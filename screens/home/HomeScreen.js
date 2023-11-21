@@ -24,7 +24,6 @@ import bgStars from "../../assets/stars-backgroundRS.png";
 const fontScale = PixelRatio.getFontScale();
 const getFontSize = (size) => size / fontScale;
 
-
 const HomeScreen = () => {
   const navigation = useNavigation();
   const { username } = useContext(UserContext);
@@ -49,7 +48,6 @@ const HomeScreen = () => {
             name="people-outline"
             size={24}
             color="white"
-
           />
           <LogoutButton />
         </View>
@@ -63,7 +61,7 @@ const HomeScreen = () => {
         <Image source={bgStars} style={styles.backgroundImage}></Image>
         <View style={styles.overlay}>
           <Image source={logo} />
-          <Text style={styles.textContainer}>Welcome User</Text>
+          <Text style={styles.textContainer}>Welcome {username}</Text>
           <Pressable
             style={({ pressed }) => [
               styles.buttonContainer,
