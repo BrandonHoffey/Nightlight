@@ -114,7 +114,7 @@ const User = ({ item }) => {
       </View>
 
       <View style={{ marginLeft: 12, flex: 1 }}>
-        <Text style={{ fontWeight: "bold", color:Colors.white, fontSize:getFontSize(16)}}>{item?.username}</Text>
+        <Text style={{ fontWeight: "bold", color:Colors.white, fontSize:getFontSize(16)}}>{item?.displayName}</Text>
       </View>
       {userFriends.includes(item._id) ? (
         <Pressable

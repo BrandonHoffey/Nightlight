@@ -50,7 +50,7 @@ const Friend = ({ item }) => {
                   fontWeight: "bold",
                 }}
               >
-                {item?.username}
+                {item?.displayName}
               </Text>
             </View>
           </View>
