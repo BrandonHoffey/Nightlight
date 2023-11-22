@@ -21,7 +21,7 @@ const getFontSize = (size) => size / fontScale;
 export default (params) => {
   const { login } = useContext(UserContext);
 
-  const [username, setUsername] = useState("neil");
+  const [username, setUsername] = useState("brandon");
   const [password, setPassword] = useState("Test123");
   const navigation = useNavigation();
 
