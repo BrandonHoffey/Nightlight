@@ -26,3 +26,5 @@ export const API_VIEW_ALL_FRIENDS_BY_ID =
   "https://f98f-2601-282-4303-1fc0-acab-99c9-dcce-6b19.ngrok-free.app/friend/friends";
 export const API_USER_EDIT_BY_ID =
   "https://f98f-2601-282-4303-1fc0-acab-99c9-dcce-6b19.ngrok-free.app/user/edit-account";
+export const API_UPDATE_STATUS =
+  "https://f98f-2601-282-4303-1fc0-acab-99c9-dcce-6b19.ngrok-free.app/user/update-status";
