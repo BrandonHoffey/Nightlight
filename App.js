@@ -2,18 +2,17 @@ import React from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
 import MessageScreen from "./screens/messages/MessageScreen";
 import Colors from "./Colors";
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer } from "@react-navigation/native";
 import StackNavigator from "./StackNavigator";
 import { UserProvider } from "./UserContext";
 
-
 export default function App() {
   return (
-    <NavigationContainer>
-      <UserProvider>
-        <StackNavigator style={styles.StyleSheet}/>
-      </UserProvider>
-    </NavigationContainer>
+    <UserProvider>
+      <NavigationContainer>
+        <StackNavigator style={styles.StyleSheet} />
+      </NavigationContainer>
+    </UserProvider>
   );
 }
 
