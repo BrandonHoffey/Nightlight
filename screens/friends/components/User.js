@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, Pressable, Image, PixelRatio } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Pressable,
+  Image,
+  PixelRatio,
+} from "react-native";
 import React, { useContext, useState, useEffect } from "react";
 import { UserContext } from "../../../UserContext";
 import {
@@ -11,6 +18,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const fontScale = PixelRatio.getFontScale();
 const getFontSize = (size) => size / fontScale;
+
 const User = ({ item }) => {
   const { userId, setUserId, token } = useContext(UserContext);
   const [requestSent, setRequestSent] = useState(false);
@@ -26,21 +34,45 @@ const User = ({ item }) => {
         if (response.ok) {
           setFriendRequests(data);
         } else {
-          console.log("error", response.status);
+          console.log("error fetching friend requests", response.status, data);
         }
       } catch (error) {
-        console.log("error", error);
+        console.log("Fetch error", error);
       }
     };
 
     fetchFriendRequests();
-  }, []);
+  }, [userId]);
+
+  useEffect(() => {
+    const checkFriendshipStatus = () => {
+      if (friendRequests.some((friend) => friend._id === item._id)) {
+        setRequestSent(true);
+      } else {
+        setRequestSent(false);
+      }
+    };
+
+    checkFriendshipStatus();
+  }, [friendRequests, item._id]);
+
+  useEffect(() => {
+    const loadRequestSentStatus = async () => {
+      try {
+        const status = await AsyncStorage.getItem(`friendRequest:${item._id}`);
+        setRequestSent(status === "sent");
+      } catch (error) {
+        console.log("Error loading requestSent status", error);
+      }
+    };
+
+    loadRequestSentStatus();
+  }, [friendRequests, item._id]);
 
   useEffect(() => {
     const fetchUserFriends = async () => {
       try {
         const response = await fetch(`${API_VIEW_ALL_FRIENDS_BY_ID}/${userId}`);
-
         const data = await response.json();
 
         if (response.ok) {
@@ -54,20 +86,7 @@ const User = ({ item }) => {
     };
 
     fetchUserFriends();
-  }, []);
-
-  useEffect(() => {
-    const loadRequestSentStatus = async () => {
-      try {
-        const status = await AsyncStorage.getItem(`friendRequest:${item._id}`);
-        setRequestSent(status === "sent");
-      } catch (error) {
-        console.log("Error loading requestSent status", error);
-      }
-    };
-
-    loadRequestSentStatus();
-  }, [item._id]);
+  }, [userId]);
 
   const sendFriendRequest = async (currentUserId, selectedUserId) => {
     try {
@@ -99,7 +118,6 @@ const User = ({ item }) => {
   return (
     <Pressable
       style={{ flexDirection: "row", alignItems: "center", marginVertical: 10 }}
-      disabled={requestSent}
     >
       <View>
         <Image
@@ -114,48 +132,48 @@ const User = ({ item }) => {
       </View>
 
       <View style={{ marginLeft: 12, flex: 1 }}>
-        <Text style={{ fontWeight: "bold", color:Colors.white, fontSize:getFontSize(16)}}>{item?.displayName}</Text>
+        <Text
+          style={{
+            fontWeight: "bold",
+            color: Colors.white,
+            fontSize: getFontSize(16),
+          }}
+        >
+          {item?.displayName}
+        </Text>
       </View>
-      {userFriends.includes(item._id) ? (
-        <Pressable
+
+      <Pressable
+        onPress={() => sendFriendRequest(userId, item._id)}
+        style={{
+          backgroundColor: userFriends.includes(item._id)
+            ? Colors.lightGreen
+            : requestSent
+            ? Colors.yellow
+            : Colors.lightBlue,
+          padding: 10,
+          borderRadius: 20,
+          width: 105,
+        }}
+      >
+        <Text
           style={{
-            backgroundColor: Colors.lightGreen,
-            padding: 10,
-            width: 105,
-            borderRadius: 20,
+            textAlign: "center",
+            color: userFriends.includes(item._id)
+              ? "white"
+              : requestSent
+              ? "black"
+              : "white",
+            fontSize: getFontSize(14),
           }}
         >
-          <Text style={{ textAlign: "center", color: "white", fontSize: getFontSize(14)}}>Friends</Text>
-        </Pressable>
-      ) : requestSent ||
-        friendRequests.some((friend) => friend._id === item._id) ? (
-        <Pressable
-          style={{
-            backgroundColor: Colors.yellow,
-            padding: 10,
-            width: 105,
-            borderRadius: 20,
-          }}
-        >
-          <Text style={{ textAlign: "center", color: "black", fontSize: getFontSize(14) }}>
-            Pending
-          </Text>
-        </Pressable>
-      ) : (
-        <Pressable
-          onPress={() => sendFriendRequest(userId, item._id)}
-          style={{
-            backgroundColor: Colors.lightBlue,
-            padding: 10,
-            borderRadius:20,
-            width: 105,
-          }}
-        >
-          <Text style={{ textAlign: "center", color: "white", fontSize: getFontSize(14) }}>
-            Add Friend
-          </Text>
-        </Pressable>
-      )}
+          {userFriends.includes(item._id)
+            ? "Friend"
+            : requestSent
+            ? "Pending"
+            : "Add Friend"}
+        </Text>
+      </Pressable>
     </Pressable>
   );
 };

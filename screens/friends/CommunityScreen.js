@@ -1,4 +1,4 @@
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, ScrollView, StyleSheet, Text, View, RefreshControl } from "react-native";
 import React, {
   useLayoutEffect,
   useContext,
@@ -24,6 +24,7 @@ const CommunityScreen = () => {
   const { userId, setUserId, token } = useContext(UserContext);
   const [users, setUsers] = useState([]);
   const [userItems, setUserItems] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   const flatListRef = useRef(null);
 
@@ -50,7 +51,6 @@ const CommunityScreen = () => {
     });
   }, []);
 
-  useEffect(() => {
     const fetchUsers = async () => {
       try {
         const myHeaders = new Headers();
@@ -69,12 +69,25 @@ const CommunityScreen = () => {
       }
     };
 
+    const onRefresh = () => {
+      setRefreshing(true);
+  
+      // Add the logic to refresh your data
+      fetchUsers();
+  
+      setRefreshing(false);
+    };
+
+    useEffect(() => {
     fetchUsers();
   }, [token, userId]);
 
   return (
     <SafeAreaView>
-      <ScrollView style={styles.screenContainer}>
+      <ScrollView
+        style={styles.screenContainer}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      >
         {userItems.map((item, index) => (
           <User key={index} item={item} />
         ))}
