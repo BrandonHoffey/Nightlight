@@ -66,16 +66,16 @@ const FriendScreen = () => {
         fetchFriends();
       }, [token]);
 
-  return (
-
-      <ScrollView style={styles.screenContainer}>
-        {friendItems.map((item) => (
-          <Friend key={item._id} item={item} />
-        ))}
-      </ScrollView>
-
-  );
-};
+      return (
+        <ScrollView style={styles.screenContainer}>
+          {friendItems.length === 0 ? (
+            <Text style={styles.emptyFriendsText}>Your friends list is empty</Text>
+          ) : (
+            friendItems.map((item) => <Friend key={item._id} item={item} />)
+          )}
+        </ScrollView>
+      );
+    };
 
 export default FriendScreen;
 
@@ -84,5 +84,11 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     backgroundColor: Colors.darkBlue,
+  },
+  emptyFriendsText: {
+    fontSize: 16,
+    color: Colors.white,
+    textAlign: "center",
+    marginTop: 20,
   },
 });

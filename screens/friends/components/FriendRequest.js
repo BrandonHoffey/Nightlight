@@ -68,7 +68,7 @@ const FriendRequest = ({ item, FriendRequests, setFriendRequests }) => {
         style={{ fontSize: getFontSize(16), fontWeight: "bold", marginLeft: 10, flex: 1, color: "white" }}
 
       >
-        {item?.username} sent you a friend request!!
+        {item?.displayName} sent you a friend request!!
       </Text>
       <Pressable
         onPress={() => acceptRequest(item._id)}
