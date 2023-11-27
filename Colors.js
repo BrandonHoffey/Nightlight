@@ -8,5 +8,5 @@ export default {
   black: "#000000",
   red: "#d43a3a",
   onlineGreen: "#2cfc03"
-  
 };
+

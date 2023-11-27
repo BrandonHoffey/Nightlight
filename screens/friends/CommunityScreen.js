@@ -1,4 +1,11 @@
-import { SafeAreaView, ScrollView, StyleSheet, Text, View, RefreshControl } from "react-native";
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  RefreshControl,
+} from "react-native";
 import React, {
   useLayoutEffect,
   useContext,
@@ -51,34 +58,34 @@ const CommunityScreen = () => {
     });
   }, []);
 
-    const fetchUsers = async () => {
-      try {
-        const myHeaders = new Headers();
-        myHeaders.append("Authorization", token);
-        myHeaders.append("ngrok-skip-browser-warning", "true");
-        let requestOptions = {
-          method: "GET",
-          headers: myHeaders,
-        };
-        const response = await fetch(API_VIEW_ALL_USERS, requestOptions);
-        const data = await response.json();
-        const filteredUsers = data.users.filter((user) => user._id !== userId);
-        setUserItems(filteredUsers);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  const fetchUsers = async () => {
+    try {
+      const myHeaders = new Headers();
+      myHeaders.append("Authorization", token);
+      myHeaders.append("ngrok-skip-browser-warning", "true");
+      let requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+      };
+      const response = await fetch(API_VIEW_ALL_USERS, requestOptions);
+      const data = await response.json();
+      const filteredUsers = data.users.filter((user) => user._id !== userId);
+      setUserItems(filteredUsers);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-    const onRefresh = () => {
-      setRefreshing(true);
-  
-      // Add the logic to refresh your data
-      fetchUsers();
-  
-      setRefreshing(false);
-    };
+  const onRefresh = () => {
+    setRefreshing(true);
 
-    useEffect(() => {
+    // Add the logic to refresh your data
+    fetchUsers();
+
+    setRefreshing(false);
+  };
+
+  useEffect(() => {
     fetchUsers();
   }, [token, userId]);
 
@@ -86,7 +93,9 @@ const CommunityScreen = () => {
     <SafeAreaView>
       <ScrollView
         style={styles.screenContainer}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
         {userItems.map((item, index) => (
           <User key={index} item={item} />

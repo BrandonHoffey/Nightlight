@@ -1,5 +1,4 @@
-import React, { useContext, useLayoutEffect, useState, useEffect } from "react";
-
+import React, { useContext, useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,183 +7,146 @@ import {
   PixelRatio,
   Pressable,
   SafeAreaView,
+  TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import Colors from "../../Colors";
 import { useNavigation } from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons";
 import LogoutButton from "../../ui/LogoutButton";
-import logo from "../../assets/NightLight-GCfont1.png";
+import logo from "../../assets/logo.png";
 import { UserContext } from "../../UserContext";
-import bgStars from "../../assets/stars-backgroundRS.png";
-import { API_UPDATE_STATUS } from "../../constants/Endpoints";
-
+import { currentUser } from "../../api/UserApi";
+import bgStars from "../../assets/background.png";
 const fontScale = PixelRatio.getFontScale();
 const getFontSize = (size) => size / fontScale;
-
 const HomeScreen = () => {
+  const [currentlySignedIn, setCurrentlySignedIn] = useState({});
+  const { username, token } = useContext(UserContext);
   const navigation = useNavigation();
-  const { username } = useContext(UserContext);
-  const [isOnline, setIsOnline] = useState(false);
-  const { userId, setUserId, token } = useContext(UserContext);
 
   useEffect(() => {
-    const fetchUserStatus = async () => {
+    const handlePageLoad = async () => {
       try {
-        const myHeaders = new Headers();
-        myHeaders.append("Authorization", token);
-
-        const response = await fetch(`${API_UPDATE_STATUS}/${userId}`, {
-          method: "GET",
-          headers: myHeaders,
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setIsOnline(data.user.status === "online");
+        if (token) {
+          const result = await currentUser(token);
+          setCurrentlySignedIn(result);
         }
       } catch (error) {
-        console.error("Error fetching user status:", error);
+        console.error(error);
       }
     };
-
-    fetchUserStatus();
-  }, [userId, token]);
-
-  const toggleOnlineStatus = async () => {
-    try {
-      const myHeaders = new Headers();
-      myHeaders.append("Authorization", token);
-
-      const response = await fetch(`${API_UPDATE_STATUS}/${userId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": token,
-        },
-        body: JSON.stringify({
-          status: isOnline ? "offline" : "online",
-        }),
-      });
-
-      if (response.ok) {
-        setIsOnline(!isOnline);
-      } else {
-        console.error(`Failed to update user status. HTTP Error: ${response.status}`);
-      }
-    } catch (error) {
-      console.error("An error occurred while updating user status:", error);
+    if (token) {
+      handlePageLoad();
     }
-  };
+  }, [token]);
 
   const pressHandlerFriends = () => {
-    navigation.navigate("FriendScreen");
+    navigation.navigate("FriendScreen", {
+      currentUser: currentlySignedIn,
+      token: token,
+    });
   };
   const pressHandlerGroups = () => {
-    navigation.navigate("Group Chats");
+    navigation.navigate("Group Chats", {
+      currentUser: currentlySignedIn,
+      token: token,
+    });
   };
   const pressHandlerCommunity = () => {
-    navigation.navigate("Community");
+    navigation.navigate("Community", {
+      currentUser: currentlySignedIn,
+      token: token,
+    });
   };
-  const handleSettings = () => {
-    navigation.navigate("UserSettings");
+  const pressHandlerMessages = () => {
+    navigation.navigate("InboxScreen", {
+      currentUser: currentlySignedIn,
+      token: token,
+    });
   };
 
   return (
     <>
-      <SafeAreaView style={styles.containerBG}>
-        <Image source={bgStars} style={styles.backgroundImage}></Image>
-        <View style={styles.overlay}>
-          <View style={styles.logoutButtonContainer}>
-            <LogoutButton />
+      <SafeAreaView style={styles.container}>
+        <Image source={bgStars} style={styles.backgroundImage} />
+        <View style={styles.header}>
+          <View style={styles.navBar}>
+            <Image source={logo} style={styles.logo} />
+            <View style={styles.statusContainer}>
+              <TouchableOpacity style={styles.profileImageContainer}>
+                {currentlySignedIn ? (
+                  <Image
+                    source={{ uri: currentlySignedIn.profilePicture }}
+                    style={styles.profileImage}
+                  />
+                ) : (
+                  <ActivityIndicator />
+                )}
+              </TouchableOpacity>
+              <View style={styles.online} />
+            </View>
           </View>
-          <View style={styles.userSettingsContainer}>
-            <Ionicons
-              name="md-settings-outline"
-              size={24}
-              color="white"
-              onPress={handleSettings}
-            />
+          <Text style={[styles.welcomeText]}>
+            {currentlySignedIn
+              ? `Welcome, ${currentlySignedIn.displayName}`
+              : "Welcome"}
+          </Text>
+        </View>
+        <View style={styles.buttonColumnsContainer}>
+          <View style={styles.buttonColumn}>
+            <Pressable
+              style={({ pressed }) => [
+                styles.buttonContainer,
+                styles.friendsButton,
+                {
+                  backgroundColor: pressed
+                    ? Colors.lightGreen
+                    : Colors.lightBlue,
+                },
+              ]}
+              onPress={pressHandlerFriends}
+            >
+              <Text style={[styles.buttonText]}>Friends</Text>
+            </Pressable>
+            <Pressable
+              style={({ pressed }) => [
+                styles.buttonContainer,
+                styles.groupsButton,
+                {
+                  backgroundColor: pressed
+                    ? Colors.lightBlue
+                    : Colors.lightGreen,
+                },
+              ]}
+              onPress={pressHandlerGroups}
+            >
+              <Text style={[styles.buttonText]}>Groups</Text>
+            </Pressable>
           </View>
-          <Image source={logo} />
-          <Text style={styles.textContainer}>Welcome {username}!</Text>
-          <Pressable
-            style={({ pressed }) => [
-              styles.buttonContainer,
-              {
-                backgroundColor: pressed ? Colors.lightGreen : Colors.lightBlue,
-                shadowOffset: { width: -2, height: 4 },
-                shadowOpacity: 1,
-                shadowRadius: 10,
-                borderColor: Colors.lightGreen,
-                borderWidth: 3,
-                elevation: 10,
-                shadowColor: Colors.black,
-              },
-            ]}
-            onPress={pressHandlerFriends}
-          >
-            <Text style={styles.buttonText}>Friends</Text>
-          </Pressable>
-          <Pressable
-            style={({ pressed }) => [
-              styles.buttonContainer,
-              {
-                backgroundColor: pressed ? Colors.lightBlue : Colors.lightGreen,
-                shadowOffset: { width: -2, height: 4 },
-                shadowOpacity: 1,
-                shadowRadius: 10,
-                borderColor: Colors.white,
-                borderWidth: 3,
-                elevation: 10,
-                shadowColor: Colors.black,
-              },
-            ]}
-            onPress={pressHandlerGroups}
-          >
-            <Text style={styles.buttonText}>Groups</Text>
-          </Pressable>
-          <Pressable
-            style={({ pressed }) => [
-              styles.buttonContainer,
-              {
-                backgroundColor: pressed ? Colors.lightGreen : Colors.yellow,
-                elevation: 10,
-                shadowColor: Colors.black,
-                shadowOffset: { width: -2, height: 4 },
-                shadowOpacity: 1,
-                shadowRadius: 10,
-                borderColor: Colors.lightGreen,
-                borderWidth: 3,
-              },
-            ]}
-            onPress={pressHandlerCommunity}
-          >
-            <Text style={styles.buttonText1}>Community</Text>
-          </Pressable>
-          <Pressable
-        style={({ pressed }) => [
-          styles.buttonContainerStatus,
-          {
-            backgroundColor: pressed
-              ? Colors.onlineGreen
-              : isOnline
-              ? Colors.onlineGreen
-              : Colors.red,
-            elevation: 10,
-            shadowColor: Colors.black,
-            shadowOffset: { width: -2, height: 4 },
-            shadowOpacity: 1,
-            shadowRadius: 10,
-            borderColor: Colors.white,
-            borderWidth: 3,
-          },
-        ]}
-        onPress={toggleOnlineStatus}
-      >
-        <Text style={styles.buttonText2}>
-          {isOnline ? "ONLINE" : "OFFLINE"}
-        </Text>
-      </Pressable>
+          <View style={styles.buttonColumn}>
+            <Pressable
+              style={({ pressed }) => [
+                styles.buttonContainer,
+                styles.communityButton,
+                {
+                  backgroundColor: pressed ? Colors.white : Colors.yellow,
+                },
+              ]}
+              onPress={pressHandlerCommunity}
+            >
+              <Text style={[styles.communityButtonText]}>Community</Text>
+            </Pressable>
+            <Pressable
+              style={({ pressed }) => [
+                styles.buttonContainer,
+                styles.communityButton,
+                { backgroundColor: pressed ? Colors.yellow : Colors.white },
+              ]}
+              onPress={pressHandlerMessages}
+            >
+              <Text style={[styles.communityButtonText]}>Messages</Text>
+            </Pressable>
+          </View>
         </View>
       </SafeAreaView>
     </>
@@ -192,62 +154,90 @@ const HomeScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  containerBG: {
+  container: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: Colors.darkBlue,
+  },
+  navBar: {
+    flexDirection: "row",
+    flex: 1,
+    width: "100%",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderBottomColor: Colors.white,
+    borderBottomWidth: 0.2,
+  },
+  header: {
+    flexDirection: "column",
+    gap: 20,
+    flex: 1,
+    alignItems: "left",
+    width: "95%",
   },
   backgroundImage: {
     flex: 1,
     resizeMode: "cover",
     position: "absolute",
-    width: "100%",
-    height: "100%",
-    // transform: [{ rotate: '180deg' }], //rotates image 180
+    height: "120%",
   },
-  overlay: {
-    flex: 1,
-    // marginTop:10,
-    padding: 10,
-    justifyContent: "space-evenly",
-    alignItems: "center",
-    backgroundColor: "rgba(5, 0, 43, 0.4)",
-  },
-  textContainer: {
+  welcomeText: {
     color: Colors.white,
     fontSize: getFontSize(24),
-    // fontWeight: "bold",
+  },
+  profileImageContainer: {
+    borderWidth: 1,
+    padding: 3,
+    borderRadius: 50,
+    borderColor: Colors.white,
+  },
+  profileImage: {
+    height: 40,
+    width: 40,
+    borderRadius: 40,
+  },
+  logo: {
+    resizeMode: "contain",
+    width: "40%",
   },
   buttonContainer: {
-    backgroundColor: Colors.lightBlue,
     borderRadius: 100,
     padding: 20,
     overflow: "hidden",
     margin: 10,
     marginTop: 10,
-    width: "35%",
-    height: "17%",
+    width: "50%",
+    height: "30%",
     alignItems: "center",
     justifyContent: "center",
     aspectRatio: 1,
   },
-  buttonContainerStatus: {
-    backgroundColor: Colors.lightBlue,
-    borderRadius: 100,
-    // padding: 20,
-    overflow: "hidden",
-    margin: 10,
-    marginTop: 10,
-    width: "20%",
-    height: "10%",
+  buttonColumnsContainer: {
+    flexDirection: "row",
+    flex: 4,
+    padding: 10,
     alignItems: "center",
-    justifyContent: "center",
-    aspectRatio: 1,
+    justifyContent: "space-between",
+  },
+  buttonColumn: {
+    flexDirection: "column",
+  },
+  friendsButton: {
+    backgroundColor: Colors.lightBlue,
+  },
+  groupsButton: {
+    backgroundColor: Colors.lightGreen,
+  },
+  communityButton: {
+    backgroundColor: Colors.lightBlue,
   },
   buttonText: {
     color: Colors.white,
     fontSize: getFontSize(18),
     fontWeight: "bold",
   },
-  buttonText1: {
+  communityButtonText: {
     color: Colors.lightBlue,
     fontSize: getFontSize(18),
     fontWeight: "bold",
@@ -257,17 +247,19 @@ const styles = StyleSheet.create({
     fontSize: getFontSize(14),
     fontWeight: "bold",
   },
-  logoutButtonContainer: {
-    position: "absolute",
-    top: 10,
-    right: 16,
-    marginTop: 15,
+  statusContainer: {
+    position: "relative",
   },
-  userSettingsContainer: {
+  online: {
     position: "absolute",
-    top: 16,
-    left: 16,
-    marginTop: 25,
+    width: 14,
+    height: 14,
+    borderRadius: 6,
+    backgroundColor: Colors.lightGreen,
+    right: 0,
+    bottom: 30,
+    borderWidth: 2,
+    borderColor: Colors.darkBlue,
   },
 });
 

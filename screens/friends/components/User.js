@@ -6,7 +6,8 @@ import {
   Image,
   PixelRatio,
 } from "react-native";
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { UserContext } from "../../../UserContext";
 import {
   API_SEND_FRIEND_REQUEST,
@@ -25,7 +26,7 @@ const User = ({ item }) => {
   const [friendRequests, setFriendRequests] = useState([]);
   const [userFriends, setUserFriends] = useState([]);
 
-  useEffect(() => {
+  useFocusEffect(() => {
     const fetchFriendRequests = async () => {
       try {
         const response = await fetch(`${API_SENT_FRIEND_REQUESTS}/${userId}`);
@@ -44,7 +45,7 @@ const User = ({ item }) => {
     fetchFriendRequests();
   }, [userId]);
 
-  useEffect(() => {
+  useFocusEffect(() => {
     const checkFriendshipStatus = () => {
       if (friendRequests.some((friend) => friend._id === item._id)) {
         setRequestSent(true);
@@ -56,7 +57,7 @@ const User = ({ item }) => {
     checkFriendshipStatus();
   }, [friendRequests, item._id]);
 
-  useEffect(() => {
+  useFocusEffect(() => {
     const loadRequestSentStatus = async () => {
       try {
         const status = await AsyncStorage.getItem(`friendRequest:${item._id}`);
@@ -69,7 +70,7 @@ const User = ({ item }) => {
     loadRequestSentStatus();
   }, [friendRequests, item._id]);
 
-  useEffect(() => {
+  useFocusEffect(() => {
     const fetchUserFriends = async () => {
       try {
         const response = await fetch(`${API_VIEW_ALL_FRIENDS_BY_ID}/${userId}`);
