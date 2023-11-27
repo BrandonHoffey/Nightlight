@@ -1,14 +1,30 @@
-import { StyleSheet, Text, View, Image, Pressable, PixelRatio } from "react-native";
-import React, { useContext } from "react";
-import { UserContext } from "../../../UserContext";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Pressable,
+  PixelRatio,
+} from "react-native";
+import { useNavigation } from "@react-navigation/core";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Colors from "../../../Colors";
 const fontScale = PixelRatio.getFontScale();
 const getFontSize = (size) => size / fontScale;
 
-const Friend = ({ item }) => {
-  const { userId, setUserId } = useContext(UserContext);
-
+const Friend = ({ item, token, currentUser }) => {
+  item = item.item;
+  const navigate = useNavigation();
+  const handleChatPress = () => {
+    navigate.navigate("MessageScreen", {
+      receiverName: item.displayName,
+      username: item.username,
+      receiverPicture: item.profilePicture,
+      receiverId: item._id,
+      currentUser: currentUser,
+      token: token,
+    });
+  };
   return (
     <SafeAreaView>
       <View style={styles.screenContainer}>
@@ -16,10 +32,11 @@ const Friend = ({ item }) => {
           style={{
             flexDirection: "row",
             alignItems: "center",
+            justifyContent: "space-between",
             // marginVertical: 10,
           }}
         >
-          <View>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Image
               style={{
                 width: 50,
@@ -27,21 +44,41 @@ const Friend = ({ item }) => {
                 borderRadius: 25,
                 resizeMode: "cover",
               }}
-              source={{ uri: item.profilePicture }}
+              source={{ uri: item?.profilePicture }}
             />
+
+            <View style={{ marginLeft: 12 }}>
+              <Text
+                style={{
+                  fontSize: getFontSize(16),
+                  color: "white",
+                  fontWeight: "bold",
+                }}
+              >
+                {item?.displayName}
+              </Text>
+            </View>
           </View>
 
-          <View style={{ marginLeft: 12, flex: 1 }}>
+          <Pressable
+            onPress={handleChatPress}
+            style={{
+              backgroundColor: Colors.darkBlue,
+              padding: 10,
+              borderRadius: 20,
+              width: 70,
+            }}
+          >
             <Text
               style={{
-                fontSize: getFontSize(16),
+                textAlign: "center",
                 color: "white",
-                fontWeight: "bold",
+                fontSize: getFontSize(14),
               }}
             >
-              {item?.username}
+              Chat
             </Text>
-          </View>
+          </Pressable>
         </Pressable>
       </View>
     </SafeAreaView>
@@ -52,8 +89,9 @@ export default Friend;
 
 const styles = StyleSheet.create({
   screenContainer: {
-    backgroundColor: Colors.darkBlue,
-    height: "100%",
-    width: "100%",
+    backgroundColor: Colors.lightBlue,
+    padding: 10,
+    marginBottom: 10,
+    borderRadius: 10,
   },
 });

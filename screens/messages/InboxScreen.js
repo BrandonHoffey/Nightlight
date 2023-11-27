@@ -17,7 +17,8 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import Colors from "../../Colors";
 import UserCard from "../../ui/UserCard";
 
-const InboxScreen = ({ params }) => {
+const InboxScreen = ({ route }) => {
+  const { currentUser, token } = route.params;
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const bottomSheetRef = useRef();
   const snapPoints = useMemo(() => ["75%", "75%", "75%"], []);
@@ -34,6 +35,7 @@ const InboxScreen = ({ params }) => {
       bottomSheetRef.current.expand();
     }
   }, [isSheetOpen]);
+
   useEffect(() => {}, []);
   return (
     <GestureHandlerRootView style={{ flex: 1, width: "100%" }}>
@@ -48,7 +50,7 @@ const InboxScreen = ({ params }) => {
           </Pressable>
         </SafeAreaView>
         <View style={styles.usersContainer}>
-          <UserCard />
+          <UserCard currentUser={currentUser} />
         </View>
         <BottomSheet
           ref={bottomSheetRef}

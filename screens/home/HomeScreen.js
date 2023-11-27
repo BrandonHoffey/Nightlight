@@ -7,86 +7,148 @@ import {
   PixelRatio,
   Pressable,
   SafeAreaView,
+  TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import Colors from "../../Colors";
 import { useNavigation } from "@react-navigation/native";
-import { AntDesign } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
 import LogoutButton from "../../ui/LogoutButton";
-// import logo from "../../assets/NightLight-BeamFont.png";
-import logo from "../../assets/NightLight-GCfont1.png";
+import logo from "../../assets/logo.png";
 import { UserContext } from "../../UserContext";
 import { currentUser } from "../../api/UserApi";
-import bgStars from "../../assets/stars-backgroundRS.png";
+import bgStars from "../../assets/background.png";
 
 const fontScale = PixelRatio.getFontScale();
 const getFontSize = (size) => size / fontScale;
 
 const HomeScreen = () => {
   const [currentlySignedIn, setCurrentlySignedIn] = useState({});
-  const data = currentUser();
+  const { username, token } = useContext(UserContext);
   const navigation = useNavigation();
-  const { username } = useContext(UserContext);
-
-  const pressHandlerFriends = () => {
-    navigation.navigate("FriendScreen");
-  };
-  const pressHandlerGroups = () => {
-    navigation.navigate("Group Chats");
-  };
-  const pressHandlerCommunity = () => {
-    navigation.navigate("Community");
-  };
 
   useEffect(() => {
-    setCurrentlySignedIn(data);
     const handlePageLoad = async () => {
       try {
+        if (token) {
+          const result = await currentUser(token);
+          setCurrentlySignedIn(result);
+        }
       } catch (error) {
         console.error(error);
       }
     };
-    handlePageLoad();
-  }, []);
-  console.log(data);
+    if (token) {
+      handlePageLoad();
+    }
+  }, [token]);
+
+  const pressHandlerFriends = () => {
+    navigation.navigate("FriendScreen", {
+      currentUser: currentlySignedIn,
+      token: token,
+    });
+  };
+  const pressHandlerGroups = () => {
+    navigation.navigate("Group Chats", {
+      currentUser: currentlySignedIn,
+      token: token,
+    });
+  };
+  const pressHandlerCommunity = () => {
+    navigation.navigate("Community", {
+      currentUser: currentlySignedIn,
+      token: token,
+    });
+  };
+  const pressHandlerMessages = () => {
+    navigation.navigate("InboxScreen", {
+      currentUser: currentlySignedIn,
+      token: token,
+    });
+  };
+
   return (
     <>
-      <SafeAreaView style={styles.containerBG}>
+      <SafeAreaView style={styles.container}>
         <Image source={bgStars} style={styles.backgroundImage} />
-        <View style={styles.overlay}>
-          <Image source={logo} />
-          <Text style={styles.textContainer}>Welcome User</Text>
-          <Pressable
-            style={({ pressed }) => [
-              styles.buttonContainer,
-              {
-                backgroundColor: pressed ? Colors.lightGreen : Colors.lightBlue,
-              },
-            ]}
-            onPress={pressHandlerFriends}
-          >
-            <Text style={styles.buttonText}>Friends</Text>
-          </Pressable>
-          <Pressable
-            style={({ pressed }) => [
-              styles.buttonContainer,
-              {
-                backgroundColor: pressed ? Colors.lightBlue : Colors.lightGreen,
-              },
-            ]}
-            onPress={pressHandlerGroups}
-          >
-            <Text style={styles.buttonText}>Groups</Text>
-          </Pressable>
-          <Pressable
-            style={({ pressed }) => [
-              styles.buttonContainer,
-              { backgroundColor: pressed ? Colors.lightGreen : Colors.yellow },
-            ]}
-            onPress={pressHandlerCommunity}
-          >
-            <Text style={styles.buttonText1}>Community</Text>
-          </Pressable>
+        <View style={styles.header}>
+          <View style={styles.navBar}>
+            <Image source={logo} style={styles.logo} />
+            <View style={styles.statusContainer}>
+              <TouchableOpacity style={styles.profileImageContainer}>
+                {currentlySignedIn ? (
+                  <Image
+                    source={{ uri: currentlySignedIn.profilePicture }}
+                    style={styles.profileImage}
+                  />
+                ) : (
+                  <ActivityIndicator />
+                )}
+              </TouchableOpacity>
+              <View style={styles.online} />
+            </View>
+          </View>
+          <Text style={[styles.welcomeText]}>
+            {currentlySignedIn
+              ? `Welcome, ${currentlySignedIn.displayName}`
+              : "Welcome"}
+          </Text>
+        </View>
+        <View style={styles.buttonColumnsContainer}>
+          <View style={styles.buttonColumn}>
+            <Pressable
+              style={({ pressed }) => [
+                styles.buttonContainer,
+                styles.friendsButton,
+                {
+                  backgroundColor: pressed
+                    ? Colors.lightGreen
+                    : Colors.lightBlue,
+                },
+              ]}
+              onPress={pressHandlerFriends}
+            >
+              <Text style={[styles.buttonText]}>Friends</Text>
+            </Pressable>
+            <Pressable
+              style={({ pressed }) => [
+                styles.buttonContainer,
+                styles.groupsButton,
+                {
+                  backgroundColor: pressed
+                    ? Colors.lightBlue
+                    : Colors.lightGreen,
+                },
+              ]}
+              onPress={pressHandlerGroups}
+            >
+              <Text style={[styles.buttonText]}>Groups</Text>
+            </Pressable>
+          </View>
+          <View style={styles.buttonColumn}>
+            <Pressable
+              style={({ pressed }) => [
+                styles.buttonContainer,
+                styles.communityButton,
+                {
+                  backgroundColor: pressed ? Colors.white : Colors.yellow,
+                },
+              ]}
+              onPress={pressHandlerCommunity}
+            >
+              <Text style={[styles.communityButtonText]}>Community</Text>
+            </Pressable>
+            <Pressable
+              style={({ pressed }) => [
+                styles.buttonContainer,
+                styles.communityButton,
+                { backgroundColor: pressed ? Colors.yellow : Colors.white },
+              ]}
+              onPress={pressHandlerMessages}
+            >
+              <Text style={[styles.communityButtonText]}>Messages</Text>
+            </Pressable>
+          </View>
         </View>
       </SafeAreaView>
     </>
@@ -94,49 +156,107 @@ const HomeScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  containerBG: {
+  container: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: Colors.darkBlue,
+  },
+  navBar: {
+    flexDirection: "row",
+    flex: 1,
+    width: "100%",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderBottomColor: Colors.white,
+    borderBottomWidth: 0.2,
+  },
+  header: {
+    flexDirection: "column",
+    gap: 20,
+    flex: 1,
+    alignItems: "left",
+    width: "95%",
   },
   backgroundImage: {
     flex: 1,
     resizeMode: "cover",
     position: "absolute",
     height: "120%",
-    // transform: [{ rotate: '180deg' }], //rotates image 180
   },
-  overlay: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(5, 0, 43, .5)", // Adjust the opacity with last digit, first 3 dialed in darkBlue
-  },
-  textContainer: {
+  welcomeText: {
     color: Colors.white,
     fontSize: getFontSize(24),
-    // fontWeight: "bold",
+  },
+  profileImageContainer: {
+    borderWidth: 1,
+    padding: 3,
+    borderRadius: 50,
+    borderColor: Colors.white,
+  },
+  profileImage: {
+    height: 40,
+    width: 40,
+    borderRadius: 40,
+  },
+  logo: {
+    resizeMode: "contain",
+    width: "40%",
   },
   buttonContainer: {
-    backgroundColor: Colors.lightBlue,
     borderRadius: 100,
     padding: 20,
     overflow: "hidden",
     margin: 10,
     marginTop: 10,
     width: "50%",
-    height: "25%",
+    height: "30%",
     alignItems: "center",
     justifyContent: "center",
     aspectRatio: 1,
+  },
+  buttonColumnsContainer: {
+    flexDirection: "row",
+    flex: 4,
+    padding: 10,
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  buttonColumn: {
+    flexDirection: "column",
+  },
+  friendsButton: {
+    backgroundColor: Colors.lightBlue,
+  },
+  groupsButton: {
+    backgroundColor: Colors.lightGreen,
+  },
+  communityButton: {
+    backgroundColor: Colors.lightBlue,
   },
   buttonText: {
     color: Colors.white,
     fontSize: getFontSize(24),
     fontWeight: "bold",
   },
-  buttonText1: {
+  communityButtonText: {
     color: Colors.lightBlue,
     fontSize: getFontSize(24),
     fontWeight: "bold",
+  },
+  statusContainer: {
+    position: "relative",
+  },
+  online: {
+    position: "absolute",
+    width: 14,
+    height: 14,
+    borderRadius: 6,
+    backgroundColor: Colors.lightGreen,
+    right: 0,
+    bottom: 30,
+    borderWidth: 2,
+    borderColor: Colors.darkBlue,
   },
 });
 

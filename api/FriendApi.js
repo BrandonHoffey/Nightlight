@@ -1,9 +1,7 @@
 import React, { useContext } from "react";
 import { API_VIEW_FRIENDS_DETAILS } from "../constants/Endpoints";
-import { UserContext } from "../UserContext";
 
-const fetchFriendDetail = async () => {
-  const { token } = useContext(UserContext);
+const fetchFriendDetail = async (token) => {
   try {
     const myHeaders = new Headers();
     myHeaders.append("Authorization", token);

@@ -1,58 +1,97 @@
 // import React from "react";
-import {StyleSheet, Text ,View, TextInput, Button, TouchableOpacity, FlatList, SafeAreaView} from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Button,
+  TouchableOpacity,
+  FlatList,
+  SafeAreaView,
+  Image,
+} from "react-native";
 import Colors from "../../Colors";
 import { API_GROUP_VIEW_ALL } from "../../constants/Endpoints";
-import React, { useState, useEffect } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import React, { useState, useEffect } from "react";
 
-
-export default ViewGroupsCreated = (props) => {
+export default ViewGroupsCreated = ({ route }) => {
+  const { currentUser, token } = route.params;
   const [viewAllGroups, setViewAllGroups] = useState([]);
+  const navigate = useNavigation();
+
+  const handlePress = (item, users) => {
+    console.log(item);
+    navigate.navigate("MessageScreen", {
+      receiverName: item.name,
+      username: users,
+      receiverPicture: item.groupPicture,
+      receiverId: item._id,
+      currentUser: currentUser,
+      token: token,
+    });
+  };
+
   useEffect(() => {
     const fetchGroups = async () => {
       try {
         const myHeaders = new Headers();
-        myHeaders.append();
-
+        myHeaders.append("Authorization", token);
         let requestOptions = {
           method: "GET",
           headers: myHeaders,
         };
         const response = await fetch(API_GROUP_VIEW_ALL, requestOptions);
         const data = await response.json();
-        console.log(data);
         setViewAllGroups(data.groups);
       } catch (error) {
         console.error("Error fetching groups:", error);
       }
     };
-
     fetchGroups();
   }, []);
-  useEffect(() => {
-    console.log("use effect log",viewAllGroups)
-  }, [viewAllGroups]);
-
-  const Item = ({ name, users }) => (
-    <View style={styles.groupInfo}>
-      <Text style={styles.nameText}>{name}</Text>
-      <Text style={styles.usersText}>{users}</Text>
-        
-    </View>
-  );
-  
+  const Item = ({ name, users, picture, item }) => {
+    if (users.length >= 3) {
+      users = users.slice(0, 2);
+      const updatedUsers = users.push("and others");
+    }
+    users = users.slice(0, 3).join(" ");
     return (
-      <SafeAreaView style={styles.container}>
-        <FlatList
-          data={viewAllGroups}
-          renderItem={({ item }) => 
-          <Item name={item.name} 
-          users={item.users}/>}
-          keyExtractor={item => item._id}
-        />
-      </SafeAreaView>
+      <TouchableOpacity
+        style={styles.groupInfo}
+        onPress={() => handlePress(item, users)}
+      >
+        <View style={styles.wrapper}>
+          <Image
+            source={{ uri: picture }}
+            style={{ height: 50, width: 50, borderRadius: 50 }}
+          />
+        </View>
+        <View style={styles.wrapper}>
+          <Text style={styles.nameText}>{name}</Text>
+          <Text style={styles.usersText}>{users}</Text>
+        </View>
+      </TouchableOpacity>
     );
   };
 
+  return (
+    <SafeAreaView style={styles.container}>
+      <FlatList
+        data={viewAllGroups}
+        keyExtractor={(item) => item._id}
+        renderItem={({ item }) => (
+          <Item
+            name={item.name}
+            users={item.users}
+            picture={item.groupPicture}
+            item={item}
+          />
+        )}
+      />
+    </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -73,25 +112,10 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.lightBlue,
     margin: 10,
     padding: 10,
-    borderRadius: 15,
-    overflow: "hidden",
-    marginTop:15,
+    borderRadius: 10,
+    flexDirection: "row",
   },
-  // buttonContainer: {
-  //   borderRadius: 15,
-  //   overflow: "hidden",
-  //   margin: 10,
-  //   color: Colors.lightBlue,
-  // },
+  wrapper: {
+    padding: 5,
+  },
 });
-
- // <View style={styles.container}>
-    //   <TouchableOpacity style={styles.buttonContainer}>
-    //     <Button
-    //       color={Colors.lightBlue}
-    //       title="View Groups"
-          
-    //       onPress={() => console.log("view groups clicked")}
-    //     />
-    //   </TouchableOpacity>
-    // </View>

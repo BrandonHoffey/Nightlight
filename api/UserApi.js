@@ -1,9 +1,6 @@
-import { useContext } from "react";
 import { API_CURRENT_USER_DETAILS } from "../constants/Endpoints";
-import { UserContext } from "../UserContext";
 
-const currentUser = async () => {
-  const { token } = useContext(UserContext);
+const currentUser = async (token) => {
   try {
     const myHeaders = new Headers();
     myHeaders.append("Authorization", token);
@@ -13,8 +10,7 @@ const currentUser = async () => {
     };
     const response = await fetch(API_CURRENT_USER_DETAILS, requestOptions);
     const data = await response.json();
-    console.log(data);
-    return data;
+    return data.user;
   } catch (error) {
     console.error(error);
   }

@@ -19,9 +19,17 @@ import Colors from "../../Colors";
 import { useNavigation } from "@react-navigation/core";
 import { useSocket } from "../../api/SocketManager";
 import MessageCard from "../../ui/MessageCard";
+import { listMessages } from "../../api/MessagesApi";
 
 const MessageScreen = ({ route }) => {
-  const { displayName, username, profilePicture, id } = route.params;
+  const {
+    receiverName,
+    username,
+    receiverId,
+    receiverPicture,
+    currentUser,
+    token,
+  } = route.params;
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const bottomSheetRef = useRef();
@@ -42,10 +50,17 @@ const MessageScreen = ({ route }) => {
   }, [isSheetOpen]);
 
   useEffect(() => {
-    // Listen for incoming messages from the server
+    socket.emit("join", { senderId: currentUser._id, receiverId: receiverId });
+    const loadPreviousMessages = async () => {
+      try {
+        const previousMessages = await listMessages(receiverId, token);
+        setMessages(previousMessages);
+      } catch (error) {
+        console.error("Error fetching previous messages:", error);
+      }
+    };
+    loadPreviousMessages();
     socket.on("message", (data) => {
-      console.log("Received message from server:", data);
-      // Handle the received message as needed
       setMessages((prevMessages) => [...prevMessages, data]);
     });
 
@@ -53,29 +68,31 @@ const MessageScreen = ({ route }) => {
       // Clean up on component unmount
       socket.off("message");
     };
-  }, [socket]);
-
+  }, [socket, currentUser._id, receiverId]);
   return (
     <GestureHandlerRootView style={{ flex: 1, width: "100%" }}>
       <View style={styles.viewport}>
-        {console.log({ messages })}
         <SafeAreaView style={styles.user}>
-          <Pressable onPress={() => navigation.navigate("InboxScreen")}>
+          <Pressable
+            onPress={() =>
+              navigation.navigate("InboxScreen", { currentUser, token })
+            }
+          >
             <AntDesign name="left" color={Colors.white} size={20} />
           </Pressable>
           <View style={styles.image}>
             <Image
-              source={{ uri: profilePicture }}
+              source={{ uri: receiverPicture }}
               style={{ width: 40, height: 40, borderRadius: 50 }}
             />
           </View>
           <View style={styles.name}>
-            <Text style={styles.nameText}>{displayName}</Text>
+            <Text style={styles.nameText}>{receiverName}</Text>
             <Text style={styles.usernameText}>{username}</Text>
           </View>
         </SafeAreaView>
         <View style={styles.messageContainer}>
-          <MessageCard messages={messages} />
+          <MessageCard messages={messages} currentUser={currentUser._id} />
         </View>
         <KeyboardAvoidingView
           keyboardVerticalOffset={20}
@@ -85,11 +102,12 @@ const MessageScreen = ({ route }) => {
           <MessageBar
             handleSheet={handleSheet}
             placeholder="Message..."
-            receiverPicture={profilePicture}
-            receiverName={displayName}
-            receiverId={id}
-            senderId={"nothing yet"}
-            senderName={displayName}
+            receiverPicture={receiverPicture}
+            receiverName={receiverName}
+            receiverId={receiverId}
+            senderId={currentUser._id}
+            senderName={currentUser.displayName}
+            senderPicture={currentUser.profilePicture}
           />
         </KeyboardAvoidingView>
         {isSheetOpen && (
@@ -107,11 +125,13 @@ const MessageScreen = ({ route }) => {
         >
           <TenorScreen
             isSheetOpen={isSheetOpen}
-            receiverPicture={profilePicture}
-            receiverName={displayName}
-            receiverId={id}
-            senderId={"nothing yet"}
-            senderName={displayName}
+            setIsSheetOpen={setIsSheetOpen}
+            receiverPicture={receiverPicture}
+            receiverName={receiverName}
+            receiverId={receiverId}
+            senderId={currentUser._id}
+            senderName={currentUser.displayName}
+            senderPicture={currentUser.profilePicture}
             socket={socket}
           />
         </BottomSheet>

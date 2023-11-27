@@ -21,11 +21,13 @@ const itemWidth = (screenWidth - 3 * 20) / 2;
 
 const TenorScreen = ({
   isSheetOpen,
+  setIsSheetOpen,
   receiverPicture,
   receiverId,
   receiverName,
   senderId,
   senderName,
+  senderPicture,
   socket,
 }) => {
   const [searchGif, setSearchGif] = useState([]);
@@ -50,10 +52,12 @@ const TenorScreen = ({
   };
 
   const handleMessageSend = (item) => {
+    setIsSheetOpen(false);
     socket.emit("message", {
       content: item + ".gif",
       sender: senderId,
-      senderName: senderId,
+      senderName: senderName,
+      senderPicture: senderPicture,
       receiver: receiverId,
       receiverName,
       receiverPicture,
@@ -67,6 +71,7 @@ const TenorScreen = ({
   useEffect(() => {
     if (!isSheetOpen) {
       setTextContent("");
+      handleTextChange("");
     }
   }, [isSheetOpen]);
 
@@ -116,7 +121,10 @@ const TenorScreen = ({
                   flex: 1,
                   alignItems: "center",
                 }}
-                onPress={() => handleMessageSend(item.itemurl)}
+                onPress={() => {
+                  handleMessageSend(item.itemurl);
+                  handleTextChange("");
+                }}
               >
                 <Image
                   key={index}

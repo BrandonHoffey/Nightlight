@@ -9,6 +9,8 @@ import {
   Modal,
   Alert,
   PixelRatio,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { UserContext } from "../../UserContext";
 import { API_USER_SIGN_IN } from "../../constants/Endpoints";
@@ -20,9 +22,6 @@ const getFontSize = (size) => size / fontScale;
 
 export default (params) => {
   const { login } = useContext(UserContext);
-
-  const [username, setUsername] = useState("neil");
-  const [password, setPassword] = useState("Test123");
   const navigation = useNavigation();
 
   const handleSubmit = async () => {
@@ -60,10 +59,20 @@ export default (params) => {
     }
   };
   return (
-    <SafeAreaView>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: Colors.darkBlue,
+        alignItems: "center",
+      }}
+    >
       <View style={styles.screenContainer}>
         <View style={styles.imageContainer}></View>
-        <View style={styles.signinContainer}>
+        <KeyboardAvoidingView
+          keyboardVerticalOffset={20}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.signinContainer}
+        >
           <View style={styles.inputContainer}>
             <View>
               <TextInput
@@ -122,7 +131,7 @@ export default (params) => {
               </Pressable>
             </View>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </View>
     </SafeAreaView>
   );
@@ -130,9 +139,8 @@ export default (params) => {
 
 const styles = StyleSheet.create({
   screenContainer: {
-    height: "100%",
-    width: "100%",
-    marginBottom: "40%",
+    flex: 1,
+    // marginBottom: "40%",
   },
   inputContainer: {
     gap: 20,
@@ -145,7 +153,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "white",
-    padding:20,
+    padding: 20,
   },
   controlContainer: {
     flexDirection: "row",
@@ -155,7 +163,7 @@ const styles = StyleSheet.create({
   },
 
   signinContainer: {
-    flex: 3,
+    flex: 1,
   },
   submit: {
     alignItems: "center",

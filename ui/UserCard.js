@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Text,
   View,
@@ -6,25 +6,71 @@ import {
   StyleSheet,
   Pressable,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import { fetchFriendDetail } from "../api/FriendApi";
+import { latestMessage } from "../api/MessagesApi";
 import Colors from "../Colors";
 import { useNavigation } from "@react-navigation/native";
+import { UserContext } from "../UserContext";
 
-const UserCard = ({ params }) => {
+const UserCard = ({ currentUser }) => {
   const [friendDetails, setFriendDetails] = useState([]);
+  const [latestMessages, setLatestMessages] = useState([]);
+  const { token } = useContext(UserContext);
   const navigate = useNavigation();
   useEffect(() => {
-    async function get() {
+    async function getFriends() {
       try {
-        const data = await fetchFriendDetail();
+        if (!token) throw new Error("Invalid Token");
+        const data = await fetchFriendDetail(token);
         setFriendDetails(data.friends);
       } catch (error) {
         console.error(error);
       }
     }
-    get();
-  }, []);
+    getFriends();
+  }, [token]);
+  useEffect(() => {
+    async function getLatestMessages() {
+      try {
+        if (!token) throw new Error("Invalid Token");
+        const updatedMessages = await Promise.all(
+          friendDetails.map(async (friend) => {
+            const { latestMessageSent, latestMessageSender } =
+              await latestMessage(friend._id, token);
+            let data =
+              latestMessageSender === currentUser._id
+                ? "Sent"
+                : latestMessageSent;
+            if (latestMessageSent?.includes(".gif", "https")) {
+              if (latestMessageSender !== currentUser._id) {
+                data = "sent a GIF";
+              }
+            }
+            return { [friend._id]: data };
+          })
+        );
+        setLatestMessages(updatedMessages);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    getLatestMessages();
+  }, [token, friendDetails, currentUser._id]);
+  if (latestMessages.length === 0) {
+    return (
+      <View>
+        <ActivityIndicator
+          size="large"
+          color="#fff"
+          style={{ marginTop: "50%" }}
+        />
+      </View>
+    );
+  }
+
   return (
     <View>
       <FlatList
@@ -36,10 +82,12 @@ const UserCard = ({ params }) => {
             style={styles.container}
             onPress={() =>
               navigate.navigate("MessageScreen", {
-                displayName: item.displayName,
+                receiverName: item.displayName,
                 username: item.username,
-                profilePicture: item.profilePicture,
-                id: item._id,
+                receiverPicture: item.profilePicture,
+                receiverId: item._id,
+                currentUser: currentUser,
+                token: token,
               })
             }
           >
@@ -51,7 +99,9 @@ const UserCard = ({ params }) => {
             </View>
             <View style={styles.textWrapper}>
               <Text style={styles.text}>{item.displayName}</Text>
-              <Text style={[styles.text, { opacity: 0.7 }]}>hi</Text>
+              <Text style={[styles.text, { opacity: 0.7 }]}>
+                {latestMessages[index][item._id]}
+              </Text>
             </View>
           </Pressable>
         )}

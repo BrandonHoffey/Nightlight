@@ -23,6 +23,7 @@ const MessageBar = ({
   receiverName,
   senderId,
   senderName,
+  senderPicture,
 }) => {
   const [textContent, setTextContent] = useState("");
   const [previousContentHeight, setPreviousContentHeight] = useState(40);
@@ -49,7 +50,8 @@ const MessageBar = ({
       socket.emit("message", {
         content: textContent,
         sender: senderId,
-        senderName: senderId,
+        senderName: senderName,
+        senderPicture: senderPicture,
         receiver: receiverId,
         receiverName,
         receiverPicture,

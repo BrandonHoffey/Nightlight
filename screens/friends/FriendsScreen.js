@@ -4,9 +4,10 @@ import React, {
   useContext,
   useState,
   useRef,
-  PixelRatio
+  PixelRatio,
 } from "react";
-import { StyleSheet, Text, View } from "react-native";
+
+import { ScrollView, StyleSheet, Text, View, FlatList } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../../UserContext";
 import LogoutButton from "../../ui/LogoutButton";
@@ -20,60 +21,72 @@ import Colors from "../../Colors";
 // const fontScale = PixelRatio.getFontScale();
 // const getFontSize = (size) => size / fontScale;
 
-const FriendScreen = () => {
-    const navigation = useNavigation();
-    const { userId, setUserId, token } = useContext(UserContext);
-    const [friendItems, setFriendItems] = useState([]);
+const FriendScreen = ({ route }) => {
+  const { currentUser, token } = route.params;
+  const navigation = useNavigation();
+  const [friendItems, setFriendItems] = useState([]);
 
-    useLayoutEffect(() => {
-        navigation.setOptions({
-          headerTitle: "Friends",
-          // headerLeft: () => (
-          //   <Text style={{ fontSize: 16, fontWeight: "bold" }}>Nightlight</Text>
-          // ),
-          headerRight: () => (
-            <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-              <AntDesign name="message1" size={24} color="white" />
-              <Ionicons
-                onPress={() => navigation.navigate("FriendRequestsScreen")}
-                name="people-outline"
-                size={24}
-                color="white"
-              />
-              <LogoutButton />
-            </View>
-          ),
-        });
-      }, []);
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: "Friends",
+      // headerLeft: () => (
+      //   <Text style={{ fontSize: 16, fontWeight: "bold" }}>Nightlight</Text>
+      // ),
+      headerRight: () => (
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+          <AntDesign name="message1" size={24} color="white" />
+          <Ionicons
+            onPress={() => navigation.navigate("FriendRequestsScreen")}
+            name="people-outline"
+            size={24}
+            color="white"
+          />
+          <LogoutButton />
+        </View>
+      ),
+    });
+  }, []);
 
-      useEffect(() => {
-        const fetchFriends = async () => {
-            try {
-                const myHeaders = new Headers();
-                myHeaders.append("Authorization", token);
-                myHeaders.append("ngrok-skip-browser-warning", "true");
-                let requestOptions = {
-                    method: "GET",
-                    headers: myHeaders,
-                };
-                const response = await fetch(API_VIEW_ALL_FRIENDS, requestOptions);
-                const data = await response.json();
-                setFriendItems(data.friends || []);
-            } catch (error) {
-                console.log(error);
-            }
-        }
-        fetchFriends();
-      }, [token]);
-
+  useEffect(() => {
+    const fetchFriends = async () => {
+      try {
+        const myHeaders = new Headers();
+        myHeaders.append("Authorization", token);
+        myHeaders.append("ngrok-skip-browser-warning", "true");
+        let requestOptions = {
+          method: "GET",
+          headers: myHeaders,
+        };
+        const response = await fetch(API_VIEW_ALL_FRIENDS, requestOptions);
+        const data = await response.json();
+        const friends = data.friends;
+        setFriendItems(friends);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchFriends();
+  }, [token]);
   return (
-    <SafeAreaView>
-      <View style={styles.screenContainer}>
-        {friendItems.map((item, index) => (
-          <Friend key={index} item={item} />
-        ))}
-      </View>
-    </SafeAreaView>
+    <FlatList
+      style={styles.screenContainer}
+      data={friendItems}
+      keyExtractor={(item) => item._id}
+      renderItem={(item) =>
+        friendItems.length === 0 ? (
+          <Text style={styles.emptyFriendsText}>
+            Your friends list is empty
+          </Text>
+        ) : (
+          <Friend
+            key={item._id}
+            item={item}
+            currentUser={currentUser}
+            token={token}
+          />
+        )
+      }
+    />
   );
 };
 
@@ -81,9 +94,14 @@ export default FriendScreen;
 
 const styles = StyleSheet.create({
   screenContainer: {
+    flex: 1,
     padding: 10,
     backgroundColor: Colors.darkBlue,
-    height: "100%",
-    width: "100%",
+  },
+  emptyFriendsText: {
+    fontSize: 16,
+    color: Colors.white,
+    textAlign: "center",
+    marginTop: 20,
   },
 });

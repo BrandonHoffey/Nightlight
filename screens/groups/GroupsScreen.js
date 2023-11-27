@@ -15,17 +15,17 @@ import { StatusBar } from "expo-status-bar";
 import { useNavigation } from "@react-navigation/native";
 import Colors from "../../Colors";
 
-export const Groups = () => {
-  const navigation = useNavigation();
+export const Groups = ({ route }) => {
+  const { currentUser, token } = route.params;
+  const navigate = useNavigation();
   const pressHandlerView = () => {
-    navigation.navigate("View Groups");
+    navigate.navigate("View Groups", { currentUser, token });
   };
   const pressHandlerCreate = () => {
-    navigation.navigate("Create Groups")
-  }
+    navigate.navigate("Create Groups");
+  };
   return (
     <SafeAreaView style={styles.screenContainer}>
-      
       {/* <Text style={styles.textContainer}>Group Chats</Text> */}
       <TouchableOpacity style={styles.buttonContainer}>
         <Button
@@ -41,7 +41,6 @@ export const Groups = () => {
           onPress={pressHandlerCreate}
         />
       </TouchableOpacity>
-
 
       <StatusBar style="auto" />
     </SafeAreaView>
@@ -70,8 +69,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     borderRadius: 15,
     overflow: "hidden",
-    margin:10,
-    marginTop:10,
-    
+    margin: 10,
+    marginTop: 10,
   },
 });
