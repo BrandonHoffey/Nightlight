@@ -23,11 +23,10 @@ import UserSettings from "../../ui/UserSettings";
 const fontScale = PixelRatio.getFontScale();
 const getFontSize = (size) => size / fontScale;
 
-
 const HomeScreen = () => {
   const navigation = useNavigation();
   const { username } = useContext(UserContext);
-  
+
   const pressHandlerFriends = () => {
     navigation.navigate("FriendScreen");
   };
@@ -39,8 +38,8 @@ const HomeScreen = () => {
   };
   const handleSettings = () => {
     navigation.navigate("UserSettings");
-  }
-  
+  };
+
   return (
     <>
       <SafeAreaView style={styles.containerBG}>
@@ -151,8 +150,9 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    // marginTop:10,
-    padding:10,
+    // marginTop: 30,
+
+    padding: 50,
     justifyContent: "space-evenly",
     alignItems: "center",
     backgroundColor: "rgba(5, 0, 43, 0.4)", // Adjust the opacity with last digit, first 3 dialed in darkBlue
@@ -169,8 +169,8 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     margin: 10,
     marginTop: 10,
-    width: "35%",
-    height: "17%",
+    width: "40%",
+    height: "20%",
     alignItems: "center",
     justifyContent: "center",
     aspectRatio: 1,
@@ -187,7 +187,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     aspectRatio: 1,
-    
   },
   buttonText: {
     color: Colors.white,
@@ -212,9 +211,9 @@ const styles = StyleSheet.create({
   },
   userSettingsContainer: {
     position: "absolute",
-    top: 16,
+    top: 10,
     left: 16,
-    marginTop: 25,
+    marginTop: 15,
   },
 });
 
