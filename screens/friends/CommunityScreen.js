@@ -1,4 +1,11 @@
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  RefreshControl,
+} from "react-native";
 import React, {
   useLayoutEffect,
   useContext,
@@ -16,14 +23,12 @@ import User from "./components/User";
 import LogoutButton from "../../ui/LogoutButton";
 import Colors from "../../Colors";
 
-// const fontScale = PixelRatio.getFontScale();
-// const getFontSize = (size) => size / fontScale;
-
 const CommunityScreen = () => {
   const navigation = useNavigation();
   const { userId, setUserId, token } = useContext(UserContext);
   const [users, setUsers] = useState([]);
   const [userItems, setUserItems] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   const flatListRef = useRef(null);
 
@@ -50,31 +55,45 @@ const CommunityScreen = () => {
     });
   }, []);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const myHeaders = new Headers();
-        myHeaders.append("Authorization", token);
-        myHeaders.append("ngrok-skip-browser-warning", "true");
-        let requestOptions = {
-          method: "GET",
-          headers: myHeaders,
-        };
-        const response = await fetch(API_VIEW_ALL_USERS, requestOptions);
-        const data = await response.json();
-        const filteredUsers = data.users.filter((user) => user._id !== userId);
-        setUserItems(filteredUsers);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  const fetchUsers = async () => {
+    try {
+      const myHeaders = new Headers();
+      myHeaders.append("Authorization", token);
+      myHeaders.append("ngrok-skip-browser-warning", "true");
+      let requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+      };
+      const response = await fetch(API_VIEW_ALL_USERS, requestOptions);
+      const data = await response.json();
+      const filteredUsers = data.users.filter((user) => user._id !== userId);
+      setUserItems(filteredUsers);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
+  const onRefresh = () => {
+    setRefreshing(true);
+
+    // Add the logic to refresh your data
+    fetchUsers();
+
+    setRefreshing(false);
+  };
+
+  useEffect(() => {
     fetchUsers();
   }, [token, userId]);
 
   return (
     <SafeAreaView>
-      <ScrollView style={styles.screenContainer}>
+      <ScrollView
+        style={styles.screenContainer}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         {userItems.map((item, index) => (
           <User key={index} item={item} />
         ))}

@@ -11,23 +11,34 @@ import {
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Octicons from "react-native-vector-icons/Octicons";
-import useLoading from "./UseLoading";
+import UseLoading from "./UseLoading";
 import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
-import TenorApi from "../api/TenorApi";
+import { tenorApi } from "../api/TenorApi";
+import Colors from "../Colors";
 
 const screenWidth = Dimensions.get("window").width;
 const itemWidth = (screenWidth - 3 * 20) / 2;
 
-const TenorScreen = ({ isSheetOpen }) => {
+const TenorScreen = ({
+  isSheetOpen,
+  setIsSheetOpen,
+  receiverPicture,
+  receiverId,
+  receiverName,
+  senderId,
+  senderName,
+  senderPicture,
+  socket,
+}) => {
   const [searchGif, setSearchGif] = useState([]);
   const [categoryGif, setCategoryGif] = useState([]);
   const [textContent, setTextContent] = useState("");
-  const [loading, executeWithLoading] = useLoading(async (query) => {
+  const [loading, executeWithLoading] = UseLoading(async (query) => {
     try {
-      const results = await TenorApi(query);
+      const results = await tenorApi(query);
       setSearchGif(results);
     } catch (error) {
-      Alert.alert(error);
+      console.error(error);
     }
   });
 
@@ -40,6 +51,19 @@ const TenorScreen = ({ isSheetOpen }) => {
     }
   };
 
+  const handleMessageSend = (item) => {
+    setIsSheetOpen(false);
+    socket.emit("message", {
+      content: item + ".gif",
+      sender: senderId,
+      senderName: senderName,
+      senderPicture: senderPicture,
+      receiver: receiverId,
+      receiverName,
+      receiverPicture,
+    });
+  };
+
   useEffect(() => {
     executeWithLoading();
   }, []);
@@ -47,6 +71,7 @@ const TenorScreen = ({ isSheetOpen }) => {
   useEffect(() => {
     if (!isSheetOpen) {
       setTextContent("");
+      handleTextChange("");
     }
   }, [isSheetOpen]);
 
@@ -55,7 +80,7 @@ const TenorScreen = ({ isSheetOpen }) => {
       <View style={styles.inputContainer}>
         <FontAwesome
           name="search"
-          color="#000"
+          color={Colors.black}
           style={[styles.icon, styles.left]}
           size={18}
         />
@@ -64,12 +89,12 @@ const TenorScreen = ({ isSheetOpen }) => {
           onChangeText={handleTextChange}
           value={textContent}
           placeholder="Search GIFs"
-          placeholderTextColor="#000"
+          placeholderTextColor={Colors.black}
         />
         {textContent.length > 0 && (
           <Octicons
             name="x"
-            color="#000"
+            color={Colors.black}
             style={[styles.icon, styles.right]}
             size={18}
             onPress={() => handleTextChange("")}
@@ -96,7 +121,10 @@ const TenorScreen = ({ isSheetOpen }) => {
                   flex: 1,
                   alignItems: "center",
                 }}
-                onPress={() => console.log(item.itemurl)}
+                onPress={() => {
+                  handleMessageSend(item.itemurl);
+                  handleTextChange("");
+                }}
               >
                 <Image
                   key={index}
@@ -128,7 +156,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: Colors.white,
     borderRadius: 20,
     marginBottom: 20,
   },
@@ -137,7 +165,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     borderRadius: 20,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.white,
   },
   imageContainer: {
     flex: 1,
