@@ -21,10 +21,6 @@ const FriendRequest = ({ item, FriendRequests, setFriendRequests }) => {
   const navigation = useNavigation();
   useFocusEffect(() => {
     const acceptRequest = async (friendRequestId) => {
-      console.log(
-        "Accept button pressed for friendRequestId:",
-        friendRequestId
-      );
       try {
         const response = await fetch(API_FRIEND_REQUEST_ACCEPT, {
           method: "POST",
@@ -39,20 +35,11 @@ const FriendRequest = ({ item, FriendRequests, setFriendRequests }) => {
         });
 
         const responseData = await response.json();
-        console.log("Response from server:", responseData);
-
         if (response.ok) {
           setFriendRequests((prevFriendRequests) =>
             prevFriendRequests.filter(
               (request) => request._id !== friendRequestId
             )
-          );
-          console.log("Updated Friend Requests:", FriendRequests);
-          console.log(
-            "Accepting friend request for user:",
-            userId,
-            "from user:",
-            friendRequestId
           );
         }
       } catch (error) {

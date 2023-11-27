@@ -22,6 +22,8 @@ const getFontSize = (size) => size / fontScale;
 
 export default (params) => {
   const { login } = useContext(UserContext);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const navigation = useNavigation();
 
   const handleSubmit = async () => {
@@ -41,8 +43,13 @@ export default (params) => {
       const response = await fetch(API_USER_SIGN_IN, requestOption);
       if (response.ok) {
         const data = await response.json();
+        console.log("User Data:", data.signedInAccount);
 
-        login(data.token, data.signedInAccount._id);
+        login(
+          data.token,
+          data.signedInAccount._id,
+          data.signedInAccount.username
+        );
         navigation.navigate("Home");
         Alert.alert(data.message);
         // setUsername("");

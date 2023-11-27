@@ -7,11 +7,18 @@ import {
   TextInput,
   Button,
   StyleSheet,
+  Image,
 } from "react-native";
+import { useLayoutEffect } from "react";
+import { StatusBar } from "expo-status-bar";
+import { AntDesign } from "@expo/vector-icons";
+import LogoutButton from "../../ui/LogoutButton";
+import { Ionicons } from "@expo/vector-icons";
 import GetAllUsers from "./AllUsersGroupScreen";
 import Colors from "../../Colors";
-
+import { useNavigation } from "@react-navigation/native";
 const GroupCreateAddInput = (props) => {
+  const navigation = useNavigation();
   const [showInput, setShowInput] = useState(false);
   const [inputValue, setInputValue] = useState("");
   async function handleButtonClick() {
@@ -42,6 +49,24 @@ const GroupCreateAddInput = (props) => {
       console.error(error);
     }
   }
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: "Create Groups",
+
+      headerRight: () => (
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+          <AntDesign name="message1" size={24} color="white" />
+          <Ionicons
+            onPress={() => navigation.navigate("FriendRequestsScreen")}
+            name="people-outline"
+            size={24}
+            color="white"
+          />
+          <LogoutButton />
+        </View>
+      ),
+    });
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -77,6 +102,7 @@ const GroupCreateAddInput = (props) => {
           </TouchableOpacity>
         </View>
       )}
+      
     </View>
   );
 };

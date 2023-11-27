@@ -17,10 +17,8 @@ import logo from "../../assets/logo.png";
 import { UserContext } from "../../UserContext";
 import { currentUser } from "../../api/UserApi";
 import bgStars from "../../assets/background.png";
-
 const fontScale = PixelRatio.getFontScale();
 const getFontSize = (size) => size / fontScale;
-
 const HomeScreen = () => {
   const [currentlySignedIn, setCurrentlySignedIn] = useState({});
   const { username, token } = useContext(UserContext);
@@ -236,12 +234,17 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: Colors.white,
-    fontSize: getFontSize(24),
+    fontSize: getFontSize(18),
     fontWeight: "bold",
   },
   communityButtonText: {
     color: Colors.lightBlue,
-    fontSize: getFontSize(24),
+    fontSize: getFontSize(18),
+    fontWeight: "bold",
+  },
+  buttonText2: {
+    color: Colors.white,
+    fontSize: getFontSize(14),
     fontWeight: "bold",
   },
   statusContainer: {

@@ -6,7 +6,6 @@ import React, {
   useRef,
   PixelRatio,
 } from "react";
-
 import { ScrollView, StyleSheet, Text, View, FlatList } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../../UserContext";

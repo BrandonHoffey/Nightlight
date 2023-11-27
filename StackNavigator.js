@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Groups } from "./screens/groups/GroupsScreen";
 import { Auth } from "./screens/auth/AuthScreen";
@@ -14,6 +14,8 @@ import FriendScreen from "./screens/friends/FriendsScreen";
 import MessageScreen from "./screens/messages/MessageScreen";
 import InboxScreen from "./screens/messages/InboxScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Signin from "./screens/auth/SigninScreen";
+import UserSettings from "./ui/UserSettings";
 
 const Stack = createNativeStackNavigator();
 
@@ -88,9 +90,20 @@ const StackNavigator = () => {
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
+        options={{headerShown: true}}
+        />
+        <Stack.Screen
+        name="SigninScreen"
+        component={Signin}
+        options={{headerShown: true}}
+        />
+        <Stack.Screen
+        name="UserSettings"
+        component={UserSettings}
+        options={{headerShown: true}}
+        />
+      </Stack.Navigator>
   );
 };
-
 export default StackNavigator;
-
 const styles = StyleSheet.create({});

@@ -55,7 +55,6 @@ const UserProvider = ({ children }) => {
     };
     checkStorage();
   }, []);
-
   return (
     <UserContext.Provider value={{ userId, setUserId, token, login, logout }}>
       {children}

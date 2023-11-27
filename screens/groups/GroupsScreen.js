@@ -10,8 +10,11 @@ import {
   Platform,
   PixelRatio,
 } from "react-native";
+import { useLayoutEffect } from "react";
 import { StatusBar } from "expo-status-bar";
-
+import { AntDesign } from "@expo/vector-icons";
+import LogoutButton from "../../ui/LogoutButton";
+import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import Colors from "../../Colors";
 
@@ -63,7 +66,7 @@ const styles = StyleSheet.create({
   textContainer: {
     color: Colors.lightGreen,
     fontWeight: "bold",
-    fontSize: 34,
+    fontSize: getFontSize(34),
     marginVertical: 0,
   },
   buttonContainer: {

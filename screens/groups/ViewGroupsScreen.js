@@ -74,7 +74,6 @@ export default ViewGroupsCreated = ({ route }) => {
       </TouchableOpacity>
     );
   };
-
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
@@ -101,12 +100,12 @@ const styles = StyleSheet.create({
   nameText: {
     backgroundColor: Colors.lightBlue,
     color: "white",
-    fontSize: 24,
+    fontSize: getFontSize(18),
   },
   usersText: {
     backgroundColor: Colors.lightBlue,
     color: Colors.lightGreen,
-    fontSize: 16,
+    fontSize: getFontSize(14),
   },
   groupInfo: {
     backgroundColor: Colors.lightBlue,
