@@ -89,9 +89,6 @@ const StackNavigator = () => {
         component={MessageScreen}
         options={{ headerShown: false }}
       />
-    </Stack.Navigator>
-        options={{headerShown: true}}
-        />
         <Stack.Screen
         name="SigninScreen"
         component={Signin}

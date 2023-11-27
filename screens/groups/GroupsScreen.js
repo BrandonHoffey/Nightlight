@@ -18,6 +18,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import Colors from "../../Colors";
 
+const fontScale = PixelRatio.getFontScale();
+const getFontSize = (size) => size / fontScale;
+
 export const Groups = ({ route }) => {
   const { currentUser, token } = route.params;
   const navigate = useNavigation();

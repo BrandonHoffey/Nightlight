@@ -9,11 +9,15 @@ import {
   FlatList,
   SafeAreaView,
   Image,
+  PixelRatio,
 } from "react-native";
 import Colors from "../../Colors";
 import { API_GROUP_VIEW_ALL } from "../../constants/Endpoints";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
+
+const fontScale = PixelRatio.getFontScale();
+const getFontSize = (size) => size / fontScale;
 
 export default ViewGroupsCreated = ({ route }) => {
   const { currentUser, token } = route.params;

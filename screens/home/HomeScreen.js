@@ -17,8 +17,10 @@ import logo from "../../assets/logo.png";
 import { UserContext } from "../../UserContext";
 import { currentUser } from "../../api/UserApi";
 import bgStars from "../../assets/background.png";
+
 const fontScale = PixelRatio.getFontScale();
 const getFontSize = (size) => size / fontScale;
+
 const HomeScreen = () => {
   const [currentlySignedIn, setCurrentlySignedIn] = useState({});
   const { username, token } = useContext(UserContext);
