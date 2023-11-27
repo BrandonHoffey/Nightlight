@@ -23,9 +23,6 @@ import User from "./components/User";
 import LogoutButton from "../../ui/LogoutButton";
 import Colors from "../../Colors";
 
-// const fontScale = PixelRatio.getFontScale();
-// const getFontSize = (size) => size / fontScale;
-
 const CommunityScreen = () => {
   const navigation = useNavigation();
   const { userId, setUserId, token } = useContext(UserContext);

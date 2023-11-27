@@ -23,15 +23,17 @@ const StackNavigator = () => {
   const handleAppLoad = async () => {
     const TOKEN = await AsyncStorage.getItem("TOKEN");
     const USER_ID = await AsyncStorage.getItem("USER_ID");
-    if (TOKEN && USER_ID) {
-      return true;
-    } else {
+    if (TOKEN === null || USER_ID === null) {
       return false;
+    } else {
+      return true;
     }
   };
   return (
     <Stack.Navigator
-      initialRouteName={handleAppLoad() ? "Home" : "Authorization"}
+      initialRouteName={handleAppLoad().then((result) =>
+        result ? "Home" : "Authorization"
+      )}
       screenOptions={({ navigation }) => ({
         headerStyle: {
           backgroundColor: Colors.lightBlue,
@@ -97,9 +99,9 @@ const StackNavigator = () => {
         <Stack.Screen
         name="UserSettings"
         component={UserSettings}
-        options={{headerShown: true}}
-        />
-      </Stack.Navigator>
+        options={{ headerShown: true }}
+      />
+    </Stack.Navigator>
   );
 };
 export default StackNavigator;

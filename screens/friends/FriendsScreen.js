@@ -17,9 +17,6 @@ import Friend from "./components/Friends";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Colors from "../../Colors";
 
-// const fontScale = PixelRatio.getFontScale();
-// const getFontSize = (size) => size / fontScale;
-
 const FriendScreen = ({ route }) => {
   const { currentUser, token } = route.params;
   const navigation = useNavigation();
