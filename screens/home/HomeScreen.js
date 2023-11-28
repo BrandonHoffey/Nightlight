@@ -14,7 +14,7 @@ import {
 import Colors from "../../Colors";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import logo from "../../assets/logo.png";
 import bgStars from "../../assets/background.png";
 import { currentUser } from "../../api/UserApi";
@@ -55,6 +55,25 @@ const HomeScreen = () => {
       logout();
     }
   };
+
+  const fetchAndUpdateUserData = async () => {
+    try {
+      if (token) {
+        const result = await currentUser(token);
+        setCurrentlySignedIn(result);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // Effect to run when the screen comes into focus
+  useFocusEffect(
+    React.useCallback(() => {
+      // Fetch and update user data when the screen comes into focus
+      fetchAndUpdateUserData();
+    }, [token])
+  );
 
   const handleStatusChange = (text) => {
     if (text === "offline") {

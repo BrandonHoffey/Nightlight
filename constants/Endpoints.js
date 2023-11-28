@@ -19,4 +19,4 @@ export const API_CURRENT_USER_DETAILS = DOMAIN + "/user/current-account";
 export const SOCKET = DOMAIN + "";
 export const API_VIEW_ALL_MESSAGES = DOMAIN + "/message/:id/view";
 export const API_VIEW_LATEST_MESSAGE = DOMAIN + "/message/:id/latest";
-export const API_USER_EDIT_BY_ID = DOMAIN + "/edit-account";
+export const API_USER_EDIT_BY_ID = DOMAIN + "/user/edit-account";
