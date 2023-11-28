@@ -35,6 +35,23 @@ const CommunityScreen = () => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: "Community",
+      // headerLeft: () => (
+      //   <Text style={{ fontSize: getFontSize(16), fontWeight: "bold" }}>
+      //     Nightlight
+      //   </Text>
+      // ),
+      headerRight: () => (
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+          <AntDesign name="message1" size={24} color="white" />
+          <Ionicons
+            onPress={() => navigation.navigate("FriendRequestsScreen")}
+            name="people-outline"
+            size={24}
+            color="white"
+          />
+          <LogoutButton />
+        </View>
+      ),
     });
   }, []);
 
@@ -58,7 +75,10 @@ const CommunityScreen = () => {
 
   const onRefresh = () => {
     setRefreshing(true);
+
+    // Add the logic to refresh your data
     fetchUsers();
+
     setRefreshing(false);
   };
 
@@ -67,7 +87,7 @@ const CommunityScreen = () => {
   }, [token, userId]);
 
   return (
-    <SafeAreaView style={{ backgroundColor: Colors.darkBlue }}>
+    <SafeAreaView>
       <ScrollView
         style={styles.screenContainer}
         refreshControl={

@@ -44,20 +44,21 @@ const User = ({ item }) => {
         } catch (error) {
           console.log("Fetch error", error);
         }
-      };
+      } catch (error) {
+        console.log("Fetch error", error);
+      }
+    };
 
-      fetchFriendRequests();
-    }, [userId])
-  );
+    fetchFriendRequests();
+  }, [userId]);
 
   useFocusEffect(
     React.useCallback(() => {
       const checkFriendshipStatus = () => {
         if (friendRequests.some((friend) => friend._id === item._id)) {
           setRequestSent(true);
-
         } else {
-          setRequestSent(false);
+          console.log("error retrieving user friends", response.status);
         }
       };
       checkFriendshipStatus();
@@ -99,10 +100,8 @@ const User = ({ item }) => {
           console.log("Error Message", error);
         }
       };
-
-      fetchUserFriends();
-    }, [userId])
-  );
+    fetchUserFriends();
+  }, [userId]);
 
   const sendFriendRequest = async (currentUserId, selectedUserId) => {
     try {
@@ -127,6 +126,9 @@ const User = ({ item }) => {
       console.log("error message", error);
     }
   };
+
+  console.log("friend request sent", friendRequests);
+  console.log("user friends", userFriends);
 
   return (
     <Pressable
