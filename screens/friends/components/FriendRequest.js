@@ -19,34 +19,35 @@ const getFontSize = (size) => size / fontScale;
 const FriendRequest = ({ item, FriendRequests, setFriendRequests }) => {
   const { userId, setUserId, token } = useContext(UserContext);
   const navigation = useNavigation();
-  useFocusEffect(() => {
-    const acceptRequest = async (friendRequestId) => {
-      try {
-        const response = await fetch(API_FRIEND_REQUEST_ACCEPT, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: token,
-          },
-          body: JSON.stringify({
-            senderId: friendRequestId,
-            recipientId: userId,
-          }),
-        });
+  
+      const acceptRequest = async (friendRequestId) => {
+        try {
+          const response = await fetch(API_FRIEND_REQUEST_ACCEPT, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: token,
+            },
+            body: JSON.stringify({
+              senderId: friendRequestId,
+              recipientId: userId,
+            }),
+          });
 
-        const responseData = await response.json();
-        if (response.ok) {
-          setFriendRequests((prevFriendRequests) =>
-            prevFriendRequests.filter(
-              (request) => request._id !== friendRequestId
-            )
-          );
+          const responseData = await response.json();
+          if (response.ok) {
+            setFriendRequests((prevFriendRequests) =>
+              prevFriendRequests.filter(
+                (request) => request._id !== friendRequestId
+              )
+            );
+          }
+        } catch (error) {
+          console.log("error accepting the friend request", error);
         }
-      } catch (error) {
-        console.log("error accepting the friend request", error);
-      }
-    };
-  }, []);
+      };
+     
+  
   return (
     <Pressable
       style={{
@@ -78,10 +79,11 @@ const FriendRequest = ({ item, FriendRequests, setFriendRequests }) => {
           padding: 10,
           borderRadius: 20,
         }}
-      >
+        >
         <Text style={{ textAlign: "center", color: "white" }}>Accept</Text>
       </Pressable>
     </Pressable>
+    
   );
 };
 

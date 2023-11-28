@@ -4,6 +4,7 @@ import SignupScreen from "./SignupScreen";
 import SigninScreen from "./SigninScreen";
 import Colors from "../../Colors";
 import logo from "../../assets/logo.png";
+// import logo from "../../assets/NightLight-logo.png";
 
 export const Auth = (params) => {
   const [signinVisible, setSigninVisible] = useState(true);
@@ -41,5 +42,6 @@ const styles = StyleSheet.create({
     width: "80%",
     height: "20%",
     marginTop: "40%",
+    backgroundColor:Colors.darkBlue,
   },
 });

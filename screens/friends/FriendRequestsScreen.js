@@ -6,6 +6,7 @@ import FriendRequest from "./components/FriendRequest";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import Colors from "../../Colors";
+
 const fontScale = PixelRatio.getFontScale();
 const getFontSize = (size) => size / fontScale;
 
