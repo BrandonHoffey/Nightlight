@@ -1,6 +1,6 @@
 import { API_GROUP_ADD } from "../../constants/Endpoints";
 
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   View,
   TouchableOpacity,
@@ -8,6 +8,8 @@ import {
   Button,
   StyleSheet,
   Image,
+  Modal,
+  Text,
 } from "react-native";
 import { useLayoutEffect } from "react";
 import { StatusBar } from "expo-status-bar";
@@ -17,11 +19,42 @@ import { Ionicons } from "@expo/vector-icons";
 import GetAllUsers from "./AllUsersGroupScreen";
 import Colors from "../../Colors";
 import { useNavigation } from "@react-navigation/native";
+import { UserContext } from "../../UserContext";
+import { API_VIEW_ALL_FRIENDS_BY_ID, API_VIEW_FRIENDS_DETAILS } from "../../constants/Endpoints";
+
 const GroupCreateAddInput = (props) => {
   const navigation = useNavigation();
   const [showInput, setShowInput] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  async function handleButtonClick() {
+  const [showFriendsModal, setShowFriendsModal] = useState(false);
+  const [userFriends, setUserFriends] = useState([]);
+  const { userId, setUserId, token } = useContext(UserContext);
+
+  useEffect(() => {
+    const fetchUserFriends = async () => {
+      try {
+        const response = await fetch(`${API_VIEW_ALL_FRIENDS_BY_ID}/${userId}`);
+        const data = await response.json();
+        console.log(data);
+
+        if (response.ok) {
+          setUserFriends(data);
+        } else {
+          console.log("Error retrieving user friends", response.status);
+        }
+      } catch (error) {
+        console.log("Error Message", error);
+      }
+    };
+
+    fetchUserFriends();
+  }, [userId]);
+
+  const toggleFriendsModal = () => {
+    setShowFriendsModal(!showFriendsModal);
+  };
+
+  const handleButtonClick = async () => {
     try {
       const myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
@@ -48,7 +81,7 @@ const GroupCreateAddInput = (props) => {
     } catch (error) {
       console.error(error);
     }
-  }
+  };
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: "Create Groups",
@@ -100,9 +133,53 @@ const GroupCreateAddInput = (props) => {
               onPress={handleButtonClick}
             />
           </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.buttonContainer}
+            onPress={toggleFriendsModal}
+          >
+            <Button
+              color={Colors.lightBlue}
+              title="Add Friends"
+              onPress={toggleFriendsModal}
+            />
+          </TouchableOpacity>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={showFriendsModal}
+          >
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                <Text style={styles.modalTitle}>Friends List</Text>
+                {/* Display the user's friends */}
+                {userFriends.map((friend) => {
+                  console.log("Friend object:", friend); // Add this line for debugging
+                  return (
+                    <View key={friend._id} style={styles.friendItem}>
+                      {/* Display friend's profile picture */}
+                      <Image
+                        source={{ uri: friend.profilePicture }}
+                        style={styles.profilePicture}
+                      />
+                      {/* Display friend's display name */}
+                      <Text style={styles.displayName}>
+                        {friend.displayName}
+                      </Text>
+                    </View>
+                  );
+                })}
+              </View>
+
+              <TouchableOpacity
+                style={styles.closeModalButton}
+                onPress={toggleFriendsModal}
+              >
+                <Text style={styles.closeModalButtonText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </Modal>
         </View>
       )}
-      
     </View>
   );
 };
@@ -131,6 +208,40 @@ const styles = StyleSheet.create({
     width: 200,
     borderRadius: 15,
     overflow: "hidden",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // semi-transparent background
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    width: 300,
+    maxHeight: 400, // Adjust as needed
+    overflow: "hidden",
+  },
+  closeModalButton: {
+    marginTop: 10,
+    padding: 10,
+    backgroundColor: Colors.lightBlue,
+    borderRadius: 5,
+  },
+  closeModalButtonText: {
+    color: "white",
+    textAlign: "center",
+  },
+  profilePicture: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginRight: 10,
+  },
+  displayName: {
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
 
