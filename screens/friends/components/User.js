@@ -60,7 +60,7 @@ const User = ({ item }) => {
         }
       };
       checkFriendshipStatus();
-    }, [friendRequests, item._id])
+    }, [friendRequests, item._id, requestSent])
   );
 
   useFocusEffect(
