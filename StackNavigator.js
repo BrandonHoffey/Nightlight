@@ -82,7 +82,8 @@ const StackNavigator = () => {
       <Stack.Screen
         name="Create Groups"
         component={CreateGroupScreen}
-        options={{ headerShown: true }}
+        options={{ title: "Create Group" }}
+        key="CreateGroup"
       />
       <Stack.Screen
         name="FriendRequestsScreen"
@@ -109,7 +110,12 @@ const StackNavigator = () => {
         component={MessageScreen}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
+        <Stack.Screen
+        name="SigninScreen"
+        component={Signin}
+        options={{headerShown: true}}
+        />
+        <Stack.Screen
         name="UserSettings"
         component={UserSettings}
         options={{ headerShown: true }}
