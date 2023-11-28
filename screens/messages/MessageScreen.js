@@ -20,6 +20,7 @@ import { useNavigation } from "@react-navigation/core";
 import { useSocket } from "../../api/SocketManager";
 import MessageCard from "../../ui/MessageCard";
 import { listMessages } from "../../api/MessagesApi";
+import { Status } from "../../ui/Status";
 
 const MessageScreen = ({ route }) => {
   const {
@@ -65,7 +66,6 @@ const MessageScreen = ({ route }) => {
     });
 
     return () => {
-      // Clean up on component unmount
       socket.off("message");
     };
   }, [socket, currentUser._id, receiverId]);
@@ -81,10 +81,7 @@ const MessageScreen = ({ route }) => {
             <AntDesign name="left" color={Colors.white} size={20} />
           </Pressable>
           <View style={styles.image}>
-            <Image
-              source={{ uri: receiverPicture }}
-              style={{ width: 40, height: 40, borderRadius: 50 }}
-            />
+            <Status picture={receiverPicture} id={receiverId} />
           </View>
           <View style={styles.name}>
             <Text style={styles.nameText}>{receiverName}</Text>
