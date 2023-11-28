@@ -104,6 +104,10 @@ const User = ({ item }) => {
 
   const sendFriendRequest = async (currentUserId, selectedUserId) => {
     try {
+      if (userFriends.includes(selectedUserId) || requestSent) {
+        return;
+      }
+
       const response = await fetch(API_SEND_FRIEND_REQUEST, {
         method: "POST",
         headers: {
