@@ -11,54 +11,61 @@ import {
 import { fetchFriendDetail } from "../api/FriendApi";
 import { latestMessage } from "../api/MessagesApi";
 import Colors from "../Colors";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { UserContext } from "../UserContext";
+import { useSocket } from "../api/SocketManager";
 
 const UserCard = ({ currentUser }) => {
   const [friendDetails, setFriendDetails] = useState([]);
   const [latestMessages, setLatestMessages] = useState([]);
   const { token } = useContext(UserContext);
   const navigate = useNavigation();
-  useEffect(() => {
-    async function getFriends() {
-      try {
-        if (!token) throw new Error("Invalid Token");
-        const data = await fetchFriendDetail(token);
-        setFriendDetails(data.friends);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    getFriends();
-  }, [token]);
-  useEffect(() => {
-    async function getLatestMessages() {
-      try {
-        if (!token) throw new Error("Invalid Token");
-        const updatedMessages = await Promise.all(
-          friendDetails.map(async (friend) => {
-            const { latestMessageSent, latestMessageSender } =
-              await latestMessage(friend._id, token);
-            let data =
-              latestMessageSender === currentUser._id
-                ? "Sent"
-                : latestMessageSent;
-            if (latestMessageSent?.includes(".gif", "https")) {
-              if (latestMessageSender !== currentUser._id) {
-                data = "sent a GIF";
-              }
-            }
-            return { [friend._id]: data };
-          })
-        );
-        setLatestMessages(updatedMessages);
-      } catch (error) {
-        console.error(error);
-      }
-    }
+  const socket = useSocket();
 
-    getLatestMessages();
-  }, [token, friendDetails, currentUser._id]);
+  useFocusEffect(
+    React.useCallback(() => {
+      socket.emit("inboxUpdate", {
+        user: currentUser,
+      });
+      socket.on("inboxUpdate", (update) => {
+        setFriendDetails(update);
+      });
+      return () => {
+        socket.off("inboxUpdate");
+      };
+    }, [socket, currentUser])
+  );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      async function getLatestMessages() {
+        try {
+          if (!token) throw new Error("Invalid Token");
+          const updatedMessages = await Promise.all(
+            friendDetails.map(async (friend) => {
+              const { latestMessageSent, latestMessageSender } =
+                await latestMessage(friend._id, token);
+              let data =
+                latestMessageSender === currentUser._id
+                  ? "Sent"
+                  : latestMessageSent;
+              if (latestMessageSent?.includes(".gif", "https")) {
+                if (latestMessageSender !== currentUser._id) {
+                  data = "sent a GIF";
+                }
+              }
+              return { [friend._id]: data };
+            })
+          );
+          setLatestMessages(updatedMessages);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+      getLatestMessages();
+    }, [friendDetails])
+  );
+
   if (latestMessages.length === 0) {
     return (
       <View>
