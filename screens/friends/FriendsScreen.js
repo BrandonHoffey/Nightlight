@@ -6,7 +6,6 @@ import React, {
   useRef,
   PixelRatio,
 } from "react";
-import { useFocusEffect } from "@react-navigation/native";
 import { ScrollView, StyleSheet, Text, View, FlatList } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../../UserContext";
@@ -26,32 +25,44 @@ const FriendScreen = ({ route }) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: "Friends",
+      // headerLeft: () => (
+      //   <Text style={{ fontSize: 16, fontWeight: "bold" }}>Nightlight</Text>
+      // ),
+      headerRight: () => (
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+          <AntDesign name="message1" size={24} color="white" />
+          <Ionicons
+            onPress={() => navigation.navigate("FriendRequestsScreen")}
+            name="people-outline"
+            size={24}
+            color="white"
+          />
+          <LogoutButton />
+        </View>
+      ),
     });
   }, []);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      const fetchFriends = async () => {
-        try {
-          const myHeaders = new Headers();
-          myHeaders.append("Authorization", token);
-          myHeaders.append("ngrok-skip-browser-warning", "true");
-          let requestOptions = {
-            method: "GET",
-            headers: myHeaders,
-          };
-          const response = await fetch(API_VIEW_ALL_FRIENDS, requestOptions);
-          const data = await response.json();
-          const friends = data.friends;
-          setFriendItems(friends);
-        } catch (error) {
-          console.log(error);
-        }
-      };
-      fetchFriends();
-    }, [token])
-  );
-
+  useEffect(() => {
+    const fetchFriends = async () => {
+      try {
+        const myHeaders = new Headers();
+        myHeaders.append("Authorization", token);
+        myHeaders.append("ngrok-skip-browser-warning", "true");
+        let requestOptions = {
+          method: "GET",
+          headers: myHeaders,
+        };
+        const response = await fetch(API_VIEW_ALL_FRIENDS, requestOptions);
+        const data = await response.json();
+        const friends = data.friends;
+        setFriendItems(friends);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchFriends();
+  }, [token]);
   return (
     <FlatList
       style={styles.screenContainer}
