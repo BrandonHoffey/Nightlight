@@ -77,9 +77,9 @@ const MessageScreen = ({ route }) => {
           <Pressable
             onPress={() =>
               navigation.navigate("InboxScreen", { currentUser, token })
-            }
-          ></Pressable>
+            }>
           <AntDesign name="left" color={Colors.white} size={20} />
+          </Pressable>
 
           <View style={styles.image}>
             <Status picture={receiverPicture} id={receiverId} />
@@ -89,9 +89,7 @@ const MessageScreen = ({ route }) => {
             <Text style={styles.usernameText}>{username}</Text>
           </View>
           <View style={styles.addUser}>
-            <Pressable onPress={() => navigation.navigate("FriendsScreen")}>
-              <FontAwesome name="user-plus" color={Colors.white} size={20} />
-            </Pressable>
+            
           </View>
         </SafeAreaView>
         <View style={styles.messageContainer}>
