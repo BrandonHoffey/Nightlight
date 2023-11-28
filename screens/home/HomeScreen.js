@@ -155,14 +155,14 @@ const HomeScreen = () => {
                   style={styles.friendsButton}
                   text="Friends"
                 />
-                <CustomPressable
+                <CustomPressable2
                   onPress={() => navigateToScreen("Group Chats")}
                   style={styles.groupsButton}
                   text="Groups"
                 />
               </View>
               <View style={styles.buttonColumn}>
-                <CustomPressable
+                <CustomPressable2
                   onPress={() => navigateToScreen("Community")}
                   style={styles.communityButton}
                   text="Community"
@@ -276,6 +276,18 @@ const CustomPressable = ({ onPress, style, text }) => (
     <Text style={styles.buttonText}>{text}</Text>
   </Pressable>
 );
+const CustomPressable2 = ({ onPress, style, text }) => (
+  <Pressable
+    style={({ pressed }) => [
+      styles.buttonContainer,
+      style,
+      { backgroundColor: pressed ? Colors.lightBlue : Colors.lightGreen },
+    ]}
+    onPress={onPress}
+  >
+    <Text style={styles.buttonText2}>{text}</Text>
+  </Pressable>
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -381,6 +393,7 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: "center",
     justifyContent: "space-between",
+    margin:40,
   },
   buttonColumn: {
     flexDirection: "column",
@@ -395,6 +408,11 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.lightBlue,
   },
   buttonText: {
+    color: Colors.white,
+    fontSize: getFontSize(18),
+    fontWeight: "bold",
+  },
+  buttonText2: {
     color: Colors.white,
     fontSize: getFontSize(18),
     fontWeight: "bold",
