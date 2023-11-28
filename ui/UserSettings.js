@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   View,
   SafeAreaView,
@@ -23,6 +23,12 @@ const UserSettings = () => {
   const [profilePicture, setProfilePicture] = useState(null);
   const [displayName, setDisplayName] = useState("");
   const navigation = useNavigation();
+
+  useEffect(() => {
+    // Log user data when the component mounts
+    console.log("User ID:", userId);
+    console.log("Token:", token);
+  }, []);
 
   const handleImagePicker = async () => {
     try {
@@ -50,19 +56,22 @@ const UserSettings = () => {
         );
         return;
       }
-  
+
       const requestBody = {
         username: newUsername,
         email: newEmail,
         currentPassword: currentPassword,
-        profilePicture: profilePicture,
         displayName: displayName,
       };
-  
+
       if (newPassword) {
         requestBody.password = newPassword;
       }
-  
+
+      if (profilePicture !== null) {
+        requestBody.profilePicture = profilePicture;
+      }
+
       const response = await fetch(`${API_USER_EDIT_BY_ID}/${userId}`, {
         method: "PATCH",
         headers: {
@@ -71,20 +80,34 @@ const UserSettings = () => {
         },
         body: JSON.stringify(requestBody),
       });
-      console.log('Response:', response);
-  
+      console.log("Response:", response);
+      console.log("API URL:", `${API_USER_EDIT_BY_ID}/${userId}`);
+
       const responseData = await response.json().catch((error) => {
         console.error("Error parsing JSON response:", error);
       });
-  
+
       if (response.ok) {
         console.log("Profile updated successfully");
-        navigation.navigate("Authorization");
+        console.log("Response Data:", JSON.stringify(responseData));
+        navigation.navigate("Home", {
+          screen: "Home", // Screen name within the Home stack
+          params: {
+            updateUserData: (userData) => {
+              // Callback function to update user data on the Home screen
+              // This function will be called when navigating back from User Settings
+              // userData is the updated user data
+              // Update your state or trigger a re-fetch of user data on the Home screen
+            },
+          },
+        });
       } else {
         console.error("Failed to update profile", responseData);
         Alert.alert(
           "Failed to update profile",
-          responseData && responseData.error ? responseData.error : "An error occurred"
+          responseData && responseData.error
+            ? responseData.error
+            : "An error occurred"
         );
       }
     } catch (error) {
