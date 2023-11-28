@@ -26,19 +26,11 @@ const User = ({ item }) => {
   const [friendRequests, setFriendRequests] = useState([]);
   const [userFriends, setUserFriends] = useState([]);
 
-<<<<<<< HEAD
   useFocusEffect(
     React.useCallback(() => {
       const fetchFriendRequests = async () => {
         try {
           const response = await fetch(`${API_SENT_FRIEND_REQUESTS}/${userId}`);
-=======
-  useEffect(() => {
-    const fetchFriendRequests = async () => {
-      try {
-        const response = await fetch(`${API_SENT_FRIEND_REQUESTS}/${userId}`);
->>>>>>> d0a34bc5cf7e3f3881d8d79e5522ae349c797f6b
-
           const data = await response.json();
           if (response.ok) {
             setFriendRequests(data);
@@ -58,52 +50,16 @@ const User = ({ item }) => {
     }, [userId])
   );
 
-<<<<<<< HEAD
   useFocusEffect(
     React.useCallback(() => {
       const checkFriendshipStatus = () => {
         if (friendRequests.some((friend) => friend._id === item._id)) {
           setRequestSent(true);
-=======
-  useEffect(() => {
-    const checkFriendshipStatus = () => {
-      if (friendRequests.some((friend) => friend._id === item._id)) {
-        setRequestSent(true);
-      } else {
-        setRequestSent(false);
-      }
-    };
 
-    checkFriendshipStatus();
-  }, [friendRequests, item._id]);
-
-  useEffect(() => {
-    const loadRequestSentStatus = async () => {
-      try {
-        const status = await AsyncStorage.getItem(`friendRequest:${item._id}`);
-        setRequestSent(status === "sent");
-      } catch (error) {
-        console.log("Error loading requestSent status", error);
-      }
-    };
-
-    loadRequestSentStatus();
-  }, [friendRequests, item._id]);
-
-  useEffect(() => {
-    const fetchUserFriends = async () => {
-      try {
-        const response = await fetch(`${API_VIEW_ALL_FRIENDS_BY_ID}/${userId}`);
-        const data = await response.json();
-
-        if (response.ok) {
-          setUserFriends(data);
->>>>>>> d0a34bc5cf7e3f3881d8d79e5522ae349c797f6b
         } else {
           setRequestSent(false);
         }
       };
-
       checkFriendshipStatus();
     }, [friendRequests, item._id])
   );
