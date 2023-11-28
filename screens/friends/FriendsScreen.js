@@ -25,21 +25,6 @@ const FriendScreen = ({ route }) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: "Friends",
-      // headerLeft: () => (
-      //   <Text style={{ fontSize: 16, fontWeight: "bold" }}>Nightlight</Text>
-      // ),
-      headerRight: () => (
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-          <AntDesign name="message1" size={24} color="white" />
-          <Ionicons
-            onPress={() => navigation.navigate("FriendRequestsScreen")}
-            name="people-outline"
-            size={24}
-            color="white"
-          />
-          <LogoutButton />
-        </View>
-      ),
     });
   }, []);
 
