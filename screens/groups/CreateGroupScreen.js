@@ -1,5 +1,4 @@
-import { API_GROUP_ADD } from "../../constants/Endpoints";
-
+import { API_GROUP_ADD, API_VIEW_ALL_FRIENDS } from "../../constants/Endpoints";
 import React, { useState, useContext, useEffect } from "react";
 import {
   View,
@@ -20,7 +19,6 @@ import GetAllUsers from "./AllUsersGroupScreen";
 import Colors from "../../Colors";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../../UserContext";
-import { API_VIEW_ALL_FRIENDS_BY_ID, API_VIEW_FRIENDS_DETAILS } from "../../constants/Endpoints";
 
 const GroupCreateAddInput = (props) => {
   const navigation = useNavigation();
@@ -29,40 +27,63 @@ const GroupCreateAddInput = (props) => {
   const [showFriendsModal, setShowFriendsModal] = useState(false);
   const [userFriends, setUserFriends] = useState([]);
   const { userId, setUserId, token } = useContext(UserContext);
+  const [selectedFriends, setSelectedFriends] = useState([]);
 
   useEffect(() => {
-    const fetchUserFriends = async () => {
+    const fetchFriends = async () => {
       try {
-        const response = await fetch(`${API_VIEW_ALL_FRIENDS_BY_ID}/${userId}`);
+        const myHeaders = new Headers();
+        myHeaders.append("Authorization", token);
+        myHeaders.append("ngrok-skip-browser-warning", "true");
+        let requestOptions = {
+          method: "GET",
+          headers: myHeaders,
+        };
+        const response = await fetch(API_VIEW_ALL_FRIENDS, requestOptions);
         const data = await response.json();
-        console.log(data);
-
-        if (response.ok) {
-          setUserFriends(data);
-        } else {
-          console.log("Error retrieving user friends", response.status);
-        }
+        const friends = data.friends;
+        setUserFriends(friends);
       } catch (error) {
-        console.log("Error Message", error);
+        console.log(error);
       }
     };
-
-    fetchUserFriends();
-  }, [userId]);
+    fetchFriends();
+  }, [token]);
 
   const toggleFriendsModal = () => {
     setShowFriendsModal(!showFriendsModal);
+  };
+
+  const selectFriend = (friend) => {
+    // Toggle the selection status of the friend
+    setSelectedFriends((prevSelectedFriends) => {
+      if (prevSelectedFriends.includes(friend)) {
+        return prevSelectedFriends.filter((selectedFriend) => selectedFriend !== friend);
+      } else {
+        return [...prevSelectedFriends, friend];
+      }
+    });
+  };
+
+  const handleAddFriendsClick = () => {
+    // Implement logic to handle adding selected friends
+    console.log("Selected Friends:", selectedFriends);
+    // Clear the selected friends
+    setSelectedFriends([]);
+    // Close the friends modal
+    toggleFriendsModal();
   };
 
   const handleButtonClick = async () => {
     try {
       const myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
-      let users = [];
+
+      let users = selectedFriends.map(friend => friend._id);
 
       let body = {
         name: inputValue,
-        users: users.push(),
+        users: users,
       };
       const requestOptions = {
         method: "Post",
@@ -72,12 +93,14 @@ const GroupCreateAddInput = (props) => {
       const response = await fetch(API_GROUP_ADD, requestOptions);
 
       const data = await response.json();
+      console.log("Group Add Response:", data);
       //   props.fetchGroups();
       console.log("Input Value:", inputValue);
       // Hide the input field after saving
       setShowInput(false);
       //  resets input field after save
       setInputValue("");
+      setSelectedFriends([]);
     } catch (error) {
       console.error(error);
     }
@@ -151,23 +174,37 @@ const GroupCreateAddInput = (props) => {
             <View style={styles.modalContainer}>
               <View style={styles.modalContent}>
                 <Text style={styles.modalTitle}>Friends List</Text>
-                {/* Display the user's friends */}
-                {userFriends.map((friend) => {
-                  console.log("Friend object:", friend); // Add this line for debugging
-                  return (
-                    <View key={friend._id} style={styles.friendItem}>
-                      {/* Display friend's profile picture */}
-                      <Image
-                        source={{ uri: friend.profilePicture }}
-                        style={styles.profilePicture}
-                      />
-                      {/* Display friend's display name */}
-                      <Text style={styles.displayName}>
-                        {friend.displayName}
-                      </Text>
-                    </View>
-                  );
-                })}
+                {userFriends && userFriends.length > 0 ? (
+                  userFriends.map((friend) => (
+                    <TouchableOpacity
+                    key={friend._id}
+                  style={[ styles.friendItem, selectedFriends && selectedFriends.includes(friend) && styles.selectedFriend,]}
+                  onPress={() => selectFriend(friend)}
+                >
+                        <Image
+                          source={{ uri: friend.profilePicture }}
+                          style={styles.profilePicture}
+                        />
+                        <Text style={styles.displayName}>
+                          {friend.displayName}
+                        </Text>
+                        </TouchableOpacity>
+                    ))
+                ) : (
+                  <Text>No friends to display</Text>
+                )}
+                {selectedFriends && selectedFriends.length > 0 && (
+              <TouchableOpacity
+                style={styles.buttonContainer}
+                onPress={handleAddFriendsClick}
+              >
+                <Button
+                  color={Colors.lightBlue}
+                  title="Add Friends"
+                  onPress={handleAddFriendsClick}
+                />
+              </TouchableOpacity>
+            )}
               </View>
 
               <TouchableOpacity

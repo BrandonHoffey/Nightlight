@@ -31,6 +31,7 @@ const MessageScreen = ({ route }) => {
     currentUser,
     token,
   } = route.params;
+  console.log("Here", currentUser);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const bottomSheetRef = useRef();
