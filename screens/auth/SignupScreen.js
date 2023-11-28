@@ -133,8 +133,13 @@ const styles = StyleSheet.create({
   screenContainer: {
     height: "100%",
     width: "100%",
-    marginBottom: "40%",
+    // marginBottom: "10%",
+    // marginTop:"20%",
+    paddingTop:100,
   },
+  // imageContainer:{
+  //   paddingTop:50,
+  // },
   inputContainer: {
     gap: 20,
   },

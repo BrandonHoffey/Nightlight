@@ -35,6 +35,15 @@ const CommunityScreen = () => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: "Community",
+      headerRight: ()=>(
+        <AntDesign
+        name="addusergroup"
+        size={24}
+        color={Colors.white}
+        style={{marginRight:15}}
+        onPress={()=>navigation.navigate("FriendRequestsScreen")}
+        />
+      )
     });
   }, []);
 
