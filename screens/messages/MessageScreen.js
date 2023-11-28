@@ -20,6 +20,7 @@ import { useNavigation } from "@react-navigation/core";
 import { useSocket } from "../../api/SocketManager";
 import MessageCard from "../../ui/MessageCard";
 import { listMessages } from "../../api/MessagesApi";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const MessageScreen = ({ route }) => {
   const {
@@ -77,9 +78,9 @@ const MessageScreen = ({ route }) => {
             onPress={() =>
               navigation.navigate("InboxScreen", { currentUser, token })
             }
-          >
-            <AntDesign name="left" color={Colors.white} size={20} />
-          </Pressable>
+          ></Pressable>
+          <AntDesign name="left" color={Colors.white} size={20} />
+
           <View style={styles.image}>
             <Image
               source={{ uri: receiverPicture }}
@@ -89,6 +90,11 @@ const MessageScreen = ({ route }) => {
           <View style={styles.name}>
             <Text style={styles.nameText}>{receiverName}</Text>
             <Text style={styles.usernameText}>{username}</Text>
+          </View>
+          <View style={styles.addUser}>
+            <Pressable onPress={() => navigation.navigate("FriendsScreen")}>
+              <FontAwesome name="user-plus" color={Colors.white} size={20} />
+            </Pressable>
           </View>
         </SafeAreaView>
         <View style={styles.messageContainer}>
@@ -150,6 +156,7 @@ const styles = StyleSheet.create({
   text: {
     color: Colors.white,
   },
+ 
   inputContainer: {
     alignSelf: "center",
     justifyContent: "center",
@@ -182,6 +189,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginLeft: 10,
     marginRight: 10,
+    padding:10,
   },
   name: {
     flexDirection: "column",
