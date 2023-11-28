@@ -1,5 +1,5 @@
 const DOMAIN =
-  "https://ec8f-2607-fb90-3c08-4295-b1ab-3497-62b6-d2f4.ngrok-free.app";
+  "https://43e8-2601-282-4303-1fc0-91c5-8d5b-566e-dfa7.ngrok-free.app";
 export const API_GROUP_ADD = DOMAIN + "/group/add";
 export const API_GROUP_VIEW_ALL = DOMAIN + "/group/viewAll";
 export const API_VIEW_ALL_USERS = DOMAIN + "/user/view-all";
@@ -19,3 +19,4 @@ export const API_CURRENT_USER_DETAILS = DOMAIN + "/user/current-account";
 export const SOCKET = DOMAIN + "";
 export const API_VIEW_ALL_MESSAGES = DOMAIN + "/message/:id/view";
 export const API_VIEW_LATEST_MESSAGE = DOMAIN + "/message/:id/latest";
+export const API_USER_EDIT_BY_ID = DOMAIN + "/edit-account";

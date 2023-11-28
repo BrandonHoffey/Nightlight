@@ -44,7 +44,7 @@ const HomeScreen = () => {
     if (text === "changeStatus") {
       setIsStatusOpen(!isStatusOpen);
     } else if (text === "account") {
-      handleSheet();
+      navigation.navigate("UserSettings");
     } else if (text === "signOut") {
       handleSheet();
       socket.emit("statusUpdate", {
