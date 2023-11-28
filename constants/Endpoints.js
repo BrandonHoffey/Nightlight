@@ -1,5 +1,5 @@
 const DOMAIN =
-  "https://8187-2607-fb90-3c08-4295-5dbd-a417-f422-b715.ngrok-free.app";
+  "https://c74c-2601-282-4303-1fc0-2cb8-c66c-9721-3864.ngrok-free.app";
 export const API_GROUP_ADD = DOMAIN + "/group/add";
 export const API_GROUP_VIEW_ALL = DOMAIN + "/group/viewAll";
 export const API_VIEW_ALL_USERS = DOMAIN + "/user/view-all";
