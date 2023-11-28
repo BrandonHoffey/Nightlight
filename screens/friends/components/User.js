@@ -26,68 +26,84 @@ const User = ({ item }) => {
   const [friendRequests, setFriendRequests] = useState([]);
   const [userFriends, setUserFriends] = useState([]);
 
-  useFocusEffect(() => {
-    const fetchFriendRequests = async () => {
-      try {
-        const response = await fetch(`${API_SENT_FRIEND_REQUESTS}/${userId}`);
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchFriendRequests = async () => {
+        try {
+          const response = await fetch(`${API_SENT_FRIEND_REQUESTS}/${userId}`);
 
-        const data = await response.json();
-        if (response.ok) {
-          setFriendRequests(data);
-        } else {
-          console.log("error fetching friend requests", response.status, data);
+          const data = await response.json();
+          if (response.ok) {
+            setFriendRequests(data);
+          } else {
+            console.log(
+              "error fetching friend requests",
+              response.status,
+              data
+            );
+          }
+        } catch (error) {
+          console.log("Fetch error", error);
         }
-      } catch (error) {
-        console.log("Fetch error", error);
-      }
-    };
+      };
 
-    fetchFriendRequests();
-  }, [userId]);
+      fetchFriendRequests();
+    }, [userId])
+  );
 
-  useFocusEffect(() => {
-    const checkFriendshipStatus = () => {
-      if (friendRequests.some((friend) => friend._id === item._id)) {
-        setRequestSent(true);
-      } else {
-        setRequestSent(false);
-      }
-    };
-
-    checkFriendshipStatus();
-  }, [friendRequests, item._id]);
-
-  useFocusEffect(() => {
-    const loadRequestSentStatus = async () => {
-      try {
-        const status = await AsyncStorage.getItem(`friendRequest:${item._id}`);
-        setRequestSent(status === "sent");
-      } catch (error) {
-        console.log("Error loading requestSent status", error);
-      }
-    };
-
-    loadRequestSentStatus();
-  }, [friendRequests, item._id]);
-
-  useFocusEffect(() => {
-    const fetchUserFriends = async () => {
-      try {
-        const response = await fetch(`${API_VIEW_ALL_FRIENDS_BY_ID}/${userId}`);
-        const data = await response.json();
-
-        if (response.ok) {
-          setUserFriends(data);
+  useFocusEffect(
+    React.useCallback(() => {
+      const checkFriendshipStatus = () => {
+        if (friendRequests.some((friend) => friend._id === item._id)) {
+          setRequestSent(true);
         } else {
-          console.log("error retrieving user friends", response.status);
+          setRequestSent(false);
         }
-      } catch (error) {
-        console.log("Error Message", error);
-      }
-    };
+      };
 
-    fetchUserFriends();
-  }, [userId]);
+      checkFriendshipStatus();
+    }, [friendRequests, item._id])
+  );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const loadRequestSentStatus = async () => {
+        try {
+          const status = await AsyncStorage.getItem(
+            `friendRequest:${item._id}`
+          );
+          setRequestSent(status === "sent");
+        } catch (error) {
+          console.log("Error loading requestSent status", error);
+        }
+      };
+
+      loadRequestSentStatus();
+    }, [friendRequests, item._id])
+  );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchUserFriends = async () => {
+        try {
+          const response = await fetch(
+            `${API_VIEW_ALL_FRIENDS_BY_ID}/${userId}`
+          );
+          const data = await response.json();
+
+          if (response.ok) {
+            setUserFriends(data);
+          } else {
+            console.log("error retrieving user friends", response.status);
+          }
+        } catch (error) {
+          console.log("Error Message", error);
+        }
+      };
+
+      fetchUserFriends();
+    }, [userId])
+  );
 
   const sendFriendRequest = async (currentUserId, selectedUserId) => {
     try {
@@ -112,9 +128,6 @@ const User = ({ item }) => {
       console.log("error message", error);
     }
   };
-
-  console.log("friend request sent", friendRequests);
-  console.log("user friends", userFriends);
 
   return (
     <Pressable

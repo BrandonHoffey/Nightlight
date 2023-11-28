@@ -103,6 +103,7 @@ const HomeScreen = () => {
   useEffect(() => {
     if (!isSheetOpen) {
       bottomSheetRef.current && bottomSheetRef.current.close();
+      setIsStatusOpen(false);
     } else {
       bottomSheetRef.current && bottomSheetRef.current.expand();
     }

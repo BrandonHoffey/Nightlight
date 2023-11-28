@@ -63,7 +63,7 @@ const Friend = ({ item, token, currentUser }) => {
           <Pressable
             onPress={handleChatPress}
             style={{
-              backgroundColor: Colors.darkBlue,
+              backgroundColor: Colors.lightBlue,
               padding: 10,
               borderRadius: 20,
               width: 70,
@@ -89,8 +89,6 @@ export default Friend;
 
 const styles = StyleSheet.create({
   screenContainer: {
-    backgroundColor: Colors.lightBlue,
-    padding: 10,
     marginBottom: 10,
     borderRadius: 10,
   },
