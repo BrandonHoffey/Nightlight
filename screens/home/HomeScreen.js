@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef, useMemo } from "react";
 import {
   View,
   Text,
@@ -7,24 +7,79 @@ import {
   PixelRatio,
   Pressable,
   SafeAreaView,
-  TouchableOpacity,
   ActivityIndicator,
+  TouchableWithoutFeedback,
+  TouchableOpacity,
 } from "react-native";
 import Colors from "../../Colors";
+import BottomSheet from "@gorhom/bottom-sheet";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
-import LogoutButton from "../../ui/LogoutButton";
 import logo from "../../assets/logo.png";
-import { UserContext } from "../../UserContext";
-import { currentUser } from "../../api/UserApi";
 import bgStars from "../../assets/background.png";
+import { currentUser } from "../../api/UserApi";
+import { StatusHome } from "../../ui/Status";
+import { UserContext } from "../../UserContext";
+import { useSocket } from "../../api/SocketManager";
 
 const fontScale = PixelRatio.getFontScale();
 const getFontSize = (size) => size / fontScale;
 
 const HomeScreen = () => {
   const [currentlySignedIn, setCurrentlySignedIn] = useState({});
-  const { username, token } = useContext(UserContext);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [isStatusOpen, setIsStatusOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const { token, logout } = useContext(UserContext);
+  const bottomSheetRef = useRef();
+  const snapPoints = useMemo(() => ["40%", "40%", "40%"], []);
   const navigation = useNavigation();
+  const socket = useSocket();
+
+  const handleSheet = () => {
+    setIsSheetOpen(!isSheetOpen);
+  };
+
+  const handlePress = (text) => {
+    if (text === "changeStatus") {
+      setIsStatusOpen(!isStatusOpen);
+    } else if (text === "account") {
+      handleSheet();
+    } else if (text === "signOut") {
+      handleSheet();
+      socket.emit("statusUpdate", {
+        user: currentlySignedIn,
+        status: "offline",
+      });
+      navigation.navigate("Authorization");
+      logout();
+    }
+  };
+
+  const handleStatusChange = (text) => {
+    if (text === "offline") {
+      handleSheet();
+      socket.emit("statusUpdate", {
+        user: currentlySignedIn,
+        status: "offline",
+      });
+      setIsStatusOpen(false);
+    } else if (text === "online") {
+      handleSheet();
+      socket.emit("statusUpdate", {
+        user: currentlySignedIn,
+        status: "online",
+      });
+      setIsStatusOpen(false);
+    } else if (text === "notReady") {
+      handleSheet();
+      socket.emit("statusUpdate", {
+        user: currentlySignedIn,
+        status: "notReady",
+      });
+      setIsStatusOpen(false);
+    }
+  };
 
   useEffect(() => {
     const handlePageLoad = async () => {
@@ -35,33 +90,33 @@ const HomeScreen = () => {
         }
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
+
     if (token) {
       handlePageLoad();
     }
   }, [token]);
 
-  const pressHandlerFriends = () => {
-    navigation.navigate("FriendScreen", {
-      currentUser: currentlySignedIn,
-      token: token,
+  useEffect(() => {
+    if (!isSheetOpen) {
+      bottomSheetRef.current && bottomSheetRef.current.close();
+    } else {
+      bottomSheetRef.current && bottomSheetRef.current.expand();
+    }
+  }, [isSheetOpen]);
+
+  useEffect(() => {
+    socket.emit("statusUpdate", {
+      user: currentlySignedIn,
+      status: "online",
     });
-  };
-  const pressHandlerGroups = () => {
-    navigation.navigate("Group Chats", {
-      currentUser: currentlySignedIn,
-      token: token,
-    });
-  };
-  const pressHandlerCommunity = () => {
-    navigation.navigate("Community", {
-      currentUser: currentlySignedIn,
-      token: token,
-    });
-  };
-  const pressHandlerMessages = () => {
-    navigation.navigate("InboxScreen", {
+  }, [currentlySignedIn]);
+
+  const navigateToScreen = (screenName) => {
+    navigation.navigate(screenName, {
       currentUser: currentlySignedIn,
       token: token,
     });
@@ -69,91 +124,158 @@ const HomeScreen = () => {
 
   return (
     <>
-      <SafeAreaView style={styles.container}>
-        <Image source={bgStars} style={styles.backgroundImage} />
-        <View style={styles.header}>
-          <View style={styles.navBar}>
-            <Image source={logo} style={styles.logo} />
-            <View style={styles.statusContainer}>
-              <TouchableOpacity style={styles.profileImageContainer}>
-                {currentlySignedIn ? (
-                  <Image
-                    source={{ uri: currentlySignedIn.profilePicture }}
-                    style={styles.profileImage}
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={Colors.white} />
+        </View>
+      ) : (
+        <GestureHandlerRootView style={{ flex: 1, width: "100%" }}>
+          <SafeAreaView style={styles.container}>
+            <Image source={bgStars} style={styles.backgroundImage} />
+            <View style={styles.header}>
+              <View style={styles.navBar}>
+                <Image source={logo} style={styles.logo} />
+                {currentlySignedIn && (
+                  <StatusHome
+                    currentlySignedIn={currentlySignedIn}
+                    handleSheet={handleSheet}
                   />
-                ) : (
-                  <ActivityIndicator />
                 )}
-              </TouchableOpacity>
-              <View style={styles.online} />
+              </View>
+              <Text style={styles.welcomeText}>
+                {currentlySignedIn
+                  ? `Welcome, ${currentlySignedIn.displayName}`
+                  : "Welcome"}
+              </Text>
             </View>
-          </View>
-          <Text style={[styles.welcomeText]}>
-            {currentlySignedIn
-              ? `Welcome, ${currentlySignedIn.displayName}`
-              : "Welcome"}
-          </Text>
-        </View>
-        <View style={styles.buttonColumnsContainer}>
-          <View style={styles.buttonColumn}>
-            <Pressable
-              style={({ pressed }) => [
-                styles.buttonContainer,
-                styles.friendsButton,
-                {
-                  backgroundColor: pressed
-                    ? Colors.lightGreen
-                    : Colors.lightBlue,
-                },
-              ]}
-              onPress={pressHandlerFriends}
+            <View style={styles.buttonColumnsContainer}>
+              <View style={styles.buttonColumn}>
+                <CustomPressable
+                  onPress={() => navigateToScreen("FriendScreen")}
+                  style={styles.friendsButton}
+                  text="Friends"
+                />
+                <CustomPressable
+                  onPress={() => navigateToScreen("Group Chats")}
+                  style={styles.groupsButton}
+                  text="Groups"
+                />
+              </View>
+              <View style={styles.buttonColumn}>
+                <CustomPressable
+                  onPress={() => navigateToScreen("Community")}
+                  style={styles.communityButton}
+                  text="Community"
+                />
+                <CustomPressable
+                  onPress={() => navigateToScreen("InboxScreen")}
+                  style={styles.communityButton}
+                  text="Messages"
+                />
+              </View>
+            </View>
+            {isSheetOpen && (
+              <TouchableWithoutFeedback onPress={handleSheet}>
+                <View style={styles.overlay}></View>
+              </TouchableWithoutFeedback>
+            )}
+            <BottomSheet
+              ref={bottomSheetRef}
+              index={-1}
+              snapPoints={snapPoints}
+              enabledContentGestureInteraction={false}
+              backgroundStyle={styles.sheetContainer}
+              handleIndicatorStyle={{ backgroundColor: Colors.white }}
             >
-              <Text style={[styles.buttonText]}>Friends</Text>
-            </Pressable>
-            <Pressable
-              style={({ pressed }) => [
-                styles.buttonContainer,
-                styles.groupsButton,
-                {
-                  backgroundColor: pressed
-                    ? Colors.lightBlue
-                    : Colors.lightGreen,
-                },
-              ]}
-              onPress={pressHandlerGroups}
-            >
-              <Text style={[styles.buttonText]}>Groups</Text>
-            </Pressable>
-          </View>
-          <View style={styles.buttonColumn}>
-            <Pressable
-              style={({ pressed }) => [
-                styles.buttonContainer,
-                styles.communityButton,
-                {
-                  backgroundColor: pressed ? Colors.white : Colors.yellow,
-                },
-              ]}
-              onPress={pressHandlerCommunity}
-            >
-              <Text style={[styles.communityButtonText]}>Community</Text>
-            </Pressable>
-            <Pressable
-              style={({ pressed }) => [
-                styles.buttonContainer,
-                styles.communityButton,
-                { backgroundColor: pressed ? Colors.yellow : Colors.white },
-              ]}
-              onPress={pressHandlerMessages}
-            >
-              <Text style={[styles.communityButtonText]}>Messages</Text>
-            </Pressable>
-          </View>
-        </View>
-      </SafeAreaView>
+              <View style={styles.sheetContainerContent}>
+                <Pressable
+                  style={styles.buttons}
+                  onPress={() => handlePress("changeStatus")}
+                >
+                  <Text style={styles.text}>Change Status</Text>
+                </Pressable>
+                {isStatusOpen ? (
+                  <View style={styles.statusChangeContainer}>
+                    <View>
+                      <TouchableOpacity
+                        onPress={() => handleStatusChange("online")}
+                        style={styles.statusWrapper}
+                      >
+                        <View
+                          style={[
+                            styles.statusColor,
+                            { backgroundColor: Colors.onlineGreen },
+                          ]}
+                        />
+                        <Text style={styles.text}>Online</Text>
+                      </TouchableOpacity>
+                    </View>
+                    <View>
+                      <TouchableOpacity
+                        onPress={() => handleStatusChange("offline")}
+                        style={styles.statusWrapper}
+                      >
+                        <View
+                          style={[
+                            styles.statusColor,
+                            { backgroundColor: Colors.yellow },
+                          ]}
+                        />
+                        <Text style={styles.text}>Offline</Text>
+                      </TouchableOpacity>
+                    </View>
+                    <View>
+                      <TouchableOpacity
+                        onPress={() => handleStatusChange("notReady")}
+                        style={styles.statusWrapper}
+                      >
+                        <View
+                          style={[
+                            styles.statusColor,
+                            { backgroundColor: Colors.red },
+                          ]}
+                        />
+                        <Text style={styles.text}>Not ready</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                ) : (
+                  <>
+                    <Pressable
+                      style={styles.buttons}
+                      onPress={() => handlePress("account")}
+                    >
+                      <Text style={styles.text}>Account</Text>
+                    </Pressable>
+                    <Pressable
+                      style={styles.buttons}
+                      onPress={() => handlePress("signOut")}
+                    >
+                      <Text style={styles.text}>Sign Out</Text>
+                    </Pressable>
+                  </>
+                )}
+              </View>
+            </BottomSheet>
+          </SafeAreaView>
+        </GestureHandlerRootView>
+      )}
     </>
   );
 };
+
+const CustomPressable = ({ onPress, style, text }) => (
+  <Pressable
+    style={({ pressed }) => [
+      styles.buttonContainer,
+      style,
+      { backgroundColor: pressed ? Colors.lightGreen : Colors.lightBlue },
+    ]}
+    onPress={onPress}
+  >
+    <Text style={styles.buttonText}>{text}</Text>
+  </Pressable>
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -161,6 +283,64 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: Colors.darkBlue,
+  },
+  statusChangeContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    flex: 1,
+    width: "90%",
+  },
+  statusColor: {
+    width: 14,
+    height: 14,
+    borderRadius: 7,
+  },
+  statusWrapper: {
+    flexDirection: "row",
+    gap: 4,
+  },
+  sheetContainer: {
+    alignSelf: "center",
+    justifyContent: "center",
+    backgroundColor: Colors.darkBlue,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    flex: 1,
+    width: "100%",
+  },
+  sheetContainerContent: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 20,
+    marginBottom: 20,
+  },
+  buttons: {
+    backgroundColor: Colors.lightBlue,
+    width: "90%",
+    padding: 20,
+    borderRadius: 20,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: Colors.darkBlue,
+  },
+  backgroundImage: {
+    flex: 1,
+    resizeMode: "cover",
+    position: "absolute",
+    height: "120%",
+  },
+  header: {
+    flexDirection: "column",
+    gap: 20,
+    flex: 1,
+    alignItems: "left",
+    width: "95%",
   },
   navBar: {
     flexDirection: "row",
@@ -171,33 +351,13 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.white,
     borderBottomWidth: 0.2,
   },
-  header: {
-    flexDirection: "column",
-    gap: 20,
-    flex: 1,
-    alignItems: "left",
-    width: "95%",
-  },
-  backgroundImage: {
-    flex: 1,
-    resizeMode: "cover",
-    position: "absolute",
-    height: "120%",
-  },
   welcomeText: {
     color: Colors.white,
     fontSize: getFontSize(24),
   },
-  profileImageContainer: {
-    borderWidth: 1,
-    padding: 3,
-    borderRadius: 50,
-    borderColor: Colors.white,
-  },
-  profileImage: {
-    height: 40,
-    width: 40,
-    borderRadius: 40,
+  text: {
+    color: Colors.white,
+    textAlign: "center",
   },
   logo: {
     resizeMode: "contain",
@@ -244,24 +404,8 @@ const styles = StyleSheet.create({
     fontSize: getFontSize(18),
     fontWeight: "bold",
   },
-  buttonText2: {
-    color: Colors.white,
-    fontSize: getFontSize(14),
-    fontWeight: "bold",
-  },
-  statusContainer: {
-    position: "relative",
-  },
-  online: {
-    position: "absolute",
-    width: 14,
-    height: 14,
-    borderRadius: 6,
-    backgroundColor: Colors.lightGreen,
-    right: 0,
-    bottom: 30,
-    borderWidth: 2,
-    borderColor: Colors.darkBlue,
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
   },
 });
 
