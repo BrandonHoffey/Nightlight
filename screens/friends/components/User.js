@@ -31,7 +31,6 @@ const User = ({ item }) => {
       const fetchFriendRequests = async () => {
         try {
           const response = await fetch(`${API_SENT_FRIEND_REQUESTS}/${userId}`);
-
           const data = await response.json();
           if (response.ok) {
             setFriendRequests(data);
@@ -60,7 +59,6 @@ const User = ({ item }) => {
           setRequestSent(false);
         }
       };
-
       checkFriendshipStatus();
     }, [friendRequests, item._id])
   );
@@ -100,7 +98,6 @@ const User = ({ item }) => {
           console.log("Error Message", error);
         }
       };
-
       fetchUserFriends();
     }, [userId])
   );
