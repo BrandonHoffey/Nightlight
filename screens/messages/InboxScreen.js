@@ -59,9 +59,7 @@ const InboxScreen = ({ route }) => {
           enabledContentGestureInteraction={false}
           backgroundStyle={styles.gifContainer}
           handleIndicatorStyle={{ backgroundColor: Colors.white }}
-        >
-          {/* <TenorScreen isSheetOpen={isSheetOpen} /> */}
-        </BottomSheet>
+        ></BottomSheet>
       </View>
     </GestureHandlerRootView>
   );

@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import React, { useContext, useState, useEffect } from "react";
+import { View, Text, StyleSheet, Image, ActivityIndicator } from "react-native";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Groups } from "./screens/groups/GroupsScreen";
@@ -19,21 +19,39 @@ import UserSettings from "./ui/UserSettings";
 
 const Stack = createNativeStackNavigator();
 
-const StackNavigator = () => {
-  const handleAppLoad = async () => {
-    const TOKEN = await AsyncStorage.getItem("TOKEN");
-    const USER_ID = await AsyncStorage.getItem("USER_ID");
-    if (TOKEN === null || USER_ID === null) {
-      return false;
-    } else {
-      return true;
-    }
-  };
+const loadingScreen = () => {
   return (
+    <View style={styles.loadingContainer}>
+      <ActivityIndicator size="large" color="#fff" />
+    </View>
+  );
+};
+
+const StackNavigator = () => {
+  const [initialRoute, setInitialRoute] = useState("Authorization");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const handleAppLoad = async () => {
+      const TOKEN = await AsyncStorage.getItem("TOKEN");
+      const USER_ID = await AsyncStorage.getItem("USER_ID");
+      console.log(TOKEN, USER_ID);
+      if (TOKEN === null || USER_ID === null) {
+        setInitialRoute("Authorization");
+      } else {
+        setInitialRoute("Home");
+      }
+      setLoading(false);
+    };
+    handleAppLoad();
+  }, []);
+
+  console.log(initialRoute);
+  return loading ? (
+    loadingScreen
+  ) : (
     <Stack.Navigator
-      initialRouteName={handleAppLoad().then((result) =>
-        result ? "Home" : "Authorization"
-      )}
+      initialRouteName={initialRoute}
       screenOptions={({ navigation }) => ({
         headerStyle: {
           backgroundColor: Colors.lightBlue,
@@ -100,4 +118,10 @@ const StackNavigator = () => {
   );
 };
 export default StackNavigator;
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
