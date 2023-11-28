@@ -71,8 +71,11 @@ const UserSettings = () => {
         },
         body: JSON.stringify(requestBody),
       });
+      console.log('Response:', response);
   
-      const responseData = await response.json();
+      const responseData = await response.json().catch((error) => {
+        console.error("Error parsing JSON response:", error);
+      });
   
       if (response.ok) {
         console.log("Profile updated successfully");
@@ -81,7 +84,7 @@ const UserSettings = () => {
         console.error("Failed to update profile", responseData);
         Alert.alert(
           "Failed to update profile",
-          responseData.error || "An error occurred"
+          responseData && responseData.error ? responseData.error : "An error occurred"
         );
       }
     } catch (error) {
