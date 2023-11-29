@@ -47,7 +47,7 @@ const FriendRequestsScreen = () => {
       }
     };
     fetchFriendRequests();
-  }, [token, userId]);
+  
 
   useFocusEffect(
     React.useCallback(() => {
@@ -93,7 +93,7 @@ const FriendRequestsScreen = () => {
       </View>
     </SafeAreaView>
   );
-};
+  }
 
 export default FriendRequestsScreen;
 const styles = StyleSheet.create({
