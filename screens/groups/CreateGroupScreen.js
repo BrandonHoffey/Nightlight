@@ -203,11 +203,16 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.darkBlue,
     flex: 1,
+    alignItems: "center", // Center content horizontally
+   
   },
   buttonContainer: {
     borderRadius: 15,
     overflow: "hidden",
     margin: 10,
+    width: 200,
+    
+    // justifyContent: "center",
   },
   inputContainer: {
     alignItems: "center",
