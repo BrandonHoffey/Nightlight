@@ -30,7 +30,7 @@ const User = ({ item }) => {
     try {
       const response = await fetch(`${API_SENT_FRIEND_REQUESTS}/${userId}`);
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       if (response.ok) {
         setFriendRequests(data);
       } else {
