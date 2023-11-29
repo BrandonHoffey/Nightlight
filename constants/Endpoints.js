@@ -12,8 +12,7 @@ export const API_SEND_FRIEND_REQUEST = DOMAIN + "/friend/add";
 export const API_FRIEND_REQUESTS = DOMAIN + "/friend/friend-requests";
 export const API_FRIEND_REQUEST_ACCEPT =
   DOMAIN + "/friend/friend-request/accept";
-export const API_FRIEND_REQUEST_DECLINE =
-  DOMAIN + "/friend/friend-request/decline";
+  export const API_FRIEND_REQUEST_DECLINE = DOMAIN + "/friend/friend-request/decline"
 export const API_SENT_FRIEND_REQUESTS = DOMAIN + "/friend/friend-requests/sent";
 export const API_VIEW_ALL_FRIENDS_BY_ID = DOMAIN + "/friend/friends";
 export const API_VIEW_FRIENDS_DETAILS = DOMAIN + "/friend/view-all-details";
