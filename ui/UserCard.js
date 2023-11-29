@@ -28,7 +28,7 @@ const UserCard = ({ currentUser }) => {
     if (userList.length > 2) {
       groupMembers = userList.splice(0, 2).join(", ") + ", and others";
     } else {
-      groupMembers = userList.join(" ");
+      groupMembers = userList.join(", ");
     }
     return groupMembers;
   };

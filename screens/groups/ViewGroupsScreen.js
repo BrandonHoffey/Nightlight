@@ -55,11 +55,13 @@ export default ViewGroupsCreated = ({ route }) => {
     fetchGroups();
   }, []);
   const Item = ({ name, users, picture, item }) => {
-    if (users.length >= 3) {
-      users = users.slice(0, 2);
-      const updatedUsers = users.push("and others");
+    const userList = users.map((user) => user.displayName);
+    let groupMembers;
+    if (userList.length > 2) {
+      groupMembers = userList.splice(0, 2).join(", ") + ", and others";
+    } else {
+      groupMembers = userList.join(", ");
     }
-    users = users.slice(0, 3).join(" ");
     return (
       <TouchableOpacity
         style={styles.groupInfo}
@@ -73,7 +75,7 @@ export default ViewGroupsCreated = ({ route }) => {
         </View>
         <View style={styles.wrapper}>
           <Text style={styles.nameText}>{name}</Text>
-          <Text style={styles.usersText}>{users}</Text>
+          <Text style={styles.usersText}>{groupMembers}</Text>
         </View>
       </TouchableOpacity>
     );
