@@ -6,6 +6,7 @@ import FriendRequest from "./components/FriendRequest";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import Colors from "../../Colors";
+import { Fonts } from "../../Font";
 
 const fontScale = PixelRatio.getFontScale();
 const getFontSize = (size) => size / fontScale;
@@ -77,12 +78,12 @@ const FriendRequestsScreen = () => {
     <SafeAreaView>
       <View style={styles.screenContainer}>
         {friendRequests.length > 0 && (
-          <Text style={{ color: "white", fontSize: getFontSize(16) }}>
+          <Text style={styles.yourFriendRequests}>
             Your Friend Requests
           </Text>
         )}
         {friendRequests.length === 0 && (
-          <Text style={{ color: "white", fontSize: getFontSize(16) }}>
+          <Text style={styles.noRequestsText}>
             No New Friend Requests
           </Text>
         )}
@@ -108,6 +109,16 @@ const styles = StyleSheet.create({
     // marginHorizontal: 12,
     height: "100%",
     width: "100%",
-    
   },
+  noRequestsText: {
+    color: Colors.yellow,
+    fontSize: getFontSize(16),
+    textAlign: "center",
+    marginTop: "50%",
+  },
+  yourFriendRequests: {
+    color: Colors.yellow,
+    fontSize: getFontSize(16),
+    textAlign: "center",
+  }
 });
