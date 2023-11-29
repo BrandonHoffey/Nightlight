@@ -16,7 +16,8 @@ import Colors from "../../../Colors";
 const fontScale = PixelRatio.getFontScale();
 const getFontSize = (size) => size / fontScale;
 
-const FriendRequest = ({ item, FriendRequests, setFriendRequests }) => {
+const FriendRequest = ({ item, friendRequests, setFriendRequests }) => {
+  console.log('Rendering FriendRequest for:', item.displayName);
   const { userId, setUserId, token } = useContext(UserContext);
   const navigation = useNavigation();
   
