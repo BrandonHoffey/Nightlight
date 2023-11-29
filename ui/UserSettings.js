@@ -25,7 +25,6 @@ const UserSettings = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    // Log user data when the component mounts
     console.log("User ID:", userId);
     console.log("Token:", token);
   }, []);
@@ -91,7 +90,7 @@ const UserSettings = () => {
         console.log("Profile updated successfully");
         console.log("Response Data:", JSON.stringify(responseData));
         navigation.navigate("Home", {
-          screen: "Home", // Screen name within the Home stack
+          screen: "Home",
           params: {
             updateUserData: (userData) => {
               // Callback function to update user data on the Home screen
@@ -118,9 +117,9 @@ const UserSettings = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text>Edit Profile</Text>
+      <Text style={styles.labelText}>Edit Profile</Text>
       <View style={styles.formGroup}>
-        <Text>Username:</Text>
+        <Text style={styles.labelText}>Username:</Text>
         <TextInput
           value={newUsername}
           onChangeText={(text) => setNewUsername(text)}
@@ -128,7 +127,7 @@ const UserSettings = () => {
         />
       </View>
       <View style={styles.formGroup}>
-        <Text>Display Name:</Text>
+        <Text style={styles.labelText}>Display Name:</Text>
         <TextInput
           value={displayName}
           onChangeText={(text) => setDisplayName(text)}
@@ -136,17 +135,21 @@ const UserSettings = () => {
         />
       </View>
       <View style={styles.formGroup}>
-        <Text>Profile Picture:</Text>
+        <Text style={styles.labelText}>Profile Picture:</Text>
         {profilePicture && (
           <Image
             source={{ uri: profilePicture }}
             style={styles.profilePicture}
           />
         )}
-        <Button title="Choose Profile Picture" onPress={handleImagePicker} />
+        <Button
+          title="Choose Profile Picture"
+          onPress={handleImagePicker}
+          color="#24A49C" // Set button color to #24A49C
+        />
       </View>
       <View style={styles.formGroup}>
-        <Text>Email:</Text>
+        <Text style={styles.labelText}>Email:</Text>
         <TextInput
           value={newEmail}
           onChangeText={(text) => setNewEmail(text)}
@@ -154,7 +157,7 @@ const UserSettings = () => {
         />
       </View>
       <View style={styles.formGroup}>
-        <Text>Current Password:</Text>
+        <Text style={styles.labelText}>Current Password:</Text>
         <TextInput
           value={currentPassword}
           onChangeText={(text) => setCurrentPassword(text)}
@@ -163,7 +166,7 @@ const UserSettings = () => {
         />
       </View>
       <View style={styles.formGroup}>
-        <Text>New Password:</Text>
+        <Text style={styles.labelText}>New Password:</Text>
         <TextInput
           value={newPassword}
           onChangeText={(text) => setNewPassword(text)}
@@ -171,7 +174,11 @@ const UserSettings = () => {
           style={styles.input}
         />
       </View>
-      <Button title="Save Changes" onPress={handleSaveChanges} />
+      <Button
+        title="Save Changes"
+        onPress={handleSaveChanges}
+        color="#24A49C" // Set button color to #24A49C
+      />
     </SafeAreaView>
   );
 };
@@ -182,6 +189,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: "#05002B", // Dark blue background color
   },
   formGroup: {
     marginBottom: 16,
@@ -190,7 +198,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ccc",
     padding: 8,
-    borderRadius: 4,
+    borderRadius: 8, // Rounded corners for input fields
+    backgroundColor: "#fff", // White background for input fields
+    color: "#001F3F", // Dark blue text color
   },
   profilePicture: {
     width: 100,
@@ -198,5 +208,8 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
     borderRadius: 50,
     marginTop: 10,
+  },
+  labelText: {
+    color: 'white', // Set text color to white
   },
 });
