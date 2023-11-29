@@ -22,6 +22,16 @@ const UserCard = ({ currentUser }) => {
   const navigate = useNavigation();
   const socket = useSocket();
 
+  const handleUsers = (users) => {
+    const userList = users.users.map((user) => user.displayName);
+    let groupMembers;
+    if (userList.length > 2) {
+      groupMembers = userList.splice(0, 2).join(", ") + ", and others";
+    } else {
+      groupMembers = userList.join(" ");
+    }
+    return groupMembers;
+  };
   useFocusEffect(
     React.useCallback(() => {
       socket.emit("inboxUpdate", {
@@ -89,9 +99,11 @@ const UserCard = ({ currentUser }) => {
             style={styles.container}
             onPress={() =>
               navigate.navigate("MessageScreen", {
-                receiverName: item.displayName,
-                username: item.username,
-                receiverPicture: item.profilePicture,
+                receiverName: !item.displayName ? item.name : item.displayName,
+                username: !item.username ? handleUsers(item) : item.username,
+                receiverPicture: !item.profilePicture
+                  ? item.groupPicture
+                  : item.profilePicture,
                 receiverId: item._id,
                 currentUser: currentUser,
                 token: token,
@@ -100,12 +112,18 @@ const UserCard = ({ currentUser }) => {
           >
             <View style={styles.imageWrapper}>
               <Image
-                source={{ uri: item.profilePicture }}
+                source={{
+                  uri: !item.profilePicture
+                    ? item.groupPicture
+                    : item.profilePicture,
+                }}
                 style={styles.image}
               />
             </View>
             <View style={styles.textWrapper}>
-              <Text style={styles.text}>{item.displayName}</Text>
+              <Text style={styles.text}>
+                {!item.displayName ? item.name : item.displayName}
+              </Text>
               <Text style={[styles.text, { opacity: 0.7 }]}>
                 {latestMessages[index][item._id]}
               </Text>

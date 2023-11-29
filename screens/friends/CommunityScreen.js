@@ -35,15 +35,16 @@ const CommunityScreen = () => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: "Community",
-      headerRight: ()=>(
-        <AntDesign
-        name="addusergroup"
-        size={24}
-        color={Colors.white}
-        style={{marginRight:15}}
-        onPress={()=>navigation.navigate("FriendRequestsScreen")}
-        />
-      )
+      headerRight: () => (
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+          <Ionicons
+            onPress={() => navigation.navigate("FriendRequestsScreen")}
+            name="people-outline"
+            size={24}
+            color="white"
+          />
+        </View>
+      ),
     });
   }, []);
 
@@ -79,7 +80,7 @@ const CommunityScreen = () => {
   }, [token, userId]);
 
   return (
-    <SafeAreaView style={{ backgroundColor: Colors.darkBlue }}>
+    <SafeAreaView>
       <ScrollView
         style={styles.screenContainer}
         refreshControl={

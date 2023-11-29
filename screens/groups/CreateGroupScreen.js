@@ -20,14 +20,15 @@ import Colors from "../../Colors";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../../UserContext";
 
-const GroupCreateAddInput = (props) => {
+const GroupCreateAddInput = ({ route }) => {
+  const { currentUser } = route.params;
   const navigation = useNavigation();
   const [showInput, setShowInput] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [showFriendsModal, setShowFriendsModal] = useState(false);
   const [userFriends, setUserFriends] = useState([]);
   const { userId, setUserId, token } = useContext(UserContext);
-  const [selectedFriends, setSelectedFriends] = useState([]);
+  const [selectedFriends, setSelectedFriends] = useState([currentUser]);
 
   useEffect(() => {
     const fetchFriends = async () => {
@@ -58,32 +59,21 @@ const GroupCreateAddInput = (props) => {
     // Toggle the selection status of the friend
     setSelectedFriends((prevSelectedFriends) => {
       if (prevSelectedFriends.includes(friend)) {
-        return prevSelectedFriends.filter((selectedFriend) => selectedFriend !== friend);
+        return prevSelectedFriends.filter(
+          (selectedFriend) => selectedFriend !== friend
+        );
       } else {
         return [...prevSelectedFriends, friend];
       }
     });
   };
-
-  const handleAddFriendsClick = () => {
-    // Implement logic to handle adding selected friends
-    console.log("Selected Friends:", selectedFriends);
-    // Clear the selected friends
-    setSelectedFriends([]);
-    // Close the friends modal
-    toggleFriendsModal();
-  };
-
-  const handleButtonClick = async () => {
+  const handleAddFriendsClick = async () => {
     try {
       const myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
-
-      let users = selectedFriends.map(friend => friend._id);
-
       let body = {
         name: inputValue,
-        users: users,
+        users: selectedFriends,
       };
       const requestOptions = {
         method: "Post",
@@ -104,23 +94,13 @@ const GroupCreateAddInput = (props) => {
     } catch (error) {
       console.error(error);
     }
+    setSelectedFriends([]);
+    toggleFriendsModal();
   };
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: "Create Groups",
-
-      headerRight: () => (
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-          <AntDesign name="message1" size={24} color="white" />
-          <Ionicons
-            onPress={() => navigation.navigate("FriendRequestsScreen")}
-            name="people-outline"
-            size={24}
-            color="white"
-          />
-          <LogoutButton />
-        </View>
-      ),
     });
   }, []);
 
@@ -146,15 +126,8 @@ const GroupCreateAddInput = (props) => {
             onChangeText={(text) => setInputValue(text)}
           />
 
-          <TouchableOpacity
-            style={styles.buttonContainer}
-            onPress={handleButtonClick}
-          >
-            <Button
-              color={Colors.lightGreen}
-              title="Save"
-              onPress={handleButtonClick}
-            />
+          <TouchableOpacity style={styles.buttonContainer}>
+            <Button color={Colors.lightGreen} title="Save" />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.buttonContainer}
@@ -177,34 +150,39 @@ const GroupCreateAddInput = (props) => {
                 {userFriends && userFriends.length > 0 ? (
                   userFriends.map((friend) => (
                     <TouchableOpacity
-                    key={friend._id}
-                  style={[ styles.friendItem, selectedFriends && selectedFriends.includes(friend) && styles.selectedFriend,]}
-                  onPress={() => selectFriend(friend)}
-                >
-                        <Image
-                          source={{ uri: friend.profilePicture }}
-                          style={styles.profilePicture}
-                        />
-                        <Text style={styles.displayName}>
-                          {friend.displayName}
-                        </Text>
-                        </TouchableOpacity>
-                    ))
+                      key={friend._id}
+                      style={[
+                        styles.friendItem,
+                        selectedFriends &&
+                          selectedFriends.includes(friend) &&
+                          styles.selectedFriend,
+                      ]}
+                      onPress={() => selectFriend(friend)}
+                    >
+                      <Image
+                        source={{ uri: friend.profilePicture }}
+                        style={styles.profilePicture}
+                      />
+                      <Text style={styles.displayName}>
+                        {friend.displayName}
+                      </Text>
+                    </TouchableOpacity>
+                  ))
                 ) : (
                   <Text>No friends to display</Text>
                 )}
                 {selectedFriends && selectedFriends.length > 0 && (
-              <TouchableOpacity
-                style={styles.buttonContainer}
-                onPress={handleAddFriendsClick}
-              >
-                <Button
-                  color={Colors.lightBlue}
-                  title="Add Friends"
-                  onPress={handleAddFriendsClick}
-                />
-              </TouchableOpacity>
-            )}
+                  <TouchableOpacity
+                    style={styles.buttonContainer}
+                    onPress={handleAddFriendsClick}
+                  >
+                    <Button
+                      color={Colors.lightBlue}
+                      title="Add Friends"
+                      onPress={handleAddFriendsClick}
+                    />
+                  </TouchableOpacity>
+                )}
               </View>
 
               <TouchableOpacity

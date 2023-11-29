@@ -43,8 +43,26 @@ const User = ({ item }) => {
 
   useFocusEffect(
     React.useCallback(() => {
+      const fetchFriendRequests = async () => {
+        try {
+          const url = `${API_SENT_FRIEND_REQUESTS}/${userId}`;
+          const response = await fetch(url);
+          const data = await response.json();
+          if (response.ok) {
+            setFriendRequests(data);
+          } else {
+            console.log(
+              "error fetching friend requests",
+              response.status,
+              data
+            );
+          }
+        } catch (error) {
+          console.log("Fetch error", error);
+        }
+      };
       fetchFriendRequests();
-    }, [userId])
+    }, [])
   );
 
   useFocusEffect(
