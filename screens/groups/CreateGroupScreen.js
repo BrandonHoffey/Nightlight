@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     width: 300,
-    maxHeight: 400, // Adjust as needed
+    maxHeight: 500,
     overflow: "hidden",
   },
   closeModalButton: {
@@ -243,6 +243,10 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: Colors.lightBlue,
     borderRadius: 5,
+    width: 300,
+  },
+  selectedFriend: {
+    backgroundColor: Colors.lightBlue,
   },
   closeModalButtonText: {
     color: "white",
@@ -254,9 +258,24 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginRight: 10,
   },
+  friendItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: Colors.darkBlue,
+    padding: 10,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
   displayName: {
     fontSize: 16,
     fontWeight: "bold",
+    color: Colors.white,
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: Colors.black,
+    marginBottom: 20,
   },
 });
 
