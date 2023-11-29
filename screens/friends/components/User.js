@@ -26,27 +26,23 @@ const User = ({ item }) => {
   const [friendRequests, setFriendRequests] = useState([]);
   const [userFriends, setUserFriends] = useState([]);
 
+  const fetchFriendRequests = async () => {
+    try {
+      const response = await fetch(`${API_SENT_FRIEND_REQUESTS}/${userId}`);
+      const data = await response.json();
+      console.log(data);
+      if (response.ok) {
+        setFriendRequests(data);
+      } else {
+        console.log("error fetching friend requests", response.status, data);
+      }
+    } catch (error) {
+      console.log("Fetch error", error);
+    }
+  };
+
   useFocusEffect(
     React.useCallback(() => {
-      const fetchFriendRequests = async () => {
-        try {
-          const response = await fetch(`${API_SENT_FRIEND_REQUESTS}/${userId}`);
-          const data = await response.json();
-          console.log(data);
-          if (response.ok) {
-            setFriendRequests(data);
-          } else {
-            console.log(
-              "error fetching friend requests",
-              response.status,
-              data
-            );
-          }
-        } catch (error) {
-          console.log("Fetch error", error);
-        }
-      };
-
       fetchFriendRequests();
     }, [userId])
   );
@@ -121,6 +117,10 @@ const User = ({ item }) => {
       if (response.ok) {
         await AsyncStorage.setItem(`friendRequest:${selectedUserId}`, "sent");
         setRequestSent(true);
+
+        fetchFriendRequests();
+        fetchUserFriends();
+
         console.log(
           "Add Friend button pressed for user with ID:",
           selectedUserId
