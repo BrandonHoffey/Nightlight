@@ -17,7 +17,7 @@ const fontScale = PixelRatio.getFontScale();
 const getFontSize = (size) => size / fontScale;
 
 const FriendRequest = ({ item, friendRequests, setFriendRequests }) => {
-  console.log('Rendering FriendRequest for:', item.displayName);
+  // console.log('Rendering FriendRequest for:', item.displayName);
   const { userId, setUserId, token } = useContext(UserContext);
   const navigation = useNavigation();
   
@@ -113,7 +113,7 @@ const FriendRequest = ({ item, friendRequests, setFriendRequests }) => {
             <Pressable
               onPress={() => declineRequest(item._id)}
               style={{
-                backgroundColor: Colors.red, // Choose the color for the "Decline" button
+                backgroundColor: Colors.red,
                 padding: 10,
                 borderRadius: 20,
                 marginLeft: 10,

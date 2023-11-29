@@ -1,10 +1,10 @@
-import { StyleSheet, Text, View, PixelRatio, SafeAreaView } from "react-native";
+import { StyleSheet, Text, View, PixelRatio, SafeAreaView, FlatList } from "react-native";
 import React, { useLayoutEffect, useEffect, useContext, useState } from "react";
 import { UserContext } from "../../UserContext";
 import { API_FRIEND_REQUESTS } from "../../constants/Endpoints";
 import FriendRequest from "./components/FriendRequest";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import Colors from "../../Colors";
 import { Fonts } from "../../Font";
 
@@ -21,39 +21,45 @@ const FriendRequestsScreen = () => {
     navigation.navigate("Authorization");
   };
 
+  const fetchFriendRequests = async () => {
+    try {
+      const myHeaders = new Headers();
+      myHeaders.append("Authorization", token);
+      myHeaders.append("ngrok-skip-browser-warning", "true");
+
+      const apiUrl = `${API_FRIEND_REQUESTS}/${userId}`;
+
+      const requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+      };
+
+      const response = await fetch(apiUrl, requestOptions);
+      const data = await response.json();
+      const uniqueUserIds = new Set();
+      const filteredFriendRequests = data.friendRequests.filter((request) => {
+        if (uniqueUserIds.has(request.senderId)) {
+          return false;
+        }
+        uniqueUserIds.add(request.senderId);
+        return true;
+      });
+      // console.log(data);
+      setFriendRequests(filteredFriendRequests);
+    } catch (error) {
+      console.log("error message", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchFriendRequests = async () => {
-      try {
-        const myHeaders = new Headers();
-        myHeaders.append("Authorization", token);
-        myHeaders.append("ngrok-skip-browser-warning", "true");
-
-        const apiUrl = `${API_FRIEND_REQUESTS}/${userId}`;
-
-        const requestOptions = {
-          method: "GET",
-          headers: myHeaders,
-        };
-
-        const response = await fetch(apiUrl, requestOptions);
-        const data = await response.json();
-        const uniqueUserIds = new Set();
-        const filteredFriendRequests = data.friendRequests.filter((request) => {
-          if (uniqueUserIds.has(request.senderId)) {
-            return false;
-          }
-          uniqueUserIds.add(request.senderId);
-          return true;
-        });
-        console.log(data);
-        setFriendRequests(filteredFriendRequests);
-
-      } catch (error) {
-        console.log("error message", error);
-      }
-    };
     fetchFriendRequests();
   }, [token, userId]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchFriendRequests();
+    }, [fetchFriendRequests])
+  );
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -88,14 +94,18 @@ const FriendRequestsScreen = () => {
           </Text>
         )}
 
-        {friendRequests.map((item) => (
-          <FriendRequest
-            key={item._id}
-            item={item}
-            friendRequests={friendRequests}
-            setFriendRequests={setFriendRequests}
-          />
-        ))}
+<FlatList
+  data={friendRequests}
+  keyExtractor={(item) => item._id}
+  renderItem={({ item }) => (
+    <FriendRequest
+      item={item}
+      friendRequests={friendRequests}
+      setFriendRequests={setFriendRequests}
+    />
+  )}
+  extraData={friendRequests}
+/>
       </View>
     </SafeAreaView>
   );
