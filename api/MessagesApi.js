@@ -2,7 +2,8 @@ import React, { useContext } from "react";
 import {
   API_MESSAGE_SEND,
   API_MESSAGE_VIEW,
-  API_VIEW_ALL_MESSAGES,
+  API_VIEW_ALL_MESSAGES_USER,
+  API_VIEW_ALL_MESSAGES_GROUP,
   API_VIEW_LATEST_MESSAGE,
 } from "../constants/Endpoints";
 
@@ -47,7 +48,7 @@ const viewMessages = async (id, token) => {
   }
 };
 
-const listMessages = async (receiverId, token) => {
+const listMessagesUser = async (receiverId, token) => {
   try {
     const myHeaders = new Headers();
     myHeaders.append("Authorization", token);
@@ -56,7 +57,26 @@ const listMessages = async (receiverId, token) => {
       headers: myHeaders,
     };
     const response = await fetch(
-      API_VIEW_ALL_MESSAGES.replace(":id", receiverId),
+      API_VIEW_ALL_MESSAGES_USER.replace(":id", receiverId),
+      requestOption
+    );
+    const data = await response.json();
+    return data.messages;
+  } catch (error) {
+    console.error("An error occurred:", error);
+    throw error;
+  }
+};
+const listMessagesGroup = async (receiverId, token) => {
+  try {
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", token);
+    const requestOption = {
+      method: "GET",
+      headers: myHeaders,
+    };
+    const response = await fetch(
+      API_VIEW_ALL_MESSAGES_GROUP.replace(":id", receiverId),
       requestOption
     );
     const data = await response.json();
@@ -89,4 +109,10 @@ const latestMessage = async (receiverId, token) => {
   }
 };
 
-export { sendMessage, viewMessages, listMessages, latestMessage };
+export {
+  sendMessage,
+  viewMessages,
+  listMessagesUser,
+  listMessagesGroup,
+  latestMessage,
+};

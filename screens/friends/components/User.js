@@ -30,7 +30,8 @@ const User = ({ item }) => {
     React.useCallback(() => {
       const fetchFriendRequests = async () => {
         try {
-          const response = await fetch(`${API_SENT_FRIEND_REQUESTS}/${userId}`);
+          const url = `${API_SENT_FRIEND_REQUESTS}/${userId}`;
+          const response = await fetch(url);
           const data = await response.json();
           if (response.ok) {
             setFriendRequests(data);
@@ -47,7 +48,7 @@ const User = ({ item }) => {
       };
 
       fetchFriendRequests();
-    }, [userId])
+    }, [])
   );
 
   useFocusEffect(
@@ -60,7 +61,7 @@ const User = ({ item }) => {
         }
       };
       checkFriendshipStatus();
-    }, [friendRequests, item._id])
+    }, [friendRequests, item._id, requestSent])
   );
 
   useFocusEffect(

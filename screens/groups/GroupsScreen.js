@@ -28,7 +28,7 @@ export const Groups = ({ route }) => {
     navigate.navigate("View Groups", { currentUser, token });
   };
   const pressHandlerCreate = () => {
-    navigate.navigate("Create Groups");
+    navigate.navigate("Create Groups", { currentUser });
   };
   return (
     <SafeAreaView style={styles.screenContainer}>

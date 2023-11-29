@@ -19,7 +19,7 @@ import Colors from "../../Colors";
 import { useNavigation } from "@react-navigation/core";
 import { useSocket } from "../../api/SocketManager";
 import MessageCard from "../../ui/MessageCard";
-import { listMessages } from "../../api/MessagesApi";
+import { listMessagesUser, listMessagesGroup } from "../../api/MessagesApi";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { Status } from "../../ui/Status";
 
@@ -53,11 +53,18 @@ const MessageScreen = ({ route }) => {
   }, [isSheetOpen]);
 
   useEffect(() => {
-    socket.emit("join", { senderId: currentUser._id, receiverId: receiverId });
     const loadPreviousMessages = async () => {
       try {
-        const previousMessages = await listMessages(receiverId, token);
-        setMessages(previousMessages);
+        const previousMessagesUser = await listMessagesUser(receiverId, token);
+        const previousMessagesGroup = await listMessagesGroup(
+          receiverId,
+          token
+        );
+        if (previousMessagesUser !== undefined) {
+          setMessages(previousMessagesUser);
+        } else {
+          setMessages(previousMessagesGroup);
+        }
       } catch (error) {
         console.error("Error fetching previous messages:", error);
       }
@@ -67,8 +74,13 @@ const MessageScreen = ({ route }) => {
       setMessages((prevMessages) => [...prevMessages, data]);
     });
 
+    socket.on("groupMessage", (data) => {
+      setMessages((prevMessages) => [...prevMessages, data]);
+    });
+
     return () => {
       socket.off("message");
+      socket.off("groupMessage");
     };
   }, [socket, currentUser._id, receiverId]);
   return (
@@ -78,8 +90,9 @@ const MessageScreen = ({ route }) => {
           <Pressable
             onPress={() =>
               navigation.navigate("InboxScreen", { currentUser, token })
-            }>
-          <AntDesign name="left" color={Colors.white} size={20} />
+            }
+          >
+            <AntDesign name="left" color={Colors.white} size={20} />
           </Pressable>
 
           <View style={styles.image}>
@@ -89,9 +102,7 @@ const MessageScreen = ({ route }) => {
             <Text style={styles.nameText}>{receiverName}</Text>
             <Text style={styles.usernameText}>{username}</Text>
           </View>
-          <View style={styles.addUser}>
-            
-          </View>
+          <View style={styles.addUser}></View>
         </SafeAreaView>
         <View style={styles.messageContainer}>
           <MessageCard messages={messages} currentUser={currentUser._id} />
@@ -152,7 +163,7 @@ const styles = StyleSheet.create({
   text: {
     color: Colors.white,
   },
- 
+
   inputContainer: {
     alignSelf: "center",
     justifyContent: "center",
@@ -185,7 +196,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginLeft: 10,
     marginRight: 10,
-    padding:10,
+    padding: 10,
   },
   name: {
     flexDirection: "column",

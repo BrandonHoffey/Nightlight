@@ -35,7 +35,6 @@ const InboxScreen = ({ route }) => {
       bottomSheetRef.current.expand();
     }
   }, [isSheetOpen]);
-
   useEffect(() => {}, []);
   return (
     <GestureHandlerRootView style={{ flex: 1, width: "100%" }}>
