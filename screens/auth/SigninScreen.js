@@ -22,8 +22,8 @@ const getFontSize = (size) => size / fontScale;
 
 export default (params) => {
   const { login } = useContext(UserContext);
-  const [username, setUsername] = useState("brandon");
-  const [password, setPassword] = useState("Test123");
+  const [username, setUsername] = useState("john");
+  const [password, setPassword] = useState("test123");
   const navigation = useNavigation();
 
   const handleSubmit = async () => {
