@@ -143,142 +143,142 @@ const HomeScreen = () => {
 
   return (
     <>
-      {/* {loading ? (
+      {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={Colors.white} />
         </View>
-      ) : ( */}
-      <GestureHandlerRootView style={{ flex: 1, width: "100%" }}>
-        <SafeAreaView style={styles.container}>
-          <Image source={bgStars} style={styles.backgroundImage} />
-          <View style={styles.header}>
-            <View style={styles.navBar}>
-              <Image source={logo} style={styles.logo} />
-              {currentlySignedIn && (
-                <StatusHome
-                  currentlySignedIn={currentlySignedIn}
-                  handleSheet={handleSheet}
+      ) : (
+        <GestureHandlerRootView style={{ flex: 1, width: "100%" }}>
+          <SafeAreaView style={styles.container}>
+            <Image source={bgStars} style={styles.backgroundImage} />
+            <View style={styles.header}>
+              <View style={styles.navBar}>
+                <Image source={logo} style={styles.logo} />
+                {currentlySignedIn && (
+                  <StatusHome
+                    currentlySignedIn={currentlySignedIn}
+                    handleSheet={handleSheet}
+                  />
+                )}
+              </View>
+              <Text style={styles.welcomeText}>
+                {currentlySignedIn
+                  ? `Welcome, ${currentlySignedIn.displayName}`
+                  : "Welcome"}
+              </Text>
+            </View>
+            <View style={styles.buttonColumnsContainer}>
+              <View style={styles.buttonColumn}>
+                <CustomPressable
+                  onPress={() => navigateToScreen("FriendScreen")}
+                  style={styles.friendsButton}
+                  text="Friends"
                 />
-              )}
+                <CustomPressable2
+                  onPress={() => navigateToScreen("Group Chats")}
+                  style={styles.groupsButton}
+                  text="Groups"
+                />
+              </View>
+              <View style={styles.buttonColumn}>
+                <CustomPressable2
+                  onPress={() => navigateToScreen("Community")}
+                  style={styles.communityButton}
+                  text="Community"
+                />
+                <CustomPressable
+                  onPress={() => navigateToScreen("InboxScreen")}
+                  style={styles.communityButton}
+                  text="Messages"
+                />
+              </View>
             </View>
-            <Text style={styles.welcomeText}>
-              {currentlySignedIn
-                ? `Welcome, ${currentlySignedIn.displayName}`
-                : "Welcome"}
-            </Text>
-          </View>
-          <View style={styles.buttonColumnsContainer}>
-            <View style={styles.buttonColumn}>
-              <CustomPressable
-                onPress={() => navigateToScreen("FriendScreen")}
-                style={styles.friendsButton}
-                text="Friends"
-              />
-              <CustomPressable2
-                onPress={() => navigateToScreen("Group Chats")}
-                style={styles.groupsButton}
-                text="Groups"
-              />
-            </View>
-            <View style={styles.buttonColumn}>
-              <CustomPressable2
-                onPress={() => navigateToScreen("Community")}
-                style={styles.communityButton}
-                text="Community"
-              />
-              <CustomPressable
-                onPress={() => navigateToScreen("InboxScreen")}
-                style={styles.communityButton}
-                text="Messages"
-              />
-            </View>
-          </View>
-          {isSheetOpen && (
-            <TouchableWithoutFeedback onPress={handleSheet}>
-              <View style={styles.overlay}></View>
-            </TouchableWithoutFeedback>
-          )}
-          <BottomSheet
-            ref={bottomSheetRef}
-            index={-1}
-            snapPoints={snapPoints}
-            enabledContentGestureInteraction={false}
-            backgroundStyle={styles.sheetContainer}
-            handleIndicatorStyle={{ backgroundColor: Colors.white }}
-          >
-            <View style={styles.sheetContainerContent}>
-              <Pressable
-                style={styles.buttons}
-                onPress={() => handlePress("changeStatus")}
-              >
-                <Text style={styles.text}>Change Status</Text>
-              </Pressable>
-              {isStatusOpen ? (
-                <View style={styles.statusChangeContainer}>
-                  <View>
-                    <TouchableOpacity
-                      onPress={() => handleStatusChange("online")}
-                      style={styles.statusWrapper}
-                    >
-                      <View
-                        style={[
-                          styles.statusColor,
-                          { backgroundColor: Colors.onlineGreen },
-                        ]}
-                      />
-                      <Text style={styles.text}>Online</Text>
-                    </TouchableOpacity>
+            {isSheetOpen && (
+              <TouchableWithoutFeedback onPress={handleSheet}>
+                <View style={styles.overlay}></View>
+              </TouchableWithoutFeedback>
+            )}
+            <BottomSheet
+              ref={bottomSheetRef}
+              index={-1}
+              snapPoints={snapPoints}
+              enabledContentGestureInteraction={false}
+              backgroundStyle={styles.sheetContainer}
+              handleIndicatorStyle={{ backgroundColor: Colors.white }}
+            >
+              <View style={styles.sheetContainerContent}>
+                <Pressable
+                  style={styles.buttons}
+                  onPress={() => handlePress("changeStatus")}
+                >
+                  <Text style={styles.text}>Change Status</Text>
+                </Pressable>
+                {isStatusOpen ? (
+                  <View style={styles.statusChangeContainer}>
+                    <View>
+                      <TouchableOpacity
+                        onPress={() => handleStatusChange("online")}
+                        style={styles.statusWrapper}
+                      >
+                        <View
+                          style={[
+                            styles.statusColor,
+                            { backgroundColor: Colors.onlineGreen },
+                          ]}
+                        />
+                        <Text style={styles.text}>Online</Text>
+                      </TouchableOpacity>
+                    </View>
+                    <View>
+                      <TouchableOpacity
+                        onPress={() => handleStatusChange("offline")}
+                        style={styles.statusWrapper}
+                      >
+                        <View
+                          style={[
+                            styles.statusColor,
+                            { backgroundColor: Colors.yellow },
+                          ]}
+                        />
+                        <Text style={styles.text}>Offline</Text>
+                      </TouchableOpacity>
+                    </View>
+                    <View>
+                      <TouchableOpacity
+                        onPress={() => handleStatusChange("notReady")}
+                        style={styles.statusWrapper}
+                      >
+                        <View
+                          style={[
+                            styles.statusColor,
+                            { backgroundColor: Colors.red },
+                          ]}
+                        />
+                        <Text style={styles.text}>Not ready</Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
-                  <View>
-                    <TouchableOpacity
-                      onPress={() => handleStatusChange("offline")}
-                      style={styles.statusWrapper}
+                ) : (
+                  <>
+                    <Pressable
+                      style={styles.buttons}
+                      onPress={() => handlePress("account")}
                     >
-                      <View
-                        style={[
-                          styles.statusColor,
-                          { backgroundColor: Colors.yellow },
-                        ]}
-                      />
-                      <Text style={styles.text}>Offline</Text>
-                    </TouchableOpacity>
-                  </View>
-                  <View>
-                    <TouchableOpacity
-                      onPress={() => handleStatusChange("notReady")}
-                      style={styles.statusWrapper}
+                      <Text style={styles.text}>Account</Text>
+                    </Pressable>
+                    <Pressable
+                      style={styles.buttons}
+                      onPress={() => handlePress("signOut")}
                     >
-                      <View
-                        style={[
-                          styles.statusColor,
-                          { backgroundColor: Colors.red },
-                        ]}
-                      />
-                      <Text style={styles.text}>Not ready</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              ) : (
-                <>
-                  <Pressable
-                    style={styles.buttons}
-                    onPress={() => handlePress("account")}
-                  >
-                    <Text style={styles.text}>Account</Text>
-                  </Pressable>
-                  <Pressable
-                    style={styles.buttons}
-                    onPress={() => handlePress("signOut")}
-                  >
-                    <Text style={styles.text}>Sign Out</Text>
-                  </Pressable>
-                </>
-              )}
-            </View>
-          </BottomSheet>
-        </SafeAreaView>
-      </GestureHandlerRootView>
-      {/* )} */}
+                      <Text style={styles.text}>Sign Out</Text>
+                    </Pressable>
+                  </>
+                )}
+              </View>
+            </BottomSheet>
+          </SafeAreaView>
+        </GestureHandlerRootView>
+      )}
     </>
   );
 };
@@ -412,7 +412,7 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: "center",
     justifyContent: "space-between",
-    margin: 40,
+    margin:40,
   },
   buttonColumn: {
     flexDirection: "column",
