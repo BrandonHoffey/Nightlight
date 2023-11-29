@@ -5,6 +5,7 @@ import {
   Pressable,
   Image,
   PixelRatio,
+  Modal,
 } from "react-native";
 import React, { useContext, useState, useEffect } from "react";
 import { useFocusEffect } from "@react-navigation/native";
@@ -25,6 +26,11 @@ const User = ({ item }) => {
   const [requestSent, setRequestSent] = useState(false);
   const [friendRequests, setFriendRequests] = useState([]);
   const [userFriends, setUserFriends] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible);
+  };
 
   const fetchFriendRequests = async () => {
     try {
@@ -150,68 +156,113 @@ const User = ({ item }) => {
   };
 
   return (
-    <Pressable
-      style={{ flexDirection: "row", alignItems: "center", marginVertical: 10 }}
-    >
-      <View>
-        <Image
-          style={{
-            width: 50,
-            height: 50,
-            borderRadius: 25,
-            resizeMode: "cover",
-          }}
-          source={{ uri: item.profilePicture }}
-        />
-      </View>
-
-      <View style={{ marginLeft: 12, flex: 1 }}>
-        <Text
-          style={{
-            fontWeight: "bold",
-            color: Colors.white,
-            fontSize: getFontSize(16),
-          }}
-        >
-          {item?.displayName}
-        </Text>
-      </View>
-
+    <>
       <Pressable
-        onPress={() => sendFriendRequest(userId, item._id)}
+        onPress={() => toggleModal()}
         style={{
-          backgroundColor: userFriends.includes(item._id)
-            ? Colors.lightGreen
-            : requestSent
-            ? Colors.yellow
-            : Colors.lightBlue,
-          padding: 10,
-          borderRadius: 20,
-          width: 105,
+          flexDirection: "row",
+          alignItems: "center",
+          marginVertical: 10,
         }}
       >
-        <Text
+        <View>
+          <Image
+            style={{
+              width: 50,
+              height: 50,
+              borderRadius: 25,
+              resizeMode: "cover",
+            }}
+            source={{ uri: item.profilePicture }}
+          />
+        </View>
+
+        <View style={{ marginLeft: 12, flex: 1 }}>
+          <Text
+            style={{
+              fontWeight: "bold",
+              color: Colors.white,
+              fontSize: getFontSize(16),
+            }}
+          >
+            {item?.displayName}
+          </Text>
+        </View>
+
+        <Pressable
+          onPress={() => sendFriendRequest(userId, item._id)}
           style={{
-            textAlign: "center",
-            color: userFriends.includes(item._id)
-              ? "white"
+            backgroundColor: userFriends.includes(item._id)
+              ? Colors.lightGreen
               : requestSent
-              ? "black"
-              : "white",
-            fontSize: getFontSize(14),
+              ? Colors.yellow
+              : Colors.lightBlue,
+            padding: 10,
+            borderRadius: 20,
+            width: 105,
           }}
         >
-          {userFriends.includes(item._id)
-            ? "Friend"
-            : requestSent
-            ? "Pending"
-            : "Add Friend"}
-        </Text>
+          <Text
+            style={{
+              textAlign: "center",
+              color: userFriends.includes(item._id)
+                ? "white"
+                : requestSent
+                ? "black"
+                : "white",
+              fontSize: getFontSize(14),
+            }}
+          >
+            {userFriends.includes(item._id)
+              ? "Friend"
+              : requestSent
+              ? "Pending"
+              : "Add Friend"}
+          </Text>
+        </Pressable>
       </Pressable>
-    </Pressable>
+
+      {/* Modal for displaying larger profile picture */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={() => {
+          setIsModalVisible(!isModalVisible);
+        }}
+      >
+        <View style={styles.modalContainer}>
+          <Image
+            style={styles.modalImage}
+            source={{ uri: item.profilePicture }}
+          />
+          <Pressable onPress={() => toggleModal()} style={styles.closeButton}>
+            <Text style={{ color: Colors.white }}>Close</Text>
+          </Pressable>
+        </View>
+      </Modal>
+    </>
   );
 };
 
-export default User;
+const styles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+  },
+  modalImage: {
+    width: 300,
+    height: 300,
+    resizeMode: "contain",
+    borderRadius: 15,
+  },
+  closeButton: {
+    position: "absolute",
+    top: 20,
+    right: 20,
+  },
+});
 
-const styles = StyleSheet.create({});
+export default User;
