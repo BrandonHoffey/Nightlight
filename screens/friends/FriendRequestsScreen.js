@@ -1,18 +1,10 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  PixelRatio,
-  SafeAreaView,
-  FlatList,
-  ActivityIndicator,
-} from "react-native";
+import { StyleSheet, Text, View, PixelRatio, SafeAreaView, FlatList } from "react-native";
 import React, { useLayoutEffect, useEffect, useContext, useState } from "react";
 import { UserContext } from "../../UserContext";
 import { API_FRIEND_REQUESTS } from "../../constants/Endpoints";
 import FriendRequest from "./components/FriendRequest";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import Colors from "../../Colors";
 import { Fonts } from "../../Font";
 import { currentUser } from "../../api/UserApi";
@@ -30,15 +22,13 @@ const FriendRequestsScreen = () => {
     navigation.navigate("Authorization");
   };
 
-  useEffect(() => {
-    const fetchFriendRequests = async () => {
-      try {
-        const myHeaders = new Headers();
-        myHeaders.append("Authorization", token);
-        myHeaders.append("ngrok-skip-browser-warning", "true");
+  const fetchFriendRequests = async () => {
+    try {
+      const myHeaders = new Headers();
+      myHeaders.append("Authorization", token);
+      myHeaders.append("ngrok-skip-browser-warning", "true");
 
-        const apiUrl = `${API_FRIEND_REQUESTS}/${userId}`;
-
+      const apiUrl = `${API_FRIEND_REQUESTS}/${userId}`;
         const requestOptions = {
           method: "GET",
           headers: myHeaders,
@@ -58,6 +48,12 @@ const FriendRequestsScreen = () => {
     };
     fetchFriendRequests();
   }, [token, userId]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchFriendRequests();
+    }, [fetchFriendRequests])
+  );
 
   useLayoutEffect(() => {
     navigation.setOptions({
