@@ -7,6 +7,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import Colors from "../../Colors";
 import { Fonts } from "../../Font";
+import { currentUser } from "../../api/UserApi";
 
 const fontScale = PixelRatio.getFontScale();
 const getFontSize = (size) => size / fontScale;
@@ -28,30 +29,23 @@ const FriendRequestsScreen = () => {
       myHeaders.append("ngrok-skip-browser-warning", "true");
 
       const apiUrl = `${API_FRIEND_REQUESTS}/${userId}`;
-
-      const requestOptions = {
-        method: "GET",
-        headers: myHeaders,
-      };
-
-      const response = await fetch(apiUrl, requestOptions);
-      const data = await response.json();
-      const uniqueUserIds = new Set();
-      const filteredFriendRequests = data.friendRequests.filter((request) => {
-        if (uniqueUserIds.has(request.senderId)) {
-          return false;
-        }
-        uniqueUserIds.add(request.senderId);
-        return true;
-      });
-      // console.log(data);
-      setFriendRequests(filteredFriendRequests);
-    } catch (error) {
-      console.log("error message", error);
-    }
-  };
-
-  useEffect(() => {
+        const requestOptions = {
+          method: "GET",
+          headers: myHeaders,
+        };
+        const response = await fetch(apiUrl, requestOptions);
+        const data = await response.json();
+        const currentUserFriends = await currentUser(token);
+        const requests = data.friendRequests;
+        const currentFriends = currentUserFriends.friends;
+        const currentRequests = requests.filter(
+          (item) => !currentFriends.includes(item._id)
+        );
+        setFriendRequests(currentRequests);
+      } catch (error) {
+        console.log("error message", error);
+      }
+    };
     fetchFriendRequests();
   }, [token, userId]);
 
@@ -80,32 +74,22 @@ const FriendRequestsScreen = () => {
     });
   }, []);
 
-  return (
-    <SafeAreaView>
+  if (friendRequests.length === 0) {
+    return (
       <View style={styles.screenContainer}>
-        {friendRequests.length > 0 && (
-          <Text style={styles.yourFriendRequests}>
-            Your Friend Requests
-          </Text>
-        )}
-        {friendRequests.length === 0 && (
-          <Text style={styles.noRequestsText}>
-            No New Friend Requests
-          </Text>
-        )}
+        <Text style={styles.yourFriendRequests}>No New Friend Requests</Text>
+      </View>
+    );
+  }
 
-<FlatList
-  data={friendRequests}
-  keyExtractor={(item) => item._id}
-  renderItem={({ item }) => (
-    <FriendRequest
-      item={item}
-      friendRequests={friendRequests}
-      setFriendRequests={setFriendRequests}
-    />
-  )}
-  extraData={friendRequests}
-/>
+  return (
+    <SafeAreaView style={{ backgroundColor: Colors.darkBlue }}>
+      <View style={styles.screenContainer}>
+        <Text style={styles.yourFriendRequests}>Your Friend Requests</Text>
+        <FriendRequest
+          friendRequests={friendRequests}
+          setFriendRequests={setFriendRequests}
+        />
       </View>
     </SafeAreaView>
   );
@@ -130,5 +114,5 @@ const styles = StyleSheet.create({
     color: Colors.yellow,
     fontSize: getFontSize(16),
     textAlign: "center",
-  }
+  },
 });

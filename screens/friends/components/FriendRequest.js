@@ -5,79 +5,87 @@ import {
   Pressable,
   Image,
   PixelRatio,
+  FlatList,
 } from "react-native";
 import React, { useContext } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { UserContext } from "../../../UserContext";
 import { useNavigation } from "@react-navigation/core";
-import { API_FRIEND_REQUEST_ACCEPT, API_FRIEND_REQUEST_DECLINE } from "../../../constants/Endpoints";
+import {
+  API_FRIEND_REQUEST_ACCEPT,
+  API_FRIEND_REQUEST_DECLINE,
+} from "../../../constants/Endpoints";
 import Colors from "../../../Colors";
 
 const fontScale = PixelRatio.getFontScale();
 const getFontSize = (size) => size / fontScale;
 
 const FriendRequest = ({ item, friendRequests, setFriendRequests }) => {
-  // console.log('Rendering FriendRequest for:', item.displayName);
   const { userId, setUserId, token } = useContext(UserContext);
   const navigation = useNavigation();
-  
-      const acceptRequest = async (friendRequestId) => {
-        try {
-          const response = await fetch(API_FRIEND_REQUEST_ACCEPT, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: token,
-            },
-            body: JSON.stringify({
-              senderId: friendRequestId,
-              recipientId: userId,
-            }),
-          });
 
-          const responseData = await response.json();
-          if (response.ok) {
-            setFriendRequests((prevFriendRequests) =>
-              prevFriendRequests.filter(
-                (request) => request._id !== friendRequestId
-              )
-            );
-          }
-        } catch (error) {
-          console.log("error accepting the friend request", error);
-        }
-      };
-  
-      const declineRequest = async (friendRequestId) => {
-        try {
-          const response = await fetch(API_FRIEND_REQUEST_DECLINE, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: token,
-            },
-            body: JSON.stringify({
-              senderId: friendRequestId,
-              recipientId: userId,
-            }),
-          });
-    
-          const responseData = await response.json();
-          if (response.ok) {
-            setFriendRequests((prevFriendRequests) =>
-              prevFriendRequests.filter(
-                (request) => request._id !== friendRequestId
-              )
-            );
-          }
-        } catch (error) {
-          console.log("error declining the friend request", error);
-        }
-      };
-  
-      return (
-        <View>
-          <Pressable
+  const acceptRequest = async (friendRequestId) => {
+    try {
+      const response = await fetch(API_FRIEND_REQUEST_ACCEPT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify({
+          senderId: friendRequestId,
+          recipientId: userId,
+        }),
+      });
+
+      const responseData = await response.json();
+      if (response.ok) {
+        setFriendRequests((prevFriendRequests) =>
+          prevFriendRequests.filter(
+            (request) => request._id !== friendRequestId
+          )
+        );
+      }
+    } catch (error) {
+      console.log("error accepting the friend request", error);
+    }
+  };
+
+  const declineRequest = async (friendRequestId) => {
+    try {
+      const response = await fetch(API_FRIEND_REQUEST_DECLINE, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify({
+          senderId: friendRequestId,
+          recipientId: userId,
+        }),
+      });
+
+      const responseData = await response.json();
+      if (response.ok) {
+        setFriendRequests((prevFriendRequests) =>
+          prevFriendRequests.filter(
+            (request) => request._id !== friendRequestId
+          )
+        );
+      }
+    } catch (error) {
+      console.log("error declining the friend request", error);
+    }
+  };
+
+  return (
+    <FlatList
+      style={{ flex: 1 }}
+      data={friendRequests}
+      keyExtractor={(item, index) => item._id.toString()}
+      renderItem={({ item, index }) => (
+        <View style={styles.requestsContainer}>
+          <View
             style={{
               flexDirection: "row",
               alignItems: "center",
@@ -98,34 +106,59 @@ const FriendRequest = ({ item, friendRequests, setFriendRequests }) => {
                 color: "white",
               }}
             >
-              {item?.displayName} sent you a friend request!!
+              {item?.displayName} {"\n"}
+              <Text
+                style={{
+                  fontSize: getFontSize(15),
+                  fontWeight: "normal",
+                  marginLeft: 10,
+                  flex: 1,
+                  color: "white",
+                }}
+              >
+                sent you a friend request!
+              </Text>
             </Text>
-            <Pressable
-              onPress={() => acceptRequest(item._id)}
-              style={{
-                backgroundColor: Colors.lightBlue,
-                padding: 10,
-                borderRadius: 20,
-              }}
+            <View
+              style={{ alignItems: "center", flex: 1, flexDirection: "row" }}
             >
-              <Text style={{ textAlign: "center", color: "white" }}>Accept</Text>
-            </Pressable>
-            <Pressable
-              onPress={() => declineRequest(item._id)}
-              style={{
-                backgroundColor: Colors.red,
-                padding: 10,
-                borderRadius: 20,
-                marginLeft: 10,
-              }}
-            >
-              <Text style={{ textAlign: "center", color: "white" }}>Decline</Text>
-            </Pressable>
-          </Pressable>
+              <Pressable
+                onPress={() => acceptRequest(item._id)}
+                style={{
+                  backgroundColor: Colors.lightBlue,
+                  padding: 10,
+                  borderRadius: 20,
+                }}
+              >
+                <Text style={{ textAlign: "center", color: "white" }}>
+                  Accept
+                </Text>
+              </Pressable>
+              <Pressable
+                onPress={() => declineRequest(item._id)}
+                style={{
+                  backgroundColor: Colors.red,
+                  padding: 10,
+                  borderRadius: 20,
+                  marginLeft: 10,
+                }}
+              >
+                <Text style={{ textAlign: "center", color: "white" }}>
+                  Decline
+                </Text>
+              </Pressable>
+            </View>
+          </View>
         </View>
-      );
-    };
+      )}
+    />
+  );
+};
 
 export default FriendRequest;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  requestsContainer: {
+    flex: 1,
+  },
+});
