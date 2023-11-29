@@ -25,10 +25,16 @@ export default ViewGroupsCreated = ({ route }) => {
   const navigate = useNavigation();
 
   const handlePress = (item, users) => {
-    console.log(item);
+    const userList = users.map((user) => user.displayName);
+    let groupMembers;
+    if (userList.length > 2) {
+      groupMembers = userList.splice(0, 2).join(", ") + ", and others";
+    } else {
+      groupMembers = userList.join(", ");
+    }
     navigate.navigate("MessageScreen", {
       receiverName: item.name,
-      username: users,
+      username: groupMembers,
       receiverPicture: item.groupPicture,
       receiverId: item._id,
       currentUser: currentUser,
