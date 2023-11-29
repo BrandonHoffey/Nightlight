@@ -1,4 +1,12 @@
-import { StyleSheet, Text, View, PixelRatio, SafeAreaView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  PixelRatio,
+  SafeAreaView,
+  FlatList,
+  ActivityIndicator,
+} from "react-native";
 import React, { useLayoutEffect, useEffect, useContext, useState } from "react";
 import { UserContext } from "../../UserContext";
 import { API_FRIEND_REQUESTS } from "../../constants/Endpoints";
@@ -7,6 +15,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import Colors from "../../Colors";
 import { Fonts } from "../../Font";
+import { currentUser } from "../../api/UserApi";
 
 const fontScale = PixelRatio.getFontScale();
 const getFontSize = (size) => size / fontScale;
@@ -34,20 +43,15 @@ const FriendRequestsScreen = () => {
           method: "GET",
           headers: myHeaders,
         };
-
         const response = await fetch(apiUrl, requestOptions);
         const data = await response.json();
-        const uniqueUserIds = new Set();
-        const filteredFriendRequests = data.friendRequests.filter((request) => {
-          if (uniqueUserIds.has(request.senderId)) {
-            return false;
-          }
-          uniqueUserIds.add(request.senderId);
-          return true;
-        });
-        console.log(data);
-        setFriendRequests(filteredFriendRequests);
-
+        const currentUserFriends = await currentUser(token);
+        const requests = data.friendRequests;
+        const currentFriends = currentUserFriends.friends;
+        const currentRequests = requests.filter(
+          (item) => !currentFriends.includes(item._id)
+        );
+        setFriendRequests(currentRequests);
       } catch (error) {
         console.log("error message", error);
       }
@@ -74,28 +78,22 @@ const FriendRequestsScreen = () => {
     });
   }, []);
 
-  return (
-    <SafeAreaView>
+  if (friendRequests.length === 0) {
+    return (
       <View style={styles.screenContainer}>
-        {friendRequests.length > 0 && (
-          <Text style={styles.yourFriendRequests}>
-            Your Friend Requests
-          </Text>
-        )}
-        {friendRequests.length === 0 && (
-          <Text style={styles.noRequestsText}>
-            No New Friend Requests
-          </Text>
-        )}
+        <Text style={styles.yourFriendRequests}>No New Friend Requests</Text>
+      </View>
+    );
+  }
 
-        {friendRequests.map((item) => (
-          <FriendRequest
-            key={item._id}
-            item={item}
-            friendRequests={friendRequests}
-            setFriendRequests={setFriendRequests}
-          />
-        ))}
+  return (
+    <SafeAreaView style={{ backgroundColor: Colors.darkBlue }}>
+      <View style={styles.screenContainer}>
+        <Text style={styles.yourFriendRequests}>Your Friend Requests</Text>
+        <FriendRequest
+          friendRequests={friendRequests}
+          setFriendRequests={setFriendRequests}
+        />
       </View>
     </SafeAreaView>
   );
@@ -120,5 +118,5 @@ const styles = StyleSheet.create({
     color: Colors.yellow,
     fontSize: getFontSize(16),
     textAlign: "center",
-  }
+  },
 });
